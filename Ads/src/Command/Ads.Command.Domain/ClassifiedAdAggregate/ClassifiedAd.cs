@@ -129,6 +129,46 @@ public class ClassifiedAd : BaseAggregateRoot<string>
         );
     }
 
+    public void Update(
+        string description,
+        string title,
+        string updatedBy,
+        DateTimeOffset updatedOn)
+    {
+        if (string.IsNullOrEmpty(description))
+            throw new ArgumentException(
+                $"Required input {nameof(description)} was empty.", nameof(description));
+
+        if (string.IsNullOrEmpty(title))
+            throw new ArgumentException(
+                $"Required input {nameof(title)} was empty.", nameof(title));
+
+        if (string.IsNullOrEmpty(updatedBy))
+            throw new ArgumentException(
+                $"Required input {nameof(updatedBy)} was empty.", nameof(updatedBy));
+
+        if (updatedOn == DateTimeOffset.MinValue)
+            throw new ArgumentException(
+                $"Required input {nameof(updatedOn)} was empty.", nameof(updatedOn));
+
+        if (!IsActive)
+            throw new DeletedException(nameof(ClassifiedAd), Id);
+
+        if (PublishedOn is not null)
+            throw new PublishedException(nameof(ClassifiedAd), Id);
+
+        Apply(
+            new ClassifiedAdUpdatedV1
+            {
+                Id = Id,
+                Description = description,
+                Title = title,
+                UpdatedBy = updatedBy,
+                UpdatedOn = updatedOn
+            }
+        );
+    }
+
     protected override void When(BaseDomainEvent @event)
     {
         switch (@event)
