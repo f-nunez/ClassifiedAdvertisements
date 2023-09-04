@@ -103,6 +103,32 @@ public class ClassifiedAd : BaseAggregateRoot<string>
         );
     }
 
+    public void Unpublish(string unpublishedBy, DateTimeOffset unpublishedOn)
+    {
+        if (string.IsNullOrEmpty(unpublishedBy))
+            throw new ArgumentException(
+                $"Required input {nameof(unpublishedBy)} was empty.", nameof(unpublishedBy));
+
+        if (unpublishedOn == DateTimeOffset.MinValue)
+            throw new ArgumentException(
+                $"Required input {nameof(unpublishedOn)} was empty.", nameof(unpublishedOn));
+
+        if (!IsActive)
+            throw new DeletedException(nameof(ClassifiedAd), Id);
+
+        if (PublishedOn is null)
+            throw new NotPublishedException(nameof(ClassifiedAd), Id);
+
+        Apply(
+            new ClassifiedAdUnpublishedV1
+            {
+                Id = Id,
+                UnpublishedBy = unpublishedBy,
+                UnpublishedOn = unpublishedOn
+            }
+        );
+    }
+
     protected override void When(BaseDomainEvent @event)
     {
         switch (@event)
