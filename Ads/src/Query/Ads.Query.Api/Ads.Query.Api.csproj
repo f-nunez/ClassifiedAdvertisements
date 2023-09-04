@@ -11,4 +11,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Ads.Query.Application\Ads.Query.Application.csproj" />
+    <ProjectReference Include="..\Ads.Query.Infrastructure\Ads.Query.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
