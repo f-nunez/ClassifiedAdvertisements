@@ -1,3 +1,4 @@
+using Ads.Command.Domain.ClassifiedAdAggregate.Exceptions;
 using Ads.Command.Domain.Common;
 using Ads.Command.Domain.Exceptions;
 using Ads.Common;
@@ -72,6 +73,32 @@ public class ClassifiedAd : BaseAggregateRoot<string>
                 Id = Id,
                 DeletedBy = deletedBy,
                 DeletedOn = deletedOn
+            }
+        );
+    }
+
+    public void Publish(string publishedBy, DateTimeOffset publishedOn)
+    {
+        if (string.IsNullOrEmpty(publishedBy))
+            throw new ArgumentException(
+                $"Required input {nameof(publishedBy)} was empty.", nameof(publishedBy));
+
+        if (publishedOn == DateTimeOffset.MinValue)
+            throw new ArgumentException(
+                $"Required input {nameof(publishedOn)} was empty.", nameof(publishedOn));
+
+        if (!IsActive)
+            throw new DeletedException(nameof(ClassifiedAd), Id);
+
+        if (PublishedOn is not null)
+            throw new PublishedException(nameof(ClassifiedAd), Id);
+
+        Apply(
+            new ClassifiedAdPublishedV1
+            {
+                Id = Id,
+                PublishedBy = publishedBy,
+                PublishedOn = publishedOn
             }
         );
     }
