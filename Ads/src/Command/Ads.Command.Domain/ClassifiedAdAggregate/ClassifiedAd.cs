@@ -55,6 +55,27 @@ public class ClassifiedAd : BaseAggregateRoot<string>
         );
     }
 
+    public void Delete(string deletedBy, DateTimeOffset deletedOn)
+    {
+        if (string.IsNullOrEmpty(deletedBy))
+            throw new ArgumentException($"Required input {nameof(deletedBy)} was empty.", nameof(deletedBy));
+
+        if (deletedOn == DateTimeOffset.MinValue)
+            throw new ArgumentException($"Required input {nameof(deletedOn)} was empty.", nameof(deletedOn));
+
+        if (!IsActive)
+            throw new DeletedException(nameof(ClassifiedAd), Id);
+
+        Apply(
+            new ClassifiedAdDeletedV1
+            {
+                Id = Id,
+                DeletedBy = deletedBy,
+                DeletedOn = deletedOn
+            }
+        );
+    }
+
     protected override void When(BaseDomainEvent @event)
     {
         switch (@event)
