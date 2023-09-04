@@ -16,6 +16,45 @@ public class ClassifiedAd : BaseAggregateRoot<string>
     public string? UpdatedBy { get; private set; }
     public DateTimeOffset? UpdatedOn { get; private set; }
 
+    public void Create(
+        string id,
+        string createdBy,
+        DateTimeOffset createdOn,
+        string description,
+        string title)
+    {
+        if (string.IsNullOrEmpty(id))
+            throw new ArgumentException(
+                $"Required input {nameof(id)} was empty.", nameof(id));
+
+        if (string.IsNullOrEmpty(createdBy))
+            throw new ArgumentException(
+                $"Required input {nameof(createdBy)} was empty.", nameof(createdBy));
+
+        if (createdOn == DateTimeOffset.MinValue)
+            throw new ArgumentException(
+                $"Required input {nameof(createdOn)} was empty.", nameof(createdOn));
+
+        if (string.IsNullOrEmpty(description))
+            throw new ArgumentException(
+                $"Required input {nameof(description)} was empty.", nameof(description));
+
+        if (string.IsNullOrEmpty(title))
+            throw new ArgumentException(
+                $"Required input {nameof(title)} was empty.", nameof(title));
+
+        Apply(
+            new ClassifiedAdCreatedV1
+            {
+                Id = id,
+                CreatedBy = createdBy,
+                CreatedOn = createdOn,
+                Description = description,
+                Title = title
+            }
+        );
+    }
+
     protected override void When(BaseDomainEvent @event)
     {
         switch (@event)
