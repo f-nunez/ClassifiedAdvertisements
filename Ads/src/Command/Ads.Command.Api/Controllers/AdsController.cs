@@ -1,6 +1,7 @@
 using Ads.Command.Application.Features.CreateClassifiedAd;
 using Ads.Command.Application.Features.DeleteClassifiedAd;
 using Ads.Command.Application.Features.PublishClassifiedAd;
+using Ads.Command.Application.Features.UnpublishClassifiedAd;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ads.Command.Api.Controllers;
@@ -60,6 +61,26 @@ public class AdsController : BaseApiController
         );
 
         PublishClassifiedAdResponse response = await Mediator
+            .Send(command, cancellationToken);
+
+        return Ok(response);
+    }
+
+    [HttpPut("{ClassifiedAdId}/unpublish")]
+    public async Task<IActionResult> Unpublish(
+        string classifiedAdId,
+        [FromBody] UnpublishClassifiedAdRequestResource resource,
+        CancellationToken cancellationToken)
+    {
+        var command = new UnpublishClassifiedAdCommand(
+            new UnpublishClassifiedAdRequest
+            {
+                ClassifiedAdId = classifiedAdId,
+                ExpectedVersion = resource.ExpectedVersion
+            }
+        );
+
+        UnpublishClassifiedAdResponse response = await Mediator
             .Send(command, cancellationToken);
 
         return Ok(response);
