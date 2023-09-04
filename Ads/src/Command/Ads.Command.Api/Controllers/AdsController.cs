@@ -1,4 +1,5 @@
 using Ads.Command.Application.Features.CreateClassifiedAd;
+using Ads.Command.Application.Features.DeleteClassifiedAd;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ads.Command.Api.Controllers;
@@ -19,6 +20,25 @@ public class AdsController : BaseApiController
         );
 
         CreateClassifiedAdResponse response = await Mediator
+            .Send(command, cancellationToken);
+
+        return Ok(response);
+    }
+
+    [HttpDelete("{ClassifiedAdId}/version/{ExpectedVersion}")]
+    public async Task<IActionResult> Delete(
+        [FromRoute] DeleteClassifiedAdRequestResource resource,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteClassifiedAdCommand(
+            new DeleteClassifiedAdRequest
+            {
+                ClassifiedAdId = resource.ClassifiedAdId,
+                ExpectedVersion = resource.ExpectedVersion
+            }
+        );
+
+        DeleteClassifiedAdResponse response = await Mediator
             .Send(command, cancellationToken);
 
         return Ok(response);
