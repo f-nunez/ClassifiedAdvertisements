@@ -6,7 +6,7 @@ namespace Ads.Query.Api.Controllers;
 public class AdsController : BaseApiController
 {
     [HttpGet("{classifiedAdId}")]
-    public async Task<IActionResult> Get(
+    public async Task<IActionResult> GetClassifiedAd(
         string classifiedAdId,
         CancellationToken cancellationToken)
     {
