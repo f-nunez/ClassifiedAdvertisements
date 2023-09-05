@@ -4,6 +4,6 @@ namespace Ads.Command.Application.Features.UnpublishClassifiedAd;
 
 public class UnpublishClassifiedAdRequest : BaseRequest
 {
-    public string ClassifiedAdId { get; set; } = string.Empty;
-    public long ExpectedVersion { get; set; } = -1;
+    public string? ClassifiedAdId { get; set; }
+    public long ExpectedVersion { get; set; }
 }
