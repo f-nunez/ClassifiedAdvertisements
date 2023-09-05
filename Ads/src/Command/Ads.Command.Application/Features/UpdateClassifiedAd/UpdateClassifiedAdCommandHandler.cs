@@ -8,10 +8,14 @@ namespace Ads.Command.Application.Features.UpdateClassifiedAd;
 public class UpdateClassifiedAdCommandHandler
     : IRequestHandler<UpdateClassifiedAdCommand, UpdateClassifiedAdResponse>
 {
+    private readonly ICurrentUserService _currentUserService;
     private readonly IEventStore<ClassifiedAd> _eventStore;
 
-    public UpdateClassifiedAdCommandHandler(IEventStore<ClassifiedAd> eventStore)
+    public UpdateClassifiedAdCommandHandler(
+        ICurrentUserService currentUserService,
+        IEventStore<ClassifiedAd> eventStore)
     {
+        _currentUserService = currentUserService;
         _eventStore = eventStore;
     }
 
@@ -31,7 +35,7 @@ public class UpdateClassifiedAdCommandHandler
         classifiedAd.Update(
             request.Description,
             request.Title,
-            Guid.NewGuid().ToString(),
+           _currentUserService.UserId,
             DateTimeOffset.UtcNow
         );
 
