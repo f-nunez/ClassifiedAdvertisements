@@ -6,12 +6,6 @@ public class CreateClassifiedAdRequestResource
     public string Title { get; set; } = string.Empty;
 }
 
-public class DeleteClassifiedAdRequestResource
-{
-    public string ClassifiedAdId { get; set; } = string.Empty;
-    public long ExpectedVersion { get; set; } = -1;
-}
-
 public class PublishClassifiedAdRequestResource
 {
     public long ExpectedVersion { get; set; } = -1;
