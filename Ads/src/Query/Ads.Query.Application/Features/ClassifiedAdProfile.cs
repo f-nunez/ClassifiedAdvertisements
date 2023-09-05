@@ -42,5 +42,23 @@ public class ClassifiedAdProfile : Profile
                 d => d.Version,
                 m => m.MapFrom(s => s.Version)
             );
+
+        CreateMap<ClassifiedAd, ClassifiedAdPaginatedListItemDto>()
+            .ForMember(
+                d => d.Description,
+                m => m.MapFrom(s => s.Description)
+            ).ForMember(
+                d => d.Id,
+                m => m.MapFrom(s => s.Id)
+            ).ForMember(
+                d => d.PublishedBy,
+                m => m.MapFrom(s => s.PublishedBy)
+            ).ForMember(
+                d => d.PublishedOn,
+                m => m.MapFrom(s => s.PublishedOn)
+            ).ForMember(
+                d => d.Title,
+                m => m.MapFrom(s => s.Title)
+            );
     }
 }
