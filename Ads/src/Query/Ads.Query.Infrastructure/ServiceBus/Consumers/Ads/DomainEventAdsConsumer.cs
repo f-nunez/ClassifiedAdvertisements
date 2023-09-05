@@ -36,8 +36,8 @@ public class DomainEventAdsConsumer : IConsumer<DomainEventAdsContract>
                     PublishedBy = null,
                     PublishedOn = null,
                     Title = classifiedAdCreatedV1.Title,
-                    UpdatedBy = null,
-                    UpdatedOn = null,
+                    UpdatedBy = classifiedAdCreatedV1.CreatedBy,
+                    UpdatedOn = classifiedAdCreatedV1.CreatedOn,
                     Version = domainEvent.EventVersion
                 };
 
