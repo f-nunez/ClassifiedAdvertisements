@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Ads.Common\Ads.Common.csproj" />
+  </ItemGroup>
+
 </Project>
