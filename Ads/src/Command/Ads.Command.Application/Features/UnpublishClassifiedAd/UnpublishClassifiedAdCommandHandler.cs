@@ -8,10 +8,14 @@ namespace Ads.Command.Application.Features.UnpublishClassifiedAd;
 public class UnpublishClassifiedAdCommandHandler
     : IRequestHandler<UnpublishClassifiedAdCommand, UnpublishClassifiedAdResponse>
 {
+    private readonly ICurrentUserService _currentUserService;
     private readonly IEventStore<ClassifiedAd> _eventStore;
 
-    public UnpublishClassifiedAdCommandHandler(IEventStore<ClassifiedAd> eventStore)
+    public UnpublishClassifiedAdCommandHandler(
+        ICurrentUserService currentUserService,
+        IEventStore<ClassifiedAd> eventStore)
     {
+        _currentUserService = currentUserService;
         _eventStore = eventStore;
     }
 
@@ -28,7 +32,7 @@ public class UnpublishClassifiedAdCommandHandler
         if (classifiedAd is null)
             throw new NotFoundException(nameof(classifiedAd), request.ClassifiedAdId);
 
-        classifiedAd.Unpublish(Guid.NewGuid().ToString(), DateTimeOffset.UtcNow);
+        classifiedAd.Unpublish(_currentUserService.UserId, DateTimeOffset.UtcNow);
 
         await _eventStore.AppendEventsAsync(
             classifiedAd,
