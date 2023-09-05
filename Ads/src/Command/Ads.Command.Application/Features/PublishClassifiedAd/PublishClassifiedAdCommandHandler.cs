@@ -7,10 +7,14 @@ namespace Ads.Command.Application.Features.PublishClassifiedAd;
 
 public class PublishClassifiedAdCommandHandler : IRequestHandler<PublishClassifiedAdCommand, PublishClassifiedAdResponse>
 {
+    private readonly ICurrentUserService _currentUserService;
     private readonly IEventStore<ClassifiedAd> _eventStore;
 
-    public PublishClassifiedAdCommandHandler(IEventStore<ClassifiedAd> eventStore)
+    public PublishClassifiedAdCommandHandler(
+        ICurrentUserService currentUserService,
+        IEventStore<ClassifiedAd> eventStore)
     {
+        _currentUserService = currentUserService;
         _eventStore = eventStore;
     }
 
@@ -27,7 +31,7 @@ public class PublishClassifiedAdCommandHandler : IRequestHandler<PublishClassifi
         if (classifiedAd is null)
             throw new NotFoundException(nameof(classifiedAd), request.ClassifiedAdId);
 
-        classifiedAd.Publish(Guid.NewGuid().ToString(), DateTimeOffset.UtcNow);
+        classifiedAd.Publish(_currentUserService.UserId, DateTimeOffset.UtcNow);
 
         await _eventStore.AppendEventsAsync(
             classifiedAd,
