@@ -28,16 +28,17 @@ public class AdsController : BaseApiController
         return Ok(response);
     }
 
-    [HttpDelete("{ClassifiedAdId}/version/{ExpectedVersion}")]
+    [HttpDelete("{classifiedAdId}/version/{expectedVersion}")]
     public async Task<IActionResult> Delete(
-        [FromRoute] DeleteClassifiedAdRequestResource resource,
+        string classifiedAdId,
+        long expectedVersion,
         CancellationToken cancellationToken)
     {
         var command = new DeleteClassifiedAdCommand(
             new DeleteClassifiedAdRequest
             {
-                ClassifiedAdId = resource.ClassifiedAdId,
-                ExpectedVersion = resource.ExpectedVersion
+                ClassifiedAdId = classifiedAdId,
+                ExpectedVersion = expectedVersion
             }
         );
 
@@ -47,7 +48,7 @@ public class AdsController : BaseApiController
         return Ok(response);
     }
 
-    [HttpPut("{ClassifiedAdId}/publish")]
+    [HttpPut("{classifiedAdId}/publish")]
     public async Task<IActionResult> Publish(
         string classifiedAdId,
         [FromBody] PublishClassifiedAdRequestResource resource,
@@ -67,7 +68,7 @@ public class AdsController : BaseApiController
         return Ok(response);
     }
 
-    [HttpPut("{ClassifiedAdId}/unpublish")]
+    [HttpPut("{classifiedAdId}/unpublish")]
     public async Task<IActionResult> Unpublish(
         string classifiedAdId,
         [FromBody] UnpublishClassifiedAdRequestResource resource,
@@ -87,7 +88,7 @@ public class AdsController : BaseApiController
         return Ok(response);
     }
 
-    [HttpPut("{ClassifiedAdId}")]
+    [HttpPut("{classifiedAdId}")]
     public async Task<IActionResult> Update(
         string classifiedAdId,
         [FromBody] UpdateClassifiedAdRequestResource resource,
