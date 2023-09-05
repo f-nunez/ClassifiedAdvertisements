@@ -1,4 +1,6 @@
 using Ads.Command.Api.Filters;
+using Ads.Command.Api.Services;
+using Ads.Command.Application.Common.Interfaces;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -6,6 +8,8 @@ public static class ConfigureServices
 {
     public static IServiceCollection AddWebServices(this IServiceCollection services)
     {
+        services.AddSingleton<ICurrentUserService, CurrentUserService>();
+
         services.AddRouting(options => options.LowercaseUrls = true);
 
         services.AddControllers(options => options.Filters.Add<ApiExceptionFilterAttribute>());
