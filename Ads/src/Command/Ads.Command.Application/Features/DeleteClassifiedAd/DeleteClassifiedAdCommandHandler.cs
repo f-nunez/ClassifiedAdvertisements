@@ -8,10 +8,14 @@ namespace Ads.Command.Application.Features.DeleteClassifiedAd;
 public class DeleteClassifiedAdCommandHandler
     : IRequestHandler<DeleteClassifiedAdCommand, DeleteClassifiedAdResponse>
 {
+    private readonly ICurrentUserService _currentUserService;
     private readonly IEventStore<ClassifiedAd> _eventStore;
 
-    public DeleteClassifiedAdCommandHandler(IEventStore<ClassifiedAd> eventStore)
+    public DeleteClassifiedAdCommandHandler(
+        ICurrentUserService currentUserService,
+        IEventStore<ClassifiedAd> eventStore)
     {
+        _currentUserService = currentUserService;
         _eventStore = eventStore;
     }
 
@@ -28,7 +32,7 @@ public class DeleteClassifiedAdCommandHandler
         if (classifiedAd is null)
             throw new NotFoundException(nameof(classifiedAd), request.ClassifiedAdId);
 
-        classifiedAd.Delete(Guid.NewGuid().ToString(), DateTimeOffset.UtcNow);
+        classifiedAd.Delete(_currentUserService.UserId, DateTimeOffset.UtcNow);
 
         await _eventStore.AppendEventsAsync(
             classifiedAd,
