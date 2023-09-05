@@ -8,10 +8,14 @@ public class CreateClassifiedAdCommandHandler
     : IRequestHandler<CreateClassifiedAdCommand, CreateClassifiedAdResponse>
 {
     private static readonly int NewVersion = -1;
+    private readonly ICurrentUserService _currentUserService;
     private readonly IEventStore<ClassifiedAd> _eventStore;
 
-    public CreateClassifiedAdCommandHandler(IEventStore<ClassifiedAd> eventStore)
+    public CreateClassifiedAdCommandHandler(
+        ICurrentUserService currentUserService,
+        IEventStore<ClassifiedAd> eventStore)
     {
+        _currentUserService = currentUserService;
         _eventStore = eventStore;
     }
 
@@ -27,7 +31,7 @@ public class CreateClassifiedAdCommandHandler
 
         newClassifiedAd.Create(
             Guid.NewGuid().ToString(),
-            Guid.NewGuid().ToString(),
+            _currentUserService.UserId,
             DateTimeOffset.UtcNow,
             request.Description,
             request.Title
