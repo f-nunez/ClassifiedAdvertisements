@@ -18,11 +18,11 @@ public class ClassifiedAd : BaseAggregateRoot<string>
     public DateTimeOffset? UpdatedOn { get; private set; }
 
     public void Create(
-        string id,
-        string createdBy,
+        string? id,
+        string? createdBy,
         DateTimeOffset createdOn,
-        string description,
-        string title)
+        string? description,
+        string? title)
     {
         if (string.IsNullOrEmpty(id))
             throw new ArgumentException(
@@ -56,7 +56,7 @@ public class ClassifiedAd : BaseAggregateRoot<string>
         );
     }
 
-    public void Delete(string deletedBy, DateTimeOffset deletedOn)
+    public void Delete(string? deletedBy, DateTimeOffset deletedOn)
     {
         if (string.IsNullOrEmpty(deletedBy))
             throw new ArgumentException($"Required input {nameof(deletedBy)} was empty.", nameof(deletedBy));
@@ -77,7 +77,7 @@ public class ClassifiedAd : BaseAggregateRoot<string>
         );
     }
 
-    public void Publish(string publishedBy, DateTimeOffset publishedOn)
+    public void Publish(string? publishedBy, DateTimeOffset publishedOn)
     {
         if (string.IsNullOrEmpty(publishedBy))
             throw new ArgumentException(
@@ -103,7 +103,7 @@ public class ClassifiedAd : BaseAggregateRoot<string>
         );
     }
 
-    public void Unpublish(string unpublishedBy, DateTimeOffset unpublishedOn)
+    public void Unpublish(string? unpublishedBy, DateTimeOffset unpublishedOn)
     {
         if (string.IsNullOrEmpty(unpublishedBy))
             throw new ArgumentException(
@@ -130,9 +130,9 @@ public class ClassifiedAd : BaseAggregateRoot<string>
     }
 
     public void Update(
-        string description,
-        string title,
-        string updatedBy,
+        string? description,
+        string? title,
+        string? updatedBy,
         DateTimeOffset updatedOn)
     {
         if (string.IsNullOrEmpty(description))
@@ -179,6 +179,8 @@ public class ClassifiedAd : BaseAggregateRoot<string>
                 Description = e.Description;
                 Id = e.Id;
                 Title = e.Title;
+                UpdatedBy = e.CreatedBy;
+                UpdatedOn = e.CreatedOn;
                 break;
             case ClassifiedAdDeletedV1 e:
                 Id = e.Id;
