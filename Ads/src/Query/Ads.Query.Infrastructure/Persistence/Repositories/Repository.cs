@@ -2,6 +2,7 @@ using System.Linq.Expressions;
 using Ads.Query.Application.Common.Interfaces;
 using Ads.Query.Domain.Common;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Ads.Query.Infrastructure.Persistence.Repositories;
 
@@ -48,14 +49,14 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         await _mongoCollection.DeleteOneAsync(filterDefinition, cancellationToken);
     }
 
-    public void DeleteById(string id, CancellationToken cancellationToken = default)
+    public void DeleteById(string? id, CancellationToken cancellationToken = default)
     {
         var filterDefinition = Builders<T>.Filter.Where(x => x.Id == id);
 
         _mongoCollection.DeleteOne(filterDefinition, cancellationToken);
     }
 
-    public async Task DeleteByIdAsync(string id, CancellationToken cancellationToken = default)
+    public async Task DeleteByIdAsync(string? id, CancellationToken cancellationToken = default)
     {
         var filterDefinition = Builders<T>.Filter.Where(x => x.Id == id);
 
@@ -104,7 +105,7 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         return count > 0;
     }
 
-    public T GetById(string id, CancellationToken cancellationToken = default)
+    public T GetById(string? id, CancellationToken cancellationToken = default)
     {
         var filterDefinition = Builders<T>.Filter.Where(x => x.Id == id);
 
@@ -112,7 +113,7 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
     }
 
     public async Task<T> GetByIdAsync(
-        string id,
+        string? id,
         CancellationToken cancellationToken = default)
     {
         var filterDefinition = Builders<T>.Filter.Where(x => x.Id == id);
@@ -129,7 +130,7 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         var query = GetQuery(filter, orderBy);
 
-        return query.FirstOrDefault();
+        return query.FirstOrDefault(cancellationToken);
     }
 
     public async Task<T?> GetFirstOrDefaultAsync(
@@ -139,7 +140,7 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         var query = GetQuery(filter, orderBy);
 
-        return await Task.FromResult(query.FirstOrDefault());
+        return await query.FirstOrDefaultAsync(cancellationToken);
     }
 
     public IEnumerable<T> GetList(
@@ -151,7 +152,7 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         var query = GetQuery(filter, orderBy, skip, take);
 
-        return query.ToList();
+        return query.ToList(cancellationToken);
     }
 
     public async Task<IEnumerable<T>> GetListAsync(
@@ -163,7 +164,7 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
     {
         var query = GetQuery(filter, orderBy, skip, take);
 
-        return await Task.FromResult(query.ToList());
+        return await query.ToListAsync(cancellationToken);
     }
 
     public void Insert(T entity, CancellationToken cancellationToken = default)
@@ -178,9 +179,11 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
             document: entity, cancellationToken: cancellationToken);
     }
 
-    public void InsertRange(IEnumerable<T> entities, CancellationToken cancellationToken)
+    public void InsertRange(
+        IEnumerable<T> entities,
+        CancellationToken cancellationToken = default)
     {
-        _mongoCollection.InsertMany(entities);
+        _mongoCollection.InsertMany(documents: entities, cancellationToken: cancellationToken);
     }
 
     public async Task InsertRangeAsync(
@@ -223,7 +226,7 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
             await UpdateAsync(entity, cancellationToken);
     }
 
-    public virtual IQueryable<T> GetQuery(
+    private IMongoQueryable<T> GetQuery(
         Expression<Func<T, bool>>? filter = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         int? skip = null,
@@ -240,6 +243,6 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         if (skip.HasValue && take.HasValue)
             query = query.Skip(skip.Value).Take(take.Value);
 
-        return query;
+        return (IMongoQueryable<T>)query;
     }
 }
