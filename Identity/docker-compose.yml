@@ -1,0 +1,21 @@
+version: "3.9"
+
+name: classified-adversitments
+
+services:
+  identity-postgresql:
+    image: postgres:15.4-bullseye
+    container_name: identity-postgresql
+    environment:
+      POSTGRES_USER: "sa"
+      POSTGRES_PASSWORD: "ClassifiedAdvertisiments123!"
+    ports:
+      - 54320:5432
+    restart: on-failure
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: always
+    ports:
+      - 8080:8080
