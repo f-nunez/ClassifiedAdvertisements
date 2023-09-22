@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+
+<head>
+    <title>Classified Ads</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="assets/css/theme.css" rel="stylesheet" />
+    <script src="assets/js/theme.js"></script>
+</head>
+
+<body>
+    <main id="mainWrapper" class="main-wrapper">
+        <div class="header">
+            <div class="navbar-custom navbar navbar-expand-lg">
+                <div class="container-fluid px-0">
+                    <div class="navbar-nav">
+                        <button type="button" class="nav-toggle nav-link p-0" id="navToggle" aria-label="Sidebar button">
+                            <i class="bi bi-layout-sidebar"></i>
+                        </button>
+                    </div>
+
+                    <div class="navbar-nav navbar-right-wrap ms-lg-auto d-flex nav-top-wrap align-items-center ms-4 ms-lg-0">
+                        <div class="dropdown ms-2">
+                            <button class="btn btn-bd-primary dropdown-toggle d-flex align-items-center nav-link" id="themeColorButton"
+                                type="button" aria-expanded="false" data-bs-toggle="dropdown"
+                                aria-label="Theme color (auto)">
+                                <i class="bi bi-sun-fill me-2 theme-color-icon" id="themeColorButtonIcon"></i>
+                                <span class="visually-hidden" id="themeColorButtonText">Theme color</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end text-small shadow"
+                                aria-labelledby="themeColorButtonText">
+                                <li>
+                                    <button type="button" class="dropdown-item d-flex align-items-center"
+                                        data-bs-theme-value="light" aria-pressed="false">
+                                        <i class="bi bi-sun-fill me-2 opacity-50 theme-icon" data-icon-name="bi-sun-fill"></i>
+                                        Light
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" class="dropdown-item d-flex align-items-center"
+                                        data-bs-theme-value="dark" aria-pressed="false">
+                                        <i class="bi bi-moon-stars-fill me-2 opacity-50 theme-icon" data-icon-name="bi-moon-stars-fill"></i>
+                                        Dark
+                                    </button>
+                                </li>
+                                <li>
+                                    <button type="button" class="dropdown-item d-flex align-items-center active"
+                                        data-bs-theme-value="auto" aria-pressed="true">
+                                        <i class="bi bi-circle-half me-2 opacity-50 theme-icon" data-icon-name="bi-circle-half"></i>
+                                        Auto
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="dropdown ms-2">
+                            <button class="btn btn-bd-primary dropdown-toggle d-flex align-items-center nav-link" type="button"
+                                data-bs-toggle="dropdown">
+                                <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32"
+                                    class="rounded-circle me-2" />
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end text-small shadow">
+                                <p class="px-3 m-0">Logged as <strong>Username</strong></p>
+                                <li>
+                                    <hr class="dropdown-divider" />
+                                </li>
+                                <li>
+                                    <button type="button" class="dropdown-item d-flex align-items-center">
+                                        <i class="bi bi-power me-2 opacity-50"></i>Sign out
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="navbar-vertical navbar">
+            <a class="navbar-brand" href="../index.html">
+                <img src="assets/img/logo_light.png" alt="Classified Ads App">
+            </a>
+
+            <ul class="navbar-nav flex-column" id="sideNavbar">
+                <li class="nav-item">
+                    <div class="navbar-heading">Menu Options</div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-house nav-icon"></i>
+                        Home
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="ads.html">
+                        <i class="bi bi-card-list nav-icon"></i>
+                        My Ads
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">
+                        <i class="bi bi-people-fill nav-icon"></i>
+                        Users
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div id="appContent" class="app-content">
+            <div class="app-content-area">
+                <div class="container-fluid">
+                    <div class="page-title">
+                        <div>
+                            <h3 class="mb-0">My Ads</h3>
+                        </div>
+                    </div>
+
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <div class="d-flex">
+                                <a href="ads_add.html">
+                                    <button type="button" class="btn btn-primary btn-left-icon">
+                                        <i class="bi bi-plus-lg"></i>ADD
+                                    </button>
+                                </a>
+                            </div>
+
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-outline-secondary btn-left-icon">
+                                    <i class="bi bi-download"></i>DOWNLOAD
+                                </button>
+
+                                <div class="dropdown">
+                                    <button type="button" class="btn btn-primary btn-success btn-left-icon ms-2 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                                        <i class="bi bi-filter"></i>FILTER
+                                    </button>
+                                    <form class="dropdown-menu p-4">
+                                        <div class="mb-3">
+                                            <label for="exampleDropdownFormEmail2" class="form-label">Email address</label>
+                                            <input type="email" class="form-control" id="exampleDropdownFormEmail2" placeholder="email@example.com">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="exampleDropdownFormPassword2" class="form-label">Password</label>
+                                            <input type="password" class="form-control" id="exampleDropdownFormPassword2" placeholder="Password">
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input type="checkbox" class="form-check-input" id="dropdownCheck2">
+                                                <label class="form-check-label" for="dropdownCheck2">
+                                                    Remember me
+                                                </label>
+                                            </div>
+                                        </div>
+                                      <button type="submit" class="btn btn-primary">Sign in</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-body table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">First</th>
+                                        <th scope="col">Last</th>
+                                        <th scope="col">Handle</th>
+                                        <th scope="col" class="actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td><span>@mdo akakaka ak aka kakakakaka ak ak aka k ak a ka kakakakak</span></td>
+                                        <td class="actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td>@fat</td>
+                                        <td class="actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">3</th>
+                                        <td>Larry the Bird</td>
+                                        <td>Spring</td>
+                                        <td>@twitter</td>
+                                        <td class="actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td class="actions">
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">4</th>
+                                        <td>Frank</td>
+                                        <td>Nunez</td>
+                                        <td>@nunez</td>
+                                        <td class="actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5</th>
+                                        <td>Chris</td>
+                                        <td>Partida</td>
+                                        <td>@mdo</td>
+                                        <td class="actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">6</th>
+                                        <td>Jovanny</td>
+                                        <td>Partida</td>
+                                        <td>@mdo</td>
+                                        <td class="actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">7</th>
+                                        <td>Dalila</td>
+                                        <td>Garcia</td>
+                                        <td>@twitter</td>
+                                        <td class="actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">8</th>
+                                        <td>Iliana</td>
+                                        <td>Ledezma</td>
+                                        <td>@twitter</td>
+                                        <td class="actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">9</th>
+                                        <td>Ana</td>
+                                        <td>Sanchez</td>
+                                        <td>@twitter</td>
+                                        <td class="actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">10</th>
+                                        <td>Okoto</td>
+                                        <td>Aramara</td>
+                                        <td>@twitter</td>
+                                        <td class="actions">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-search"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary">
+                                                <i class="bi bi-pen"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="paginator">
+                                <div>
+                                    <span>Displaying page 1 of 2 (total 12 records)</span>
+                                </div>
+
+                                <div>
+                                    <ul class="pagination m-0">
+                                        <li class="page-item disabled">
+                                            <a class="page-link" tabindex="0" aria-label="First">
+                                                <i class="bi bi-chevron-double-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item disabled">
+                                            <a class="page-link" tabindex="0" aria-label="Previous">
+                                                <i class="bi bi-chevron-left"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item active" aria-current="page">
+                                            <a class="page-link" tabindex="0">1</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" tabindex="0">2</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" tabindex="0">3</a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" tabindex="0" aria-label="Next">
+                                                <i class="bi bi-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" tabindex="0" aria-label="Last">
+                                                <i class="bi bi-chevron-double-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div>
+                                    <div class="paginator-pagesize">
+                                        <div>
+                                            <select class="form-select paginator-pagesize-select"
+                                                aria-label="page size" id="pageSize">
+                                                <option value="5">5</option>
+                                                <option value="10" selected>10</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                                <option value="100">100</option>
+                                            </select>
+                                        </div>
+
+                                        <span>records per page</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
