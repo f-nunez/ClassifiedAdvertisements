@@ -14,7 +14,8 @@ const routes: Routes = [
     path: 'app',
     component: AppThemeComponent,
     loadChildren: () => import('@theme/app-theme/app-theme.module').then(module => module.AppThemeModule)
-  }
+  },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
