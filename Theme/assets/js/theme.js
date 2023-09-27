@@ -81,6 +81,10 @@
     setButtonTogglestatus(getButtonToggleStatus());
 
     const navToggleButton = document.querySelector('#navToggle');
+
+    if (!navToggleButton)
+      return;
+
     navToggleButton.addEventListener('click', () => {
       const mainWrapper = document.querySelector('#mainWrapper');
       const isToggled = mainWrapper.classList.contains('toggled');

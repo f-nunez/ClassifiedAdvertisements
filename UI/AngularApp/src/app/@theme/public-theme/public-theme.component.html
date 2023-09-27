@@ -1,0 +1,11 @@
+<main id="mainWrapper" class="main-wrapper">
+    <app-public-theme-header (signin)="onSigninAsync()"></app-public-theme-header>
+
+    <div id="appContent" class="app-content-public">
+        <div class="app-content-area">
+            <div class="container-fluid">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</main>
