@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Role } from '@core/enums/role';
 
 @Component({
   selector: 'app-app-theme-sidebar',
@@ -6,5 +7,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app-theme-sidebar.component.css']
 })
 export class AppThemeSidebarComponent {
-
+  role: typeof Role = Role;
 }
