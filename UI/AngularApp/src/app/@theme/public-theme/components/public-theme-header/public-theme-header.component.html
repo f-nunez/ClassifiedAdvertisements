@@ -2,7 +2,7 @@
     <div class="navbar-custom navbar navbar-expand-lg">
         <div class="container-fluid px-0">
             <div class="navbar-nav">
-                <a class="navbar-brand-public" href="../index.html">
+                <a class="navbar-brand-public" routerLink="/">
                     <img src="assets/img/logo_light.png" alt="Classified Ads App">
                 </a>
             </div>
@@ -57,7 +57,7 @@
                             <hr class="dropdown-divider" />
                         </li>
                         <li>
-                            <button type="button" class="dropdown-item d-flex align-items-center">
+                            <button type="button" class="dropdown-item d-flex align-items-center" (click)="onSignin()">
                                 <i class="bi bi-person-circle me-2 opacity-50"></i>Sign in
                             </button>
                         </li>

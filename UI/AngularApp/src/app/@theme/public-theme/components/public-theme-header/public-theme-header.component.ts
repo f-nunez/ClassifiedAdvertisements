@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-public-theme-header',
@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./public-theme-header.component.css']
 })
 export class PublicThemeHeaderComponent {
+  @Output() signin = new EventEmitter<void>();
 
+  onSignin() {
+    this.signin.emit();
+  }
 }
