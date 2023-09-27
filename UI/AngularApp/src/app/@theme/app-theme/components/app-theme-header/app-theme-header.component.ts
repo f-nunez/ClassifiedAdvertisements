@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-app-theme-header',
@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./app-theme-header.component.css']
 })
 export class AppThemeHeaderComponent {
+  @Output() signout = new EventEmitter<void>();
 
+  onSignout() {
+    this.signout.emit();
+  }
 }
