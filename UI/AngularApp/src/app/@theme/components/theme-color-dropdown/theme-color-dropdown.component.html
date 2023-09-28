@@ -1,0 +1,20 @@
+<div class="dropdown ms-2" *ngIf="selectedDropdownItem && dropdownItems">
+    <button class="btn btn-bd-primary dropdown-toggle d-flex align-items-center nav-link" id="themeColorButton"
+        type="button" aria-expanded="false" data-bs-toggle="dropdown" aria-label="Theme color (auto)">
+        <i class="{{selectedDropdownItem.iconClass}} me-2 theme-color-icon" id="themeColorButtonIcon"></i>
+        <span class="visually-hidden" id="themeColorButtonText">Theme color</span>
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="themeColorButtonText">
+        <li *ngFor="let dropdownItem of dropdownItems">
+            <button
+                type="button"
+                class="dropdown-item d-flex align-items-center {{dropdownItem.isSelected ? 'active':''}}"
+                aria-pressed="false"
+                (click)="onSelectColor(dropdownItem)">
+                <i class="{{dropdownItem.iconClass}} me-2 opacity-50 theme-icon"></i>
+                {{dropdownItem.text}}
+            </button>
+        </li>
+    </ul>
+</div>
