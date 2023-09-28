@@ -7,8 +7,13 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class AppThemeHeaderComponent {
   @Output() signout = new EventEmitter<void>();
+  @Output() toggle = new EventEmitter<void>();
 
   onSignout() {
     this.signout.emit();
+  }
+
+  onToggle() {
+    this.toggle.emit();
   }
 }

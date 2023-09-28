@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PublicThemeComponent } from './public-theme.component';
 import { ComponentsModule } from './components/components.module';
 import { PublicThemeRoutingModule } from './public-theme-routing.module';
+import { ThemeComponentsModule } from '@theme/components/theme-components.module';
 
 @NgModule({
   declarations: [
@@ -11,7 +12,8 @@ import { PublicThemeRoutingModule } from './public-theme-routing.module';
   imports: [
     CommonModule,
     ComponentsModule,
-    PublicThemeRoutingModule
+    PublicThemeRoutingModule,
+    ThemeComponentsModule
   ],
   exports: [
     PublicThemeComponent

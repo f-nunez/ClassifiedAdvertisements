@@ -1,18 +1,30 @@
-import { AfterContentInit, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-import { ScriptService } from '@core/services/script.service';
+import { ThemeColorDropdownItem } from '@theme/models/theme-color-dropdown-item';
+import { ThemeColorService } from '@theme/services/theme-color.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-public-theme',
   templateUrl: './public-theme.component.html',
   styleUrls: ['./public-theme.component.css']
 })
-export class PublicThemeComponent implements AfterContentInit {
-  constructor(private authService: AuthService, private router: Router, private scriptService: ScriptService) { }
+export class PublicThemeComponent {
+  selectedThemeColorDropdownItem$: Observable<ThemeColorDropdownItem>;
+  themeColorDropdownItems$: Observable<ThemeColorDropdownItem[]>;
 
-  ngAfterContentInit(): void {
-    this.scriptService.loadScripts('theme.js');
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private themeColorService: ThemeColorService
+  ) {
+    this.selectedThemeColorDropdownItem$ = this.themeColorService.getSelectedDropdownItemObservable();
+    this.themeColorDropdownItems$ = this.themeColorService.getDropdownItemsObservable();
+  }
+
+  onSelectColor(item: ThemeColorDropdownItem) {
+    this.themeColorService.setSelectedColor(item);
   }
 
   async onSigninAsync() {

@@ -1,5 +1,11 @@
 <main id="mainWrapper" class="main-wrapper">
-    <app-public-theme-header (signin)="onSigninAsync()"></app-public-theme-header>
+    <app-public-theme-header (signin)="onSigninAsync()">
+        <app-theme-color-dropdown
+            [dropdownItems$]="themeColorDropdownItems$"
+            [selectedDropdownItem$]="selectedThemeColorDropdownItem$"
+            (selectColor)="onSelectColor($event)">
+        </app-theme-color-dropdown>
+    </app-public-theme-header>
 
     <div id="appContent" class="app-content-public">
         <div class="app-content-area">
