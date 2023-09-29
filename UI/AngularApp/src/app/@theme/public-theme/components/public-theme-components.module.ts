@@ -15,4 +15,4 @@ import { RouterModule } from '@angular/router';
     PublicThemeHeaderComponent
   ]
 })
-export class ComponentsModule { }
+export class PublicThemeComponentsModule { }
