@@ -1,16 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PublicHomeComponent } from './public-home.component';
+import { PublicHomeComponent } from './containers/public-home/public-home.component';
 
-const routes: Routes = [
-  { path: '', component: PublicHomeComponent }
-];
+const routes: Routes = [{ path: '', component: PublicHomeComponent }];
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(routes)
-  ],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class PublicHomeRoutingModule { }
