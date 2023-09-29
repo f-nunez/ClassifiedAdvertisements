@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AppThemeComponent } from './app-theme.component';
 import { AppThemeRoutingModule } from './app-theme-routing.module';
-import { ComponentsModule } from './components/components.module';
+import { AppThemeComponentsModule } from './components/app-theme-components.module';
 import { SharedModule } from '@shared/shared.module';
 import { ThemeComponentsModule } from '@theme/components/theme-components.module';
 
@@ -12,7 +12,7 @@ import { ThemeComponentsModule } from '@theme/components/theme-components.module
   ],
   imports: [
     CommonModule,
-    ComponentsModule,
+    AppThemeComponentsModule,
     AppThemeRoutingModule,
     ThemeComponentsModule,
     SharedModule
