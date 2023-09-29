@@ -1,18 +1,14 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { MyAdsComponent } from './my-ads.component';
+import { SharedModule } from '@shared/shared.module';
+import { MyAdsContainersModule } from './containers/my-ads-containers.module';
 import { MyAdsRoutingModule } from './my-ads-routing.module';
 
 @NgModule({
-  declarations: [
-    MyAdsComponent
-  ],
+  declarations: [],
   imports: [
-    CommonModule,
+    SharedModule,
+    MyAdsContainersModule,
     MyAdsRoutingModule
-  ],
-  exports: [
-    MyAdsComponent
   ]
 })
 export class MyAdsModule { }
