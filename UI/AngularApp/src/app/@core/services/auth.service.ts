@@ -86,6 +86,13 @@ export class AuthService {
             return await this.userManager.signoutRedirect();
     }
 
+    public getUserUsername(): string {
+        if (this.authContext.userInfo)
+            return this.authContext.userInfo.username;
+        else
+            return '';
+    }
+
     private setEventsForUserManager(): void {
         this.userManager.events.addUserLoaded(user => {
             this.setUserToAuthContext();
