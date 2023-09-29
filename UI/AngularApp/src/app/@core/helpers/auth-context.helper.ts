@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Role } from '@core/enums/role';
-import { AuthContext } from '@core/models/auth-context';
-import { Claim } from '@core/models/claim';
-import { UserInfo } from '@core/models/user-info';
+import { AuthContext } from '@core/interfaces/auth-context';
+import { Claim } from '@core/interfaces/claim';
+import { UserInfo } from '@core/interfaces/user-info';
 
 @Injectable({
     providedIn: 'root'
