@@ -7,11 +7,19 @@ export const publicThemetGuard: CanActivateFn = (
 ) => {
     const authService: AuthService = inject(AuthService);
     const router: Router = inject(Router);
+    let canActivate = false;
+    let isAuthenticated$ = authService.getAuthenticatedObservable();
 
-    if (!authService.isAuthenticated())
-        return true;
+    isAuthenticated$.subscribe(nextResponse => {
+        if (nextResponse) {
+            router.navigate(['app']);
+            canActivate = false;
+        } else {
+            canActivate = true;
+        }
 
-    router.navigate(['app']);
+        return canActivate;
+    });
 
-    return false;
+    return canActivate;
 };

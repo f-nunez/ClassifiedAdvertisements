@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-app-theme-header',
@@ -6,6 +6,7 @@ import { Component, EventEmitter, Output } from '@angular/core';
   styleUrls: ['./app-theme-header.component.css']
 })
 export class AppThemeHeaderComponent {
+  @Input() username: string = '';
   @Output() signout = new EventEmitter<void>();
   @Output() toggle = new EventEmitter<void>();
 

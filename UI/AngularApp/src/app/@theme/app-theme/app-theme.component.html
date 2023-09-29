@@ -1,5 +1,5 @@
 <main id="mainWrapper" class="main-wrapper">
-    <app-app-theme-header (signout)="onSignoutAsync()" (toggle)="onToggle()">
+    <app-app-theme-header (signout)="onSignoutAsync()" (toggle)="onToggle()" [username]="username">
         <app-theme-color-dropdown
             [dropdownItems$]="themeColorDropdownItems$"
             [selectedDropdownItem$]="selectedThemeColorDropdownItem$"

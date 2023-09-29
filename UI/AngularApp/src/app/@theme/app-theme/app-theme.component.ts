@@ -14,6 +14,7 @@ import { Observable } from 'rxjs';
 export class AppThemeComponent implements OnInit {
   selectedThemeColorDropdownItem$: Observable<ThemeColorDropdownItem>;
   themeColorDropdownItems$: Observable<ThemeColorDropdownItem[]>;
+  username: string = '';
 
   constructor(
     private authService: AuthService,
@@ -27,6 +28,7 @@ export class AppThemeComponent implements OnInit {
 
   ngOnInit(): void {
     this.themeToggleService.initializeToggle();
+    this.username = this.authService.getUserUsername();
   }
 
   onSelectColor(item: ThemeColorDropdownItem) {

@@ -15,8 +15,11 @@ export class ThemeColorDropdownComponent implements OnInit {
   selectedDropdownItem?: ThemeColorDropdownItem;
 
   ngOnInit(): void {
-    this.dropdownItems$?.subscribe(val => this.dropdownItems = val);
-    this.selectedDropdownItem$?.subscribe(val => this.selectedDropdownItem = val);
+    this.dropdownItems$?.subscribe(nextResponse =>
+      this.dropdownItems = nextResponse);
+
+    this.selectedDropdownItem$?.subscribe(nextResponse =>
+      this.selectedDropdownItem = nextResponse);
   }
 
   onSelectColor(item: ThemeColorDropdownItem) {

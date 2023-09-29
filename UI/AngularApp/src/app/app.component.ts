@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AuthService } from '@core/services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'AngularApp';
+
+  constructor(private authService: AuthService) {
+    // authService added just to load it starting the AppComponent
+  }
 }
