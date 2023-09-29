@@ -22,7 +22,13 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/silent-callback.html",
+              {
+                "glob": "oidc-client-ts.js",
+                "input": "node_modules/oidc-client-ts/dist/browser",
+                "output": "/"
+              }
             ],
             "allowedCommonJsDependencies": [
               "crypto-js"
