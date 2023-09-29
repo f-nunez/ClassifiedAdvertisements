@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PublicThemeComponent } from './public-theme.component';
-import { ComponentsModule } from './components/components.module';
+import { PublicThemeComponentsModule } from './components/public-theme-components.module';
 import { PublicThemeRoutingModule } from './public-theme-routing.module';
 import { ThemeComponentsModule } from '@theme/components/theme-components.module';
 
@@ -11,7 +11,7 @@ import { ThemeComponentsModule } from '@theme/components/theme-components.module
   ],
   imports: [
     CommonModule,
-    ComponentsModule,
+    PublicThemeComponentsModule,
     PublicThemeRoutingModule,
     ThemeComponentsModule
   ],

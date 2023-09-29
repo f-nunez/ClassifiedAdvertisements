@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { ThemeColorDropdownItem } from '@theme/models/theme-color-dropdown-item';
+import { ThemeColorDropdownItem } from '@theme/interfaces/theme-color-dropdown-item';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ThemeColorService {
-    private readonly defaultDropdownItem: ThemeColorDropdownItem;
+    private readonly defaultDropdownItem: ThemeColorDropdownItem = { iconClass: 'bi bi-circle-half', isSelected: true, text: 'Auto', themeColor: 'auto' };
     private dropdownItems: ThemeColorDropdownItem[];
     private dropdownItems$: BehaviorSubject<ThemeColorDropdownItem[]>;
     private selectedDropdownItem: ThemeColorDropdownItem;
     private selectedDropdownItem$: BehaviorSubject<ThemeColorDropdownItem>;
 
     constructor() {
-        this.defaultDropdownItem = new ThemeColorDropdownItem('bi bi-sun-fill', true, 'Auto', 'auto');
         this.dropdownItems = [];
         this.dropdownItems$ = new BehaviorSubject<ThemeColorDropdownItem[]>([]);
         this.selectedDropdownItem = this.defaultDropdownItem;
@@ -58,9 +57,9 @@ export class ThemeColorService {
         const themeColor = this.getThemeColorFromLocalStore();
 
         this.dropdownItems = [
-            new ThemeColorDropdownItem('bi bi-sun-fill', false, 'Light', 'light'),
-            new ThemeColorDropdownItem('bi bi-moon-stars-fill', false, 'Dark', 'dark'),
-            new ThemeColorDropdownItem('bi bi-circle-half', false, 'Auto', 'auto'),
+            { iconClass: 'bi bi-sun-fill', isSelected: false, text: 'Light', themeColor: 'light' },
+            { iconClass: 'bi bi-moon-stars-fill', isSelected: false, text: 'Dark', themeColor: 'dark' },
+            { iconClass: 'bi bi-circle-half', isSelected: false, text: 'Auto', themeColor: 'auto' }
         ];
 
         let selectedThemeColorDropdownItem = this.defaultDropdownItem;

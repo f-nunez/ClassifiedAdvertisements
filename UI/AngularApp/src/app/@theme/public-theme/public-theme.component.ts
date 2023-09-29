@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';
-import { ThemeColorDropdownItem } from '@theme/models/theme-color-dropdown-item';
+import { ThemeColorDropdownItem } from '@theme/interfaces/theme-color-dropdown-item';
 import { ThemeColorService } from '@theme/services/theme-color.service';
 import { Observable } from 'rxjs';
 

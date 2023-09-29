@@ -20,4 +20,4 @@ import { RouterModule } from '@angular/router';
     AppThemeSidebarComponent
   ]
 })
-export class ComponentsModule { }
+export class AppThemeComponentsModule { }

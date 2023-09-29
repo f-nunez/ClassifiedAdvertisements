@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ThemeColorDropdownItem } from '@theme/models/theme-color-dropdown-item';
+import { ThemeColorDropdownItem } from '@theme/interfaces/theme-color-dropdown-item';
 import { Observable } from 'rxjs';
 
 @Component({

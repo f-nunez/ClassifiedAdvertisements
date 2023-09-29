@@ -1,16 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MyAdsComponent } from './my-ads.component';
+import { MyAdsComponent } from './containers/my-ads/my-ads.component';
 
-const routes: Routes = [
-  { path: '', component: MyAdsComponent }
-];
+const routes: Routes = [{ path: '', component: MyAdsComponent }];
 
 @NgModule({
   declarations: [],
-  imports: [
-    RouterModule.forChild(routes)
-  ],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
 export class MyAdsRoutingModule { }
