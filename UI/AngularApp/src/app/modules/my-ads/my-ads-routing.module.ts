@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MyAdsComponent } from './containers/my-ads/my-ads.component';
+import { MyAdsListComponent } from './containers/my-ads-list/my-ads-list.component';
 
-const routes: Routes = [{ path: '', component: MyAdsComponent }];
+const routes: Routes = [{ path: '', component: MyAdsListComponent }];
 
 @NgModule({
   declarations: [],
