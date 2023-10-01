@@ -11,7 +11,6 @@ import { ThemeComponentsModule } from '@theme/components/theme-components.module
     AppThemeComponent
   ],
   imports: [
-    CommonModule,
     AppThemeComponentsModule,
     AppThemeRoutingModule,
     ThemeComponentsModule,
