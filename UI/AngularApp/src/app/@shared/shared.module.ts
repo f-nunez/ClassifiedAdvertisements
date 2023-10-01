@@ -9,6 +9,7 @@ import { DirectivesModule } from './directives/directives.module';
     DirectivesModule
   ],
   exports: [
+    CommonModule,
     DirectivesModule
   ],
   providers: []
