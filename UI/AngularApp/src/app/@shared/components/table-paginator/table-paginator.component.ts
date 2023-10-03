@@ -49,7 +49,7 @@ export class TablePaginatorComponent implements OnChanges {
     this.firePaginationEvent(this.selectedPageNumber + 1);
   }
 
-  onSelectPageSize(take: any): void {
+  onSelectPageSize(take: number): void {
     this.take = take;
     this.firePaginationEvent(this.selectedPageNumber);
   }
