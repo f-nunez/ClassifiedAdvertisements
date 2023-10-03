@@ -6,6 +6,24 @@ import { GetMyAdsListResponse } from '../interfaces/my-ads-list/get-my-ads-list-
 
 @Injectable()
 export class MyAdsService {
+    items: GetMyAdsListItem[] = [];
+
+    constructor() {
+        // populate fake data
+        const totalFakeItems = 115;
+        for (let i = 1; i <= totalFakeItems; i++) {
+            let dummyItem: GetMyAdsListItem = {
+                description: `The dummy description ${i}`,
+                id: `${i}`,
+                publishedOn: Date.now().toString(),
+                title: `The Dummy title ${i}`,
+                updatedOn: Date.now().toString()
+            };
+
+            this.items.push(dummyItem);
+        }
+    }
+
     public getMyAdsList(request: GetMyAdsListRequest): Observable<GetMyAdsListResponse> {
         let items: GetMyAdsListItem[] = [];
 
@@ -15,19 +33,14 @@ export class MyAdsService {
         // params = params.append('take', request.take);
         // response = httpClient.get<GetMyAdsListResponse>('apiQueryUrl' + 'myads', { params });
 
-        for (let i = 0; i < request.take; i++) {
-            let dummyItem: GetMyAdsListItem = {
-                description: `The dummy description ${i}`,
-                id: `${i}`,
-                publishedOn: Date.now().toString(),
-                title: `The Dummy title ${i} from page ${this.getSelectedPage(request.skip, request.take)}`,
-                updatedOn: Date.now().toString()
-            };
+        for (let i = request.skip; i < (request.skip + request.take); i++) {
+            if (i >= this.items.length)
+                break;
 
-            items.push(dummyItem);
+            items.push(this.items[i]);
         }
 
-        let response: GetMyAdsListResponse = { count: 110, items: items };
+        let response: GetMyAdsListResponse = { count: this.items.length, items: items };
 
         return of(response);
     }
