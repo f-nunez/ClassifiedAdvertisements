@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="card-body table-responsive" *ngIf="items.length > 0">
+    <div class="card-body table-responsive">
         <table class="table table-hover align-middle">
             <thead>
                 <tr>
@@ -45,62 +45,10 @@
             </tbody>
         </table>
 
-        <div class="paginator">
-            <div>
-                <span>Displaying page 1 of 2 (total 12 records)</span>
-            </div>
-
-            <div>
-                <ul class="pagination m-0">
-                    <li class="page-item disabled">
-                        <a class="page-link" tabindex="0" aria-label="First">
-                            <i class="bi bi-chevron-double-left"></i>
-                        </a>
-                    </li>
-                    <li class="page-item disabled">
-                        <a class="page-link" tabindex="0" aria-label="Previous">
-                            <i class="bi bi-chevron-left"></i>
-                        </a>
-                    </li>
-                    <li class="page-item active" aria-current="page">
-                        <a class="page-link" tabindex="0">1</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" tabindex="0">2</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" tabindex="0">3</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" tabindex="0" aria-label="Next">
-                            <i class="bi bi-chevron-right"></i>
-                        </a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" tabindex="0" aria-label="Last">
-                            <i class="bi bi-chevron-double-right"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div>
-                <div class="paginator-pagesize">
-                    <div>
-                        <select class="form-select paginator-pagesize-select"
-                            aria-label="page size" id="pageSize">
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
-                    </div>
-
-                    <span>records per page</span>
-                </div>
-            </div>
-        </div>
+        <app-table-paginator
+            [changes]="changes"
+            [count]="count"
+            (paginationEvent)="onPaginationEvent($event)">
+        </app-table-paginator>
     </div>
 </div>

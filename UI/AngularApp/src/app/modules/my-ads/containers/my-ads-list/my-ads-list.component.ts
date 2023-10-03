@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { GetMyAdsListItem } from '../../interfaces/my-ads-list/get-my-ads-list-item';
 import { MyAdsService } from '../../services/my-ads.service';
 import { GetMyAdsListRequest } from '../../interfaces/my-ads-list/get-my-ads-list-request';
+import { TablePaginatorEvent } from '@shared/components/table-paginator/table-paginator-event';
 
 @Component({
   selector: 'app-my-ads-list',
@@ -9,13 +10,19 @@ import { GetMyAdsListRequest } from '../../interfaces/my-ads-list/get-my-ads-lis
   styleUrls: ['./my-ads-list.component.css']
 })
 export class MyAdsListComponent {
+  changes: number = 0;
   count: number = 0;
   items: GetMyAdsListItem[] = [];
+  skip: number = 0;
+  take: number = 10;
 
-  constructor(private myAdService: MyAdsService) { }
+  constructor(private myAdService: MyAdsService) {
+    this.getMyAdsList(this.skip, this.take);
+  }
 
-  ngOnInit(): void {
-    this.getMyAdsList(0, 10);
+  onPaginationEvent(trigger: TablePaginatorEvent): void {
+    this.getMyAdsList(trigger.skip, trigger.take);
+    this.changes++;
   }
 
   private getMyAdsList(skip: number, take: number): void {
