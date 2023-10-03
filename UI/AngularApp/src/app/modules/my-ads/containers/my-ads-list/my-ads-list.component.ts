@@ -3,6 +3,7 @@ import { GetMyAdsListItem } from '../../interfaces/my-ads-list/get-my-ads-list-i
 import { MyAdsService } from '../../services/my-ads.service';
 import { GetMyAdsListRequest } from '../../interfaces/my-ads-list/get-my-ads-list-request';
 import { TablePaginatorEvent } from '@shared/components/table-paginator/table-paginator-event';
+import { Route, Router, Routes } from '@angular/router';
 
 @Component({
   selector: 'app-my-ads-list',
@@ -16,8 +17,12 @@ export class MyAdsListComponent {
   skip: number = 0;
   take: number = 10;
 
-  constructor(private myAdService: MyAdsService) {
+  constructor(private myAdService: MyAdsService, private router: Router) {
     this.getMyAdsList(this.skip, this.take);
+  }
+
+  onClickAdd(): void {
+    this.router.navigate(['create']);
   }
 
   onPaginationEvent(trigger: TablePaginatorEvent): void {
