@@ -1,9 +1,13 @@
 import { Type, NgModule } from '@angular/core';
 import { SharedModule } from '@shared/shared.module';
 import { MyAdsComponentsModule } from '../components/my-ads-components.module';
+import { MyAdsCreateComponent } from './my-ads-create/my-ads-create.component';
 import { MyAdsListComponent } from './my-ads-list/my-ads-list.component';
 
-const containers: Array<Type<any>> = [MyAdsListComponent];
+const containers: Array<Type<any>> = [
+  MyAdsCreateComponent,
+  MyAdsListComponent
+];
 
 @NgModule({
   declarations: [...containers],
