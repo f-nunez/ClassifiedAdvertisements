@@ -129,7 +129,7 @@ export class TablePaginatorComponent implements OnChanges {
   }
 
   getSkip(pageNumber: number, take: number): number {
-    let skip = (pageNumber - 1) * take + 1;
+    let skip = (pageNumber - 1) * take;
 
     return skip;
   }
