@@ -3,5 +3,6 @@ export interface GetMyAdsListItem {
     id: string,
     publishedOn: string,
     title: string,
-    updatedOn: string
+    updatedOn: string,
+    version: number
 }
