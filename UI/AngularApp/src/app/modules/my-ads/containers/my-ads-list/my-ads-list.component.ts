@@ -22,7 +22,7 @@ export class MyAdsListComponent {
   }
 
   onClickAdd(): void {
-    this.router.navigate(['create']);
+    this.router.navigate(['app/my-ads/create']);
   }
 
   onPaginationEvent(trigger: TablePaginatorEvent): void {
