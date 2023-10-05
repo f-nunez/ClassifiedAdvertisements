@@ -1,0 +1,14 @@
+<textarea
+    [class]="inputClass"
+    [formControl]="formControl"
+    [id]="id"
+    [ngClass]="validationClass"
+    [placeholder]="placeholder"
+    [required]="required"
+    [readonly]="readonly"
+    [rows]="rows">
+</textarea>
+
+<ng-container *ngIf="showErrorMessages()">
+    <div *ngFor="let error of errorMessages()" [class]="errorClass">{{error}}</div>
+</ng-container>
