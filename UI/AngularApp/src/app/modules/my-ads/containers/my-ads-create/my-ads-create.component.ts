@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { MyAdsService } from '../../services/my-ads.service';
+import { CreateMyAdRequest } from '../../interfaces/create-my-ad/create-my-ad-request';
 
 @Component({
   selector: 'app-my-ads-create',
@@ -10,7 +12,11 @@ import { Router } from '@angular/router';
 export class MyAdsCreateComponent {
   validated: boolean = false;
 
-  constructor(private router: Router, private formBuilder: FormBuilder) { }
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private myAdsService: MyAdsService
+  ) { }
 
   createAdForm = this.formBuilder.group({
     title: ['', Validators.required],
@@ -27,7 +33,18 @@ export class MyAdsCreateComponent {
     if (this.createAdForm.invalid)
       return;
 
-    alert('save it!');
+    let createMyAdRequest: CreateMyAdRequest = {
+      description: this.createAdForm.get('description')?.value ?? '',
+      title: this.createAdForm.get('title')?.value ?? ''
+    };
+
+    this.myAdsService.createMyAd(createMyAdRequest).subscribe({
+      next: (response) => {
+      },
+      error: (error) => { console.log(error); }
+    });
+
+    this.backToList();
   }
 
   private backToList(): void {
