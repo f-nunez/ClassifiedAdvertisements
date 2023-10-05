@@ -3,6 +3,8 @@ import { Observable, of } from 'rxjs';
 import { GetMyAdsListItem } from '../interfaces/my-ads-list/get-my-ads-list-item';
 import { GetMyAdsListRequest } from '../interfaces/my-ads-list/get-my-ads-list-request';
 import { GetMyAdsListResponse } from '../interfaces/my-ads-list/get-my-ads-list-response';
+import { CreateMyAdRequest } from '../interfaces/create-my-ad/create-my-ad-request';
+import { CreateMyAdResponse } from '../interfaces/create-my-ad/create-my-ad-response';
 
 @Injectable()
 export class MyAdsService {
@@ -10,6 +12,12 @@ export class MyAdsService {
 
     constructor() {
         this.populateMockedData();
+    }
+
+    public createMyAd(request: CreateMyAdRequest): Observable<CreateMyAdResponse> {
+        let response = this.createMockedAd(request);
+
+        return of(response);
     }
 
     public getMyAdsList(request: GetMyAdsListRequest): Observable<GetMyAdsListResponse> {
@@ -22,6 +30,23 @@ export class MyAdsService {
         let response = this.getMockedList(request);
 
         return of(response);
+    }
+
+    private createMockedAd(request: CreateMyAdRequest): CreateMyAdResponse {
+        let newId = this.items.length + 1;
+
+        let newDummyItem: GetMyAdsListItem = {
+            description: request.description,
+            id: `${newId}`,
+            publishedOn: Date.now().toString(),
+            title: request.title,
+            updatedOn: Date.now().toString(),
+            version: 0
+        };
+
+        this.items.push(newDummyItem);
+
+        return newDummyItem;
     }
 
     private getMockedList(request: GetMyAdsListRequest): GetMyAdsListResponse {
