@@ -12,8 +12,8 @@ export class RoleHelper {
         // Find any common element with O(n) complexity
         const setRolesA = new Set(rolesA);
 
-        for (let num of rolesB)
-            if (setRolesA.has(num))
+        for (let roleB of rolesB)
+            if (setRolesA.has(roleB))
                 return true;
 
         return false;
