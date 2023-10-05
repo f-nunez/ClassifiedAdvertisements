@@ -1,1 +1,46 @@
-<p>my-ads-create works!</p>
+<div class="page-title">
+    <div>
+        <h3 class="mb-0">Create Ad</h3>
+    </div>
+    <div>
+        <button type="button" class="btn btn-sm btn-outline-secondary btn-left-icon" (click)="onClickBackToList()">
+            <i class="bi bi-arrow-left"></i>BACK TO MY ADS LIST
+        </button>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <form [formGroup]="createAdForm" (ngSubmit)="onSubmitSave()">
+            <div class="mb-3">
+                <app-form-label [for]="'title'" [text]="'Title'" />
+                <app-form-input
+                    formControlName="title"
+                    [id]="'title'"
+                    [placeholder]="'Enter Title'"
+                    [validated]="validated"
+                    [validatorErrors]="[{ type: 'required', message: 'Title is required' }]" />
+            </div>
+
+            <div class="mb-3">
+                <app-form-label [for]="'description'" [text]="'Description'" />
+                <app-form-textarea
+                    formControlName="description"
+                    [id]="'description'"
+                    [placeholder]="'Enter Description'"
+                    [rows]="3"
+                    [validated]="validated"
+                    [validatorErrors]="[{ type: 'required', message: 'Description is required' }]" />
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <div></div>
+                <div>
+                    <button type="submit" class="btn btn-success btn-left-icon">
+                        <i class="bi bi-floppy"></i>SAVE AD
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
