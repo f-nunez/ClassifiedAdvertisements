@@ -1,5 +1,7 @@
-import { Component, ChangeDetectionStrategy, Input, Self } from '@angular/core';
-import { NgControl, FormControl, ControlValueAccessor } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, OnInit, Input, DestroyRef, Self } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ControlValueAccessor, NgControl, FormControl } from '@angular/forms';
+import { debounceTime, tap } from 'rxjs';
 
 @Component({
   selector: 'app-form-input',
@@ -7,79 +9,137 @@ import { NgControl, FormControl, ControlValueAccessor } from '@angular/forms';
   styleUrls: ['./form-input.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormInputComponent implements ControlValueAccessor {
-  @Input() customInputClass: string = '';
-  @Input() customErrorClass: string = '';
-  @Input() id: string = '';
-  @Input() placeholder: string = '';
-  @Input() required: boolean = false;
-  @Input() readonly: boolean = false;
-  @Input() type: string = 'text';
-  @Input() validated: boolean = false;
+export class FormInputComponent implements ControlValueAccessor, OnInit {
+  /**
+   * @description
+   * Primitive input value for ChangeDetectionStrategy.OnPush
+   * @usageNotes
+   * At component class (ex: `counter: number = 0`)
+   * 
+   * At component template (ex: `[changes] = counter`)
+   * 
+   * Trigger change detector increasing the counter (ex: `this.counter++`)
+   */
+  @Input() changes?: number;
+  @Input() customErrorClass?: string;
+  @Input() customInputClass?: string;
+  @Input() id?: string;
+  @Input() markAsTouchedOnFocus?: boolean
+  @Input() placeholder?: string;
+  @Input() readonly?: boolean;
+  @Input() type?: string;
   /**
    * @description
    * Contains messages for validator errors
    * 
    * @usageNotes
-   * Set validationErrors has a list of ValidatorError[]
+   * Set a list of ValidatorErrorMessage[]
    * 
-   * (ex: `validatorErrors = [{ type: 'required', message: 'Required' }]`)
+   * (ex: `validatorErrorMessages = [{ type: 'required', message: 'Required' }]`)
    */
-  @Input() validatorErrors: ValidatorError[] = [];
+  @Input() validatorErrorMessages: ValidatorErrorMessage[] = [];
+  disabled: boolean = false;
+  value: string = '';
 
-  constructor(@Self() public ngControl: NgControl) {
+  constructor(private destroyRef: DestroyRef, @Self() private ngControl: NgControl) {
     this.ngControl.valueAccessor = this;
   }
 
-  writeValue(obj: any): void { }
+  writeValue(obj: any): void {
+    this.value = obj;
+  }
 
-  registerOnChange(fn: any): void { }
+  registerOnChange(fn: any): void {
+    this.onChanged = fn;
+  }
 
-  registerOnTouched(fn: any): void { }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
 
-  setDisabledState?(isDisabled: boolean): void { }
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  ngOnInit(): void {
+    this.formControl.valueChanges
+      .pipe(
+        debounceTime(200),
+        tap(value => this.onChanged(value)),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe();
+  }
+
+  onChanged = (value: string) => { };
+
+  onFocus(): void {
+    if (this.markAsTouchedOnFocus)
+      this.onTouched();
+  }
+
+  onTouched = () => { };
+
+  onValueChanged(e: any): void {
+    if (this.disabled)
+      return;
+
+    this.value = e.target.value;
+    this.onChanged(this.value);
+  }
 
   get formControl(): FormControl {
     return this.ngControl.control as FormControl;
   }
 
-  get validationClass(): string {
-    if (!this.validated && !this.formControl.touched)
-      return '';
-
-    if (this.formControl.invalid || this.formControl.errors)
-      return 'is-invalid';
-
-    return 'is-valid';
-  }
-
-  get inputClass(): string {
-    const baseClass = 'form-control';
-    return this.customInputClass === '' ? baseClass : this.customInputClass;
-  }
-
-  get errorClass(): string {
+  get getErrorClass(): string {
     const baseClass = 'invalid-feedback';
-    return this.customErrorClass === '' ? baseClass : this.customErrorClass;
+    return this.customErrorClass ?? baseClass;
+  }
+
+  get getId(): string {
+    return this.id ?? '';
+  }
+
+  get getInputClass(): string {
+    const baseClass = 'form-control';
+    return this.customInputClass ?? baseClass;
+  }
+
+  get getPlaceholder(): string {
+    return this.placeholder ?? '';
+  }
+
+  get getReadonly(): boolean {
+    return this.readonly ?? false;
+  }
+
+  get getType(): string {
+    const baseType = 'text';
+    return this.type ?? baseType;
+  }
+
+  get getValidationClass(): string | null {
+    if (!this.formControl.touched)
+      return null;
+
+    return this.formControl.invalid ? 'is-invalid' : 'is-valid';
   }
 
   showErrorMessages(): boolean {
-    if (!this.validated && !this.formControl.touched)
+    if (!this.formControl.touched)
       return false;
 
-    if (this.formControl.invalid || this.formControl.errors)
-      return true;
-
-    return false;
+    return this.formControl.invalid;
   }
 
-  errorMessages(): string[] {
+  getErrorMessages(): string[] {
     let errorMessages: string[] = [];
 
-    if (!this.validatorErrors.length)
+    if (!this.validatorErrorMessages.length)
       return errorMessages;
 
-    for (let errorValidator of this.validatorErrors)
+    for (let errorValidator of this.validatorErrorMessages)
       if (this.formControl?.errors?.[errorValidator.type])
         errorMessages.push(errorValidator.message);
 
@@ -87,7 +147,7 @@ export class FormInputComponent implements ControlValueAccessor {
   }
 }
 
-interface ValidatorError {
+interface ValidatorErrorMessage {
   type: string,
   message: string
 }
