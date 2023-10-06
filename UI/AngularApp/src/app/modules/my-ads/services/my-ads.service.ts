@@ -8,6 +8,8 @@ import { CreateMyAdResponse } from '../interfaces/create-my-ad/create-my-ad-resp
 import { GetMyAdUpdateResponse } from '../interfaces/get-my-ad-update/get-my-ad-update-response';
 import { GetMyAdUpdateRequest } from '../interfaces/get-my-ad-update/get-my-ad-update-request';
 import { GetMyAdUpdateItem } from '../interfaces/get-my-ad-update/get-my-ad-update-item';
+import { UpdateMyAdRequest } from '../interfaces/update-my-ad/update-my-ad-request';
+import { UpdateMyAdResponse } from '../interfaces/update-my-ad/update-my-ad-response';
 
 @Injectable()
 export class MyAdsService {
@@ -37,6 +39,12 @@ export class MyAdsService {
         // response = httpClient.get<GetMyAdsListResponse>('apiQueryUrl' + 'myads', { params });
 
         let response = this.getMockedList(request);
+
+        return of(response);
+    }
+
+    public updateMyAd(request: UpdateMyAdRequest): Observable<UpdateMyAdResponse> {
+        let response = this.updateMockedAd(request);
 
         return of(response);
     }
@@ -109,5 +117,20 @@ export class MyAdsService {
 
             this.items.push(dummyItem);
         }
+    }
+
+    private updateMockedAd(request: UpdateMyAdRequest): UpdateMyAdResponse {
+        this.items.forEach(item => {
+            if (item.id == request.id) {
+                item.description = request.description;
+                item.publishedOn = Date.now().toString();
+                item.title = request.title;
+                item.updatedOn = Date.now().toString();
+                item.version++;
+                return;
+            }
+        });
+
+        return {};
     }
 }
