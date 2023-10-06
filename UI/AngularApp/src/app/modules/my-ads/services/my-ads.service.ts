@@ -5,10 +5,13 @@ import { GetMyAdsListRequest } from '../interfaces/my-ads-list/get-my-ads-list-r
 import { GetMyAdsListResponse } from '../interfaces/my-ads-list/get-my-ads-list-response';
 import { CreateMyAdRequest } from '../interfaces/create-my-ad/create-my-ad-request';
 import { CreateMyAdResponse } from '../interfaces/create-my-ad/create-my-ad-response';
+import { GetMyAdUpdateResponse } from '../interfaces/get-my-ad-update/get-my-ad-update-response';
+import { GetMyAdUpdateRequest } from '../interfaces/get-my-ad-update/get-my-ad-update-request';
+import { GetMyAdUpdateItem } from '../interfaces/get-my-ad-update/get-my-ad-update-item';
 
 @Injectable()
 export class MyAdsService {
-    items: GetMyAdsListItem[] = [];
+    private items: GetMyAdsListItem[] = [];
 
     constructor() {
         this.populateMockedData();
@@ -16,6 +19,12 @@ export class MyAdsService {
 
     public createMyAd(request: CreateMyAdRequest): Observable<CreateMyAdResponse> {
         let response = this.createMockedAd(request);
+
+        return of(response);
+    }
+
+    public getMyAdUpdate(request: GetMyAdUpdateRequest): Observable<GetMyAdUpdateResponse> {
+        let response = this.getMockedAdUpdate(request);
 
         return of(response);
     }
@@ -47,6 +56,27 @@ export class MyAdsService {
         this.items.push(newDummyItem);
 
         return newDummyItem;
+    }
+
+    private getMockedAdUpdate(request: GetMyAdUpdateRequest): GetMyAdUpdateResponse {
+        var foundItem: GetMyAdUpdateItem = {
+            description: '',
+            id: '',
+            title: '',
+            version: 0
+        };
+
+        this.items.forEach(item => {
+            if (item.id == request.id) {
+                foundItem.description = item.description;
+                foundItem.id = item.id;
+                foundItem.title = item.title;
+                foundItem.version = item.version;
+                return;
+            }
+        });
+
+        return { item: foundItem };
     }
 
     private getMockedList(request: GetMyAdsListRequest): GetMyAdsListResponse {
