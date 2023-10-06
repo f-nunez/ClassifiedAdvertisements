@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MyAdsService } from '../../services/my-ads.service';
 import { CreateMyAdRequest } from '../../interfaces/create-my-ad/create-my-ad-request';
@@ -10,44 +10,54 @@ import { CreateMyAdRequest } from '../../interfaces/create-my-ad/create-my-ad-re
   styleUrls: ['./my-ads-create.component.css']
 })
 export class MyAdsCreateComponent {
-  validated: boolean = false;
+  form: FormGroup;
+  formChanges: number = 0;
 
   constructor(
     private formBuilder: FormBuilder,
-    private router: Router,
-    private myAdsService: MyAdsService
-  ) { }
-
-  createAdForm = this.formBuilder.group({
-    title: ['', Validators.required],
-    description: ['', Validators.required]
-  });
+    private myAdsService: MyAdsService,
+    private router: Router
+  ) {
+    this.form = this.formBuilder.group({
+      title: ['', Validators.required],
+      description: ['', Validators.required]
+    });
+  }
 
   onClickBackToList(): void {
     this.backToList();
   }
 
-  onSubmitSave(): void {
-    this.validated = true;
+  onClickCancel(): void {
+    this.resetFormGroup();
+  }
 
-    if (this.createAdForm.invalid)
+  onSubmitSave(): void {
+    this.form.markAllAsTouched();
+    this.formChanges++;
+
+    if (this.form.invalid)
       return;
 
-    let createMyAdRequest: CreateMyAdRequest = {
-      description: this.createAdForm.get('description')?.value ?? '',
-      title: this.createAdForm.get('title')?.value ?? ''
+    let request: CreateMyAdRequest = {
+      description: this.form.get('description')?.value ?? '',
+      title: this.form.get('title')?.value ?? ''
     };
 
-    this.myAdsService.createMyAd(createMyAdRequest).subscribe({
+    this.myAdsService.createMyAd(request).subscribe({
       next: (response) => {
+        this.backToList();
       },
       error: (error) => { console.log(error); }
     });
-
-    this.backToList();
   }
 
   private backToList(): void {
     this.router.navigate(['app/my-ads']);
+  }
+
+  private resetFormGroup(): void {
+    this.form.reset();
+    this.formChanges++;
   }
 }

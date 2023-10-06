@@ -11,30 +11,34 @@
 
 <div class="card mt-4">
     <div class="card-body">
-        <form [formGroup]="createAdForm" (ngSubmit)="onSubmitSave()">
+        <form [formGroup]="form" (ngSubmit)="onSubmitSave()">
             <div class="mb-3">
                 <app-form-label [for]="'title'" [text]="'Title'" />
                 <app-form-input
                     formControlName="title"
+                    [changes]="formChanges"
                     [id]="'title'"
                     [placeholder]="'Enter Title'"
-                    [validated]="validated"
-                    [validatorErrors]="[{ type: 'required', message: 'Title is required' }]" />
+                    [validatorErrorMessages]="[{ type: 'required', message: 'Title is required' }]" />
             </div>
 
             <div class="mb-3">
                 <app-form-label [for]="'description'" [text]="'Description'" />
                 <app-form-textarea
                     formControlName="description"
+                    [changes]="formChanges"
                     [id]="'description'"
                     [placeholder]="'Enter Description'"
                     [rows]="3"
-                    [validated]="validated"
-                    [validatorErrors]="[{ type: 'required', message: 'Description is required' }]" />
+                    [validatorErrorMessages]="[{ type: 'required', message: 'Description is required' }]" />
             </div>
 
             <div class="d-flex justify-content-between">
-                <div></div>
+                <div>
+                    <button type="button" class="btn btn-success btn-left-icon" (click)="onClickCancel()">
+                        <i class="bi bi-floppy"></i>CANCEL
+                    </button>
+                </div>
                 <div>
                     <button type="submit" class="btn btn-success btn-left-icon">
                         <i class="bi bi-floppy"></i>SAVE AD
