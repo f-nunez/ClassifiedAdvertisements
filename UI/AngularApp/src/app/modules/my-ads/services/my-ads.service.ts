@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, delay, of } from 'rxjs';
 import { GetMyAdsListItem } from '../interfaces/my-ads-list/get-my-ads-list-item';
 import { GetMyAdsListRequest } from '../interfaces/my-ads-list/get-my-ads-list-request';
 import { GetMyAdsListResponse } from '../interfaces/my-ads-list/get-my-ads-list-response';
@@ -22,13 +22,13 @@ export class MyAdsService {
     public createMyAd(request: CreateMyAdRequest): Observable<CreateMyAdResponse> {
         let response = this.createMockedAd(request);
 
-        return of(response);
+        return of(response).pipe(delay(500));
     }
 
     public getMyAdUpdate(request: GetMyAdUpdateRequest): Observable<GetMyAdUpdateResponse> {
         let response = this.getMockedAdUpdate(request);
 
-        return of(response);
+        return of(response).pipe(delay(500));
     }
 
     public getMyAdsList(request: GetMyAdsListRequest): Observable<GetMyAdsListResponse> {
@@ -40,13 +40,13 @@ export class MyAdsService {
 
         let response = this.getMockedList(request);
 
-        return of(response);
+        return of(response).pipe(delay(500));
     }
 
     public updateMyAd(request: UpdateMyAdRequest): Observable<UpdateMyAdResponse> {
         let response = this.updateMockedAd(request);
 
-        return of(response);
+        return of(response).pipe(delay(500));
     }
 
     private createMockedAd(request: CreateMyAdRequest): CreateMyAdResponse {
