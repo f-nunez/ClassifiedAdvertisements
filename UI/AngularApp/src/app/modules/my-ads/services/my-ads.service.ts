@@ -10,6 +10,9 @@ import { GetMyAdUpdateRequest } from '../interfaces/get-my-ad-update/get-my-ad-u
 import { GetMyAdUpdateItem } from '../interfaces/get-my-ad-update/get-my-ad-update-item';
 import { UpdateMyAdRequest } from '../interfaces/update-my-ad/update-my-ad-request';
 import { UpdateMyAdResponse } from '../interfaces/update-my-ad/update-my-ad-response';
+import { GetMyAdDetailItem } from '../interfaces/get-my-ad-detail/get-my-ad-detail-item';
+import { GetMyAdDetailRequest } from '../interfaces/get-my-ad-detail/get-my-ad-detail-request';
+import { GetMyAdDetailResponse } from '../interfaces/get-my-ad-detail/get-my-ad-detail-response';
 
 @Injectable()
 export class MyAdsService {
@@ -21,6 +24,12 @@ export class MyAdsService {
 
     public createMyAd(request: CreateMyAdRequest): Observable<CreateMyAdResponse> {
         let response = this.createMockedAd(request);
+
+        return of(response).pipe(delay(500));
+    }
+
+    public getMyAdDetail(request: GetMyAdDetailRequest): Observable<GetMyAdDetailResponse> {
+        let response = this.getMockedAdDetail(request);
 
         return of(response).pipe(delay(500));
     }
@@ -64,6 +73,27 @@ export class MyAdsService {
         this.items.push(newDummyItem);
 
         return newDummyItem;
+    }
+
+    private getMockedAdDetail(request: GetMyAdDetailRequest): GetMyAdDetailResponse {
+        var foundItem: GetMyAdDetailItem = {
+            description: '',
+            id: '',
+            title: '',
+            version: 0
+        };
+
+        this.items.forEach(item => {
+            if (item.id == request.id) {
+                foundItem.description = item.description;
+                foundItem.id = item.id;
+                foundItem.title = item.title;
+                foundItem.version = item.version;
+                return;
+            }
+        });
+
+        return { item: foundItem };
     }
 
     private getMockedAdUpdate(request: GetMyAdUpdateRequest): GetMyAdUpdateResponse {
