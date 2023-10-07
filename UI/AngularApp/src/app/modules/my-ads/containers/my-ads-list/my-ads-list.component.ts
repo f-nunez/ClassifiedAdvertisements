@@ -25,6 +25,10 @@ export class MyAdsListComponent {
     this.router.navigate(['app/my-ads/create']);
   }
 
+  onClickDetail(id: string): void {
+    this.router.navigate(['app/my-ads/detail', id]);
+  }
+
   onClickEdit(id: string): void {
     this.router.navigate(['app/my-ads/update', id]);
   }
