@@ -1,8 +1,13 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Type } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedDirectivesModule } from './directives/shared-directives.module';
 import { SharedComponentsModule } from './components/shared-components.module';
+import { DataTableModule } from './modules/data-table/data-table.module';
+
+export const modules: Type<any>[] = [
+  DataTableModule
+];
 
 @NgModule({
   declarations: [],
@@ -11,14 +16,16 @@ import { SharedComponentsModule } from './components/shared-components.module';
     FormsModule,
     ReactiveFormsModule,
     SharedComponentsModule,
-    SharedDirectivesModule
+    SharedDirectivesModule,
+    ...modules
   ],
   exports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     SharedComponentsModule,
-    SharedDirectivesModule
+    SharedDirectivesModule,
+    ...modules
   ],
   providers: []
 })
