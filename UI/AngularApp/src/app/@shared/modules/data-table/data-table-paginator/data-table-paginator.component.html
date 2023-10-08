@@ -1,0 +1,53 @@
+<div class="paginator">
+    <div>
+        <span>Displaying page {{selectedPageNumber}} of {{totalPageNumbers}} (total {{totalRecordsCount}} records)</span>
+    </div>
+
+    <div>
+        <ul class="pagination m-0">
+            <li class="page-item {{isFirstEnabled ? '' : 'disabled'}}">
+                <a class="page-link" tabindex="0" aria-label="First" (click)="onClickFirst()">
+                    <i class="{{paginatorSetting.iconClassFirstButton}}"></i>
+                </a>
+            </li>
+            <li class="page-item {{isPreviousEnabled ? '' : 'disabled'}}">
+                <a class="page-link" tabindex="0" aria-label="Previous" (click)="onClickPrevious()">
+                    <i class="{{paginatorSetting.iconClassPreviousButton}}"></i>
+                </a>
+            </li>
+            <li class="page-item {{pageNumber.isSelected ? 'active' : ''}}" aria-current="page" *ngFor="let pageNumber of pageNumbers">
+                <a class="page-link" tabindex="0" (click)="onClickPageNumber(pageNumber.number)">{{pageNumber.text}}</a>
+            </li>
+            <li class="page-item {{isNextEnabled ? '' : 'disabled'}}">
+                <a class="page-link" tabindex="0" aria-label="Next" (click)="onClickNext()">
+                    <i class="{{paginatorSetting.iconClassNextButton}}"></i>
+                </a>
+            </li>
+            <li class="page-item {{isLastEnabled ? '' : 'disabled'}}">
+                <a class="page-link" tabindex="0" aria-label="Last" (click)="onClickLast()">
+                    <i class="{{paginatorSetting.iconClassLastButton}}"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div>
+        <div class="paginator-pagesize">
+            <div>
+                <select
+                    class="form-select paginator-pagesize-select"
+                    aria-label="page size"
+                    (ngModelChange)="onSelectPageSize($event)"
+                    [(ngModel)]="selectedPageSize">
+                    <option
+                        *ngFor="let pagesize of paginatorSetting.pageSizeOptions"
+                        [ngValue]="pagesize">
+                        {{pagesize}}
+                    </option>
+                </select>
+            </div>
+
+            <span>records per page</span>
+        </div>
+    </div>
+</div>
