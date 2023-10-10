@@ -3,6 +3,7 @@ import { GetMyAdsListItem } from '../../interfaces/my-ads-list/get-my-ads-list-i
 import { MyAdsService } from '../../services/my-ads.service';
 import { GetMyAdsListRequest } from '../../interfaces/my-ads-list/get-my-ads-list-request';
 import { Router } from '@angular/router';
+import { DeleteMyAdRequest } from '../../interfaces/delete-my-ad/delete-my-ad-request';
 import { DataTableSetting } from '@shared/modules/data-table';
 
 @Component({
@@ -38,12 +39,26 @@ export class MyAdsListComponent {
     this.router.navigate(['app/my-ads/create']);
   }
 
+  onClickDelete(id: string): void {
+    this.deleteMyAd(id);
+  }
+
   onClickDetail(id: string): void {
     this.router.navigate(['app/my-ads/detail', id]);
   }
 
   onClickEdit(id: string): void {
     this.router.navigate(['app/my-ads/update', id]);
+  }
+
+  private deleteMyAd(id: string): void {
+    let request: DeleteMyAdRequest = { id: id };
+    this.myAdsService.deleteMyAd(request).subscribe({
+      next: (response) => {
+        this.getMyAdsList();
+      },
+      error: (error) => { console.log(error); }
+    });
   }
 
   private getDataTableSetting(): DataTableSetting {
