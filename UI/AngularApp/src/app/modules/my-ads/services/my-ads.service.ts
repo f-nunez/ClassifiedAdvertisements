@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
-import { GetMyAdsListItem } from '../interfaces/my-ads-list/get-my-ads-list-item';
-import { GetMyAdsListRequest } from '../interfaces/my-ads-list/get-my-ads-list-request';
-import { GetMyAdsListResponse } from '../interfaces/my-ads-list/get-my-ads-list-response';
+import { GetMyAdsListItem } from '../interfaces/get-my-ads-list/get-my-ads-list-item';
+import { GetMyAdsListRequest } from '../interfaces/get-my-ads-list/get-my-ads-list-request';
+import { GetMyAdsListResponse } from '../interfaces/get-my-ads-list/get-my-ads-list-response';
 import { CreateMyAdRequest } from '../interfaces/create-my-ad/create-my-ad-request';
 import { CreateMyAdResponse } from '../interfaces/create-my-ad/create-my-ad-response';
 import { GetMyAdUpdateResponse } from '../interfaces/get-my-ad-update/get-my-ad-update-response';
