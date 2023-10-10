@@ -13,6 +13,8 @@ import { UpdateMyAdResponse } from '../interfaces/update-my-ad/update-my-ad-resp
 import { GetMyAdDetailItem } from '../interfaces/get-my-ad-detail/get-my-ad-detail-item';
 import { GetMyAdDetailRequest } from '../interfaces/get-my-ad-detail/get-my-ad-detail-request';
 import { GetMyAdDetailResponse } from '../interfaces/get-my-ad-detail/get-my-ad-detail-response';
+import { DeleteMyAdRequest } from '../interfaces/delete-my-ad/delete-my-ad-request';
+import { DeleteMyAdResponse } from '../interfaces/delete-my-ad/delete-my-ad-response';
 
 @Injectable()
 export class MyAdsService {
@@ -24,6 +26,12 @@ export class MyAdsService {
 
     public createMyAd(request: CreateMyAdRequest): Observable<CreateMyAdResponse> {
         let response = this.createMockedAd(request);
+
+        return of(response).pipe(delay(500));
+    }
+
+    public deleteMyAd(request: DeleteMyAdRequest): Observable<DeleteMyAdResponse> {
+        let response = this.deleteMockedAd(request);
 
         return of(response).pipe(delay(500));
     }
@@ -73,6 +81,12 @@ export class MyAdsService {
         this.items.push(newDummyItem);
 
         return newDummyItem;
+    }
+
+    private deleteMockedAd(request: DeleteMyAdRequest): DeleteMyAdResponse {
+        this.items = this.items.filter(obj => obj.id !== request.id);
+
+        return {};
     }
 
     private getMockedAdDetail(request: GetMyAdDetailRequest): GetMyAdDetailResponse {
