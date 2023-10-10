@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { GetMyAdsListItem } from '../../interfaces/my-ads-list/get-my-ads-list-item';
-import { MyAdsService } from '../../services/my-ads.service';
-import { GetMyAdsListRequest } from '../../interfaces/my-ads-list/get-my-ads-list-request';
 import { Router } from '@angular/router';
-import { DeleteMyAdRequest } from '../../interfaces/delete-my-ad/delete-my-ad-request';
 import { DataTableSetting } from '@shared/modules/data-table';
+import { DeleteMyAdRequest } from '../../interfaces/delete-my-ad/delete-my-ad-request';
+import { GetMyAdsListItem } from '../../interfaces/get-my-ads-list/get-my-ads-list-item';
+import { GetMyAdsListRequest } from '../../interfaces/get-my-ads-list/get-my-ads-list-request';
+import { MyAdsService } from '../../services/my-ads.service';
 
 @Component({
   selector: 'app-my-ads-list',
