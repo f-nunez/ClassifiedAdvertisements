@@ -1,4 +1,6 @@
 export interface GetMyAdsListRequest {
     skip: number,
-    take: number
+    sortAscending: boolean
+    sortColumn: string,
+    take: number,
 }
