@@ -118,6 +118,37 @@ export class MyAdsService {
     }
 
     private getMockedList(request: GetMyAdsListRequest): GetMyAdsListResponse {
+        if (!!request.sortColumn) {
+            switch (request.sortColumn) {
+                case 'title':
+                    if (request.sortAscending)
+                        this.items.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
+                    else
+                        this.items.sort((a, b) => b.title.localeCompare(a.title, undefined, { numeric: true, sensitivity: 'base' }));
+                    break;
+                case 'description':
+                    if (request.sortAscending)
+                        this.items.sort((a, b) => a.description.localeCompare(b.description, undefined, { numeric: true, sensitivity: 'base' }));
+                    else
+                        this.items.sort((a, b) => b.description.localeCompare(a.description, undefined, { numeric: true, sensitivity: 'base' }));
+                    break;
+                case 'publishedOn':
+                    if (request.sortAscending)
+                        this.items.sort((a, b) => a.publishedOn.localeCompare(b.publishedOn, undefined, { numeric: true, sensitivity: 'base' }));
+                    else
+                        this.items.sort((a, b) => b.publishedOn.localeCompare(a.publishedOn, undefined, { numeric: true, sensitivity: 'base' }));
+                    break;
+                case 'updatedOn':
+                    if (request.sortAscending)
+                        this.items.sort((a, b) => a.updatedOn.localeCompare(b.updatedOn, undefined, { numeric: true, sensitivity: 'base' }));
+                    else
+                        this.items.sort((a, b) => b.updatedOn.localeCompare(a.updatedOn, undefined, { numeric: true, sensitivity: 'base' }));
+                    break;
+                default:
+                    break;
+            }
+        }
+
         let items: GetMyAdsListItem[] = [];
 
         for (let i = request.skip; i < (request.skip + request.take); i++) {
@@ -136,12 +167,14 @@ export class MyAdsService {
         const totalFakeItems = 115;
 
         for (let i = 1; i <= totalFakeItems; i++) {
+            let date = new Date();
+            date.setDate(date.getDate() + (i - totalFakeItems));
             let dummyItem: GetMyAdsListItem = {
                 description: `The dummy description ${i}`,
                 id: `${i}`,
-                publishedOn: Date.now().toString(),
+                publishedOn: date.getTime().toString(),
                 title: `The Dummy title ${i}`,
-                updatedOn: Date.now().toString(),
+                updatedOn: date.getTime().toString(),
                 version: 0
             };
 
