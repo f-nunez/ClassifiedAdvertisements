@@ -1,0 +1,16 @@
+<textarea
+    [class]="getInputClass"
+    [disabled]="disabled"
+    [id]="getId"
+    (focus)="onFocus()"
+    (keyup)="onValueChanged($event)"
+    [ngClass]="getValidationClass"
+    [placeholder]="getPlaceholder"
+    [readonly]="getReadonly"
+    [rows]="getRows"
+    [value]="value">
+</textarea>
+
+<ng-container *ngIf="showErrorMessages()">
+    <div *ngFor="let error of getErrorMessages()" [class]="getErrorClass">{{error}}</div>
+</ng-container>

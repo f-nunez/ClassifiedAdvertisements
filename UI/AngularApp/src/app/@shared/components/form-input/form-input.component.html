@@ -1,0 +1,15 @@
+<input
+    [class]="getInputClass"
+    [disabled]="disabled"
+    [id]="getId"
+    (focus)="onFocus()"
+    (keyup)="onValueChanged($event)"
+    [ngClass]="getValidationClass"
+    [placeholder]="getPlaceholder"
+    [readonly]="getReadonly"
+    [type]="getType"
+    [value]="value" />
+
+<ng-container *ngIf="showErrorMessages()">
+    <div *ngFor="let error of getErrorMessages()" [class]="getErrorClass">{{error}}</div>
+</ng-container>

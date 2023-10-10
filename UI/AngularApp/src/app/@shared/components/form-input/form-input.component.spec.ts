@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MyAdsComponent } from './my-ads.component';
+import { FormInputComponent } from './form-input.component';
 
-describe('MyAdsComponent', () => {
-  let component: MyAdsComponent;
-  let fixture: ComponentFixture<MyAdsComponent>;
+describe('FormInputComponent', () => {
+  let component: FormInputComponent;
+  let fixture: ComponentFixture<FormInputComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [MyAdsComponent]
+      declarations: [FormInputComponent]
     });
-    fixture = TestBed.createComponent(MyAdsComponent);
+    fixture = TestBed.createComponent(FormInputComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

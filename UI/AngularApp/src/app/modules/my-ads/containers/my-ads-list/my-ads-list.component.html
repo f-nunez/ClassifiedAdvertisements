@@ -1,0 +1,41 @@
+<div class="page-title">
+    <div>
+        <h3 class="mb-0">My Ads</h3>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <div class="d-flex">
+            <button type="button" class="btn btn-primary btn-left-icon" (click)="onClickAdd()">
+                <i class="bi bi-plus-lg"></i>ADD
+            </button>
+        </div>
+    </div>
+
+    <div class="card-body table-responsive">
+        <app-data-table
+            [setting]="dataTableSetting"
+            [data]="items"
+            [totalRecordsCount]="count"
+            (loadData)="onLoadData($event)">
+            <tr *dataTableRow="let item of items">
+                <td>{{item.title}}</td>
+                <td>{{item.description}}</td>
+                <td>{{item.updatedOn | date: "short"}}</td>
+                <td>{{item.publishedOn | date: "short"}}</td>
+                <td class="actions">
+                    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="onClickDetail(item.id)">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" (click)="onClickEdit(item.id)">
+                        <i class="bi bi-pen"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="onClickDelete(item.id)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+        </app-data-table>
+    </div>
+</div>

@@ -10,7 +10,6 @@ import { ThemeComponentsModule } from '@theme/components/theme-components.module
     PublicThemeComponent
   ],
   imports: [
-    CommonModule,
     PublicThemeComponentsModule,
     PublicThemeRoutingModule,
     ThemeComponentsModule

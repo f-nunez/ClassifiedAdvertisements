@@ -1,0 +1,35 @@
+<div class="page-title">
+    <div>
+        <h3 class="mb-0">Detail Ad</h3>
+    </div>
+    <div>
+        <button type="button" class="btn btn-sm btn-outline-secondary btn-left-icon" (click)="onClickBackToList()">
+            <i class="bi bi-arrow-left"></i>BACK TO MY ADS LIST
+        </button>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <form [formGroup]="form">
+            <div class="mb-3">
+                <app-form-label [for]="'title'" [text]="'Title'" />
+                <app-form-input
+                    formControlName="title"
+                    [changes]="formChanges"
+                    [id]="'title'"
+                    [readonly]="true" />
+            </div>
+
+            <div class="mb-3">
+                <app-form-label [for]="'description'" [text]="'Description'" />
+                <app-form-textarea
+                    formControlName="description"
+                    [changes]="formChanges"
+                    [id]="'description'"
+                    [readonly]="true"
+                    [rows]="3" />
+            </div>
+        </form>
+    </div>
+</div>
