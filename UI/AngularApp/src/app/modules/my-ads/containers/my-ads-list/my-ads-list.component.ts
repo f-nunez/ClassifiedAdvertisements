@@ -78,10 +78,11 @@ export class MyAdsListComponent {
 
   private loadData(): void {
     let request: GetMyAdListRequest = {
-      skip: this.skip,
-      take: this.take,
-      sortColumn: this.sortColumnPropertyName,
-      sortAscending: this.sortIsAscending
+      dataTableRequest: {
+        skip: this.skip,
+        take: this.take,
+        sorts: [{ isAscending: this.sortIsAscending, propertyName: this.sortColumnPropertyName }]
+      }
     };
 
     this.myAdsService.getMyAdsList(request).subscribe({
