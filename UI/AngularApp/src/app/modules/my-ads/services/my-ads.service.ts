@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Observable, delay, of } from 'rxjs';
-import { GetMyAdsListItem } from '../interfaces/get-my-ads-list/get-my-ads-list-item';
-import { GetMyAdsListRequest } from '../interfaces/get-my-ads-list/get-my-ads-list-request';
-import { GetMyAdsListResponse } from '../interfaces/get-my-ads-list/get-my-ads-list-response';
+import { GetMyAdListItem } from '../interfaces/get-my-ad-list/get-my-ad-list-item';
+import { GetMyAdListRequest } from '../interfaces/get-my-ad-list/get-my-ad-list-request';
+import { GetMyAdListResponse } from '../interfaces/get-my-ad-list/get-my-ad-list-response';
 import { CreateMyAdRequest } from '../interfaces/create-my-ad/create-my-ad-request';
 import { CreateMyAdResponse } from '../interfaces/create-my-ad/create-my-ad-response';
 import { GetMyAdUpdateResponse } from '../interfaces/get-my-ad-update/get-my-ad-update-response';
 import { GetMyAdUpdateRequest } from '../interfaces/get-my-ad-update/get-my-ad-update-request';
-import { GetMyAdUpdateItem } from '../interfaces/get-my-ad-update/get-my-ad-update-item';
+import { GetMyAdUpdate } from '../interfaces/get-my-ad-update/get-my-ad-update';
 import { UpdateMyAdRequest } from '../interfaces/update-my-ad/update-my-ad-request';
 import { UpdateMyAdResponse } from '../interfaces/update-my-ad/update-my-ad-response';
-import { GetMyAdDetailItem } from '../interfaces/get-my-ad-detail/get-my-ad-detail-item';
+import { GetMyAdDetail } from '../interfaces/get-my-ad-detail/get-my-ad-detail';
 import { GetMyAdDetailRequest } from '../interfaces/get-my-ad-detail/get-my-ad-detail-request';
 import { GetMyAdDetailResponse } from '../interfaces/get-my-ad-detail/get-my-ad-detail-response';
 import { DeleteMyAdRequest } from '../interfaces/delete-my-ad/delete-my-ad-request';
@@ -18,7 +18,7 @@ import { DeleteMyAdResponse } from '../interfaces/delete-my-ad/delete-my-ad-resp
 
 @Injectable()
 export class MyAdsService {
-    private items: GetMyAdsListItem[] = [];
+    private items: GetMyAdListItem[] = [];
 
     constructor() {
         this.populateMockedData();
@@ -48,7 +48,7 @@ export class MyAdsService {
         return of(response).pipe(delay(500));
     }
 
-    public getMyAdsList(request: GetMyAdsListRequest): Observable<GetMyAdsListResponse> {
+    public getMyAdsList(request: GetMyAdListRequest): Observable<GetMyAdListResponse> {
         // TODO: http request to the query api
         // let params = new HttpParams();
         // params = params.append('skip', request.skip);
@@ -69,7 +69,7 @@ export class MyAdsService {
     private createMockedAd(request: CreateMyAdRequest): CreateMyAdResponse {
         let newId = this.items.length + 1;
 
-        let newDummyItem: GetMyAdsListItem = {
+        let newDummyItem: GetMyAdListItem = {
             description: request.description,
             id: `${newId}`,
             publishedOn: Date.now().toString(),
@@ -90,7 +90,7 @@ export class MyAdsService {
     }
 
     private getMockedAdDetail(request: GetMyAdDetailRequest): GetMyAdDetailResponse {
-        var foundItem: GetMyAdDetailItem = {
+        var foundItem: GetMyAdDetail = {
             description: '',
             id: '',
             title: '',
@@ -107,11 +107,11 @@ export class MyAdsService {
             }
         });
 
-        return { item: foundItem };
+        return { getMyAdDetail: foundItem };
     }
 
     private getMockedAdUpdate(request: GetMyAdUpdateRequest): GetMyAdUpdateResponse {
-        var foundItem: GetMyAdUpdateItem = {
+        var foundItem: GetMyAdUpdate = {
             description: '',
             id: '',
             title: '',
@@ -128,10 +128,10 @@ export class MyAdsService {
             }
         });
 
-        return { item: foundItem };
+        return { getMyAdUpdate: foundItem };
     }
 
-    private getMockedList(request: GetMyAdsListRequest): GetMyAdsListResponse {
+    private getMockedList(request: GetMyAdListRequest): GetMyAdListResponse {
         if (!!request.sortColumn) {
             switch (request.sortColumn) {
                 case 'title':
@@ -163,7 +163,7 @@ export class MyAdsService {
             }
         }
 
-        let items: GetMyAdsListItem[] = [];
+        let items: GetMyAdListItem[] = [];
 
         for (let i = request.skip; i < (request.skip + request.take); i++) {
             if (i >= this.items.length)
@@ -172,7 +172,7 @@ export class MyAdsService {
             items.push(this.items[i]);
         }
 
-        let response: GetMyAdsListResponse = { count: this.items.length, items: items };
+        let response: GetMyAdListResponse = { count: this.items.length, items: items };
 
         return response;
     }
@@ -183,7 +183,7 @@ export class MyAdsService {
         for (let i = 1; i <= totalFakeItems; i++) {
             let date = new Date();
             date.setDate(date.getDate() + (i - totalFakeItems));
-            let dummyItem: GetMyAdsListItem = {
+            let dummyItem: GetMyAdListItem = {
                 description: `The dummy description ${i}`,
                 id: `${i}`,
                 publishedOn: date.getTime().toString(),
