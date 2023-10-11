@@ -1,5 +1,5 @@
-import { GetMyAdDetailItem } from './get-my-ad-detail-item';
+import { GetMyAdDetail } from './get-my-ad-detail';
 
 export interface GetMyAdDetailResponse {
-    item: GetMyAdDetailItem
+    getMyAdDetail: GetMyAdDetail
 }
