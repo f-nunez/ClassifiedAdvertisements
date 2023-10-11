@@ -1,4 +1,4 @@
-export interface GetMyAdsListItem {
+export interface GetMyAdListItem {
     description: string,
     id: string,
     publishedOn: string,
