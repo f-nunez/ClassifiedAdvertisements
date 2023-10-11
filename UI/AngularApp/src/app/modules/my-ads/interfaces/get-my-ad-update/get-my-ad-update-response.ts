@@ -1,5 +1,5 @@
-import { GetMyAdUpdateItem } from './get-my-ad-update-item';
+import { GetMyAdUpdate } from './get-my-ad-update';
 
 export interface GetMyAdUpdateResponse {
-    item: GetMyAdUpdateItem
+    getMyAdUpdate: GetMyAdUpdate
 }
