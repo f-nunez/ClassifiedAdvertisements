@@ -1,6 +1,5 @@
+import { DataTableRequest } from '@shared/interfaces/data-table-request';
+
 export interface GetMyAdListRequest {
-    skip: number,
-    sortAscending: boolean
-    sortColumn: string,
-    take: number,
+    dataTableRequest: DataTableRequest
 }
