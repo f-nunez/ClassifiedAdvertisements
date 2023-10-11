@@ -132,28 +132,28 @@ export class MyAdsService {
     }
 
     private getMockedList(request: GetMyAdListRequest): GetMyAdListResponse {
-        if (!!request.sortColumn) {
-            switch (request.sortColumn) {
+        if (!!request.dataTableRequest.sorts) {
+            switch (request.dataTableRequest.sorts[0].propertyName) {
                 case 'title':
-                    if (request.sortAscending)
+                    if (request.dataTableRequest.sorts[0].isAscending)
                         this.items.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: 'base' }));
                     else
                         this.items.sort((a, b) => b.title.localeCompare(a.title, undefined, { numeric: true, sensitivity: 'base' }));
                     break;
                 case 'description':
-                    if (request.sortAscending)
+                    if (request.dataTableRequest.sorts[0].isAscending)
                         this.items.sort((a, b) => a.description.localeCompare(b.description, undefined, { numeric: true, sensitivity: 'base' }));
                     else
                         this.items.sort((a, b) => b.description.localeCompare(a.description, undefined, { numeric: true, sensitivity: 'base' }));
                     break;
                 case 'publishedOn':
-                    if (request.sortAscending)
+                    if (request.dataTableRequest.sorts[0].isAscending)
                         this.items.sort((a, b) => a.publishedOn.localeCompare(b.publishedOn, undefined, { numeric: true, sensitivity: 'base' }));
                     else
                         this.items.sort((a, b) => b.publishedOn.localeCompare(a.publishedOn, undefined, { numeric: true, sensitivity: 'base' }));
                     break;
                 case 'updatedOn':
-                    if (request.sortAscending)
+                    if (request.dataTableRequest.sorts[0].isAscending)
                         this.items.sort((a, b) => a.updatedOn.localeCompare(b.updatedOn, undefined, { numeric: true, sensitivity: 'base' }));
                     else
                         this.items.sort((a, b) => b.updatedOn.localeCompare(a.updatedOn, undefined, { numeric: true, sensitivity: 'base' }));
@@ -164,8 +164,10 @@ export class MyAdsService {
         }
 
         let items: GetMyAdListItem[] = [];
+        let skip = request.dataTableRequest.skip;
+        let take = request.dataTableRequest.take;
 
-        for (let i = request.skip; i < (request.skip + request.take); i++) {
+        for (let i = skip; i < (skip + take); i++) {
             if (i >= this.items.length)
                 break;
 
