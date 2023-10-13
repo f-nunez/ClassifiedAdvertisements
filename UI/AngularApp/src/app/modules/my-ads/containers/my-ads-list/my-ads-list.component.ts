@@ -87,8 +87,8 @@ export class MyAdsListComponent {
 
     this.myAdsService.getMyAdsList(request).subscribe({
       next: (response) => {
-        this.count = response.count;
-        this.items = response.items;
+        this.count = response.dataTableResponse.count;
+        this.items = response.dataTableResponse.items;
       },
       error: (error) => { console.log(error); }
     });
