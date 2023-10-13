@@ -15,6 +15,7 @@ import { GetMyAdDetailRequest } from '../interfaces/get-my-ad-detail/get-my-ad-d
 import { GetMyAdDetailResponse } from '../interfaces/get-my-ad-detail/get-my-ad-detail-response';
 import { DeleteMyAdRequest } from '../interfaces/delete-my-ad/delete-my-ad-request';
 import { DeleteMyAdResponse } from '../interfaces/delete-my-ad/delete-my-ad-response';
+import { DataTableResponse } from '@shared/interfaces/data-table-response';
 
 @Injectable()
 export class MyAdsService {
@@ -174,7 +175,14 @@ export class MyAdsService {
             items.push(this.items[i]);
         }
 
-        let response: GetMyAdListResponse = { count: this.items.length, items: items };
+        let dataTableResponse: DataTableResponse<GetMyAdListItem> = {
+            count: this.items.length,
+            items: items
+        }
+
+        let response: GetMyAdListResponse = {
+            dataTableResponse: dataTableResponse
+        };
 
         return response;
     }
