@@ -39,8 +39,8 @@ export class MyAdsListComponent {
     this.router.navigate(['app/my-ads/create']);
   }
 
-  onClickDelete(id: string): void {
-    this.deleteMyAd(id);
+  onClickDelete(id: string, version: number): void {
+    this.deleteMyAd(id, version);
   }
 
   onClickDetail(id: string): void {
@@ -51,8 +51,8 @@ export class MyAdsListComponent {
     this.router.navigate(['app/my-ads/update', id]);
   }
 
-  private deleteMyAd(id: string): void {
-    let request: DeleteMyAdRequest = { id: id };
+  private deleteMyAd(id: string, version: number): void {
+    let request: DeleteMyAdRequest = { id: id, version: version };
     this.myAdsService.deleteMyAd(request).subscribe({
       next: (response) => {
         this.loadData();
