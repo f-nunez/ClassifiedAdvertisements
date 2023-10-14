@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTableSetting } from '@shared/modules/data-table';
 import { DeleteMyAdRequest } from '../../interfaces/delete-my-ad/delete-my-ad-request';
-import { GetMyAdsListItem } from '../../interfaces/get-my-ads-list/get-my-ads-list-item';
-import { GetMyAdsListRequest } from '../../interfaces/get-my-ads-list/get-my-ads-list-request';
+import { GetMyAdListItem } from '../../interfaces/get-my-ad-list/get-my-ad-list-item';
+import { GetMyAdListRequest } from '../../interfaces/get-my-ad-list/get-my-ad-list-request';
 import { MyAdsService } from '../../services/my-ads.service';
 
 @Component({
@@ -13,7 +13,7 @@ import { MyAdsService } from '../../services/my-ads.service';
 })
 export class MyAdsListComponent {
   count: number = 0;
-  items: GetMyAdsListItem[] = [];
+  items: GetMyAdListItem[] = [];
   skip: number = 0;
   take: number = 10;
   sortColumnPropertyName: string = '';
@@ -32,15 +32,15 @@ export class MyAdsListComponent {
     this.take = value.take;
     this.sortColumnPropertyName = value.sortColumnPropertyName;
     this.sortIsAscending = value.sortIsAscending;
-    this.getMyAdsList();
+    this.loadData();
   }
 
   onClickAdd(): void {
     this.router.navigate(['app/my-ads/create']);
   }
 
-  onClickDelete(id: string): void {
-    this.deleteMyAd(id);
+  onClickDelete(id: string, version: number): void {
+    this.deleteMyAd(id, version);
   }
 
   onClickDetail(id: string): void {
@@ -51,11 +51,11 @@ export class MyAdsListComponent {
     this.router.navigate(['app/my-ads/update', id]);
   }
 
-  private deleteMyAd(id: string): void {
-    let request: DeleteMyAdRequest = { id: id };
+  private deleteMyAd(id: string, version: number): void {
+    let request: DeleteMyAdRequest = { id: id, version: version };
     this.myAdsService.deleteMyAd(request).subscribe({
       next: (response) => {
-        this.getMyAdsList();
+        this.loadData();
       },
       error: (error) => { console.log(error); }
     });
@@ -76,18 +76,19 @@ export class MyAdsListComponent {
     return this.dataTableSetting;
   }
 
-  private getMyAdsList(): void {
-    let request: GetMyAdsListRequest = {
-      skip: this.skip,
-      take: this.take,
-      sortColumn: this.sortColumnPropertyName,
-      sortAscending: this.sortIsAscending
+  private loadData(): void {
+    let request: GetMyAdListRequest = {
+      dataTableRequest: {
+        skip: this.skip,
+        take: this.take,
+        sorts: [{ isAscending: this.sortIsAscending, propertyName: this.sortColumnPropertyName }]
+      }
     };
 
     this.myAdsService.getMyAdsList(request).subscribe({
       next: (response) => {
-        this.count = response.count;
-        this.items = response.items;
+        this.count = response.dataTableResponse.count;
+        this.items = response.dataTableResponse.items;
       },
       error: (error) => { console.log(error); }
     });

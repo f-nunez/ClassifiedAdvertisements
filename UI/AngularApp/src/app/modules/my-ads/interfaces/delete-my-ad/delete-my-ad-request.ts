@@ -1,3 +1,4 @@
 export interface DeleteMyAdRequest {
-    id: string
+    id: string,
+    version: number
 }

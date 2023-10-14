@@ -1,0 +1,8 @@
+export interface GetMyAdListItem {
+    description: string,
+    id: string,
+    publishedOn: string,
+    title: string,
+    updatedOn: string,
+    version: number
+}

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GetMyAdDetailRequest } from '../../interfaces/get-my-ad-detail/get-my-ad-detail-request';
-import { GetMyAdUpdateItem } from '../../interfaces/get-my-ad-update/get-my-ad-update-item';
+import { GetMyAdDetail } from '../../interfaces/get-my-ad-detail/get-my-ad-detail';
 import { MyAdsService } from '../../services/my-ads.service';
 
 @Component({
@@ -11,7 +11,7 @@ import { MyAdsService } from '../../services/my-ads.service';
   styleUrls: ['./my-ads-detail.component.css']
 })
 export class MyAdsDetailComponent implements OnInit {
-  item?: GetMyAdUpdateItem;
+  getMyAdDetail?: GetMyAdDetail;
   form: FormGroup;
   formChanges: number = 0;
 
@@ -28,7 +28,7 @@ export class MyAdsDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getMyAdDetail();
+    this.lodData();
   }
 
   onClickBackToList(): void {
@@ -39,7 +39,7 @@ export class MyAdsDetailComponent implements OnInit {
     this.router.navigate(['app/my-ads']);
   }
 
-  private getMyAdDetail(): void {
+  private lodData(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
 
     if (id == null)
@@ -51,8 +51,8 @@ export class MyAdsDetailComponent implements OnInit {
 
     this.myAdsService.getMyAdDetail(request).subscribe({
       next: (response) => {
-        this.item = response.item;
-        this.form.patchValue(this.item);
+        this.getMyAdDetail = response.getMyAdDetail;
+        this.form.patchValue(this.getMyAdDetail);
         this.formChanges++;
       },
       error: (error) => { console.log(error); }

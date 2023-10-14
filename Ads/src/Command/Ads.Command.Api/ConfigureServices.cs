@@ -18,6 +18,18 @@ public static class ConfigureServices
 
         services.AddSwaggerGen();
 
+        services.AddCors(corsOptions =>
+        {
+            corsOptions.AddPolicy("CorsPolicy", corsPolicyBuilder =>
+            {
+                corsPolicyBuilder.AllowAnyHeader();
+
+                corsPolicyBuilder.AllowAnyMethod();
+
+                corsPolicyBuilder.AllowAnyOrigin();
+            });
+        });
+
         return services;
     }
 
@@ -30,6 +42,8 @@ public static class ConfigureServices
         }
 
         app.UseHttpsRedirection();
+
+        app.UseCors("CorsPolicy");
 
         app.UseAuthorization();
 

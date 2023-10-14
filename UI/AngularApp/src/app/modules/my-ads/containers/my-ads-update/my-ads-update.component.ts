@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MyAdsService } from '../../services/my-ads.service';
 import { GetMyAdUpdateRequest } from '../../interfaces/get-my-ad-update/get-my-ad-update-request';
-import { GetMyAdUpdateItem } from '../../interfaces/get-my-ad-update/get-my-ad-update-item';
+import { GetMyAdUpdate } from '../../interfaces/get-my-ad-update/get-my-ad-update';
 import { UpdateMyAdRequest } from '../../interfaces/update-my-ad/update-my-ad-request';
 
 @Component({
@@ -12,7 +12,7 @@ import { UpdateMyAdRequest } from '../../interfaces/update-my-ad/update-my-ad-re
   styleUrls: ['./my-ads-update.component.css']
 })
 export class MyAdsUpdateComponent implements OnInit {
-  item?: GetMyAdUpdateItem;
+  getMyAdUpdate?: GetMyAdUpdate;
   form: FormGroup;
   formChanges: number = 0;
   validated: boolean = false;
@@ -30,7 +30,7 @@ export class MyAdsUpdateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getMyAdToUpdate();
+    this.loadData();
   }
 
   onClickBackToList(): void {
@@ -50,9 +50,9 @@ export class MyAdsUpdateComponent implements OnInit {
 
     let request: UpdateMyAdRequest = {
       description: this.form.get('description')?.value ?? '',
-      id: this.item?.id!,
+      id: this.getMyAdUpdate?.id!,
       title: this.form.get('title')?.value ?? '',
-      version: this.item?.version!
+      version: this.getMyAdUpdate?.version!
     };
 
     this.myAdsService.updateMyAd(request).subscribe({
@@ -67,7 +67,7 @@ export class MyAdsUpdateComponent implements OnInit {
     this.router.navigate(['app/my-ads']);
   }
 
-  private getMyAdToUpdate(): void {
+  private loadData(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
 
     if (id == null)
@@ -79,8 +79,8 @@ export class MyAdsUpdateComponent implements OnInit {
 
     this.myAdsService.getMyAdUpdate(request).subscribe({
       next: (response) => {
-        this.item = response.item;
-        this.form.patchValue(this.item);
+        this.getMyAdUpdate = response.getMyAdUpdate;
+        this.form.patchValue(this.getMyAdUpdate);
         this.formChanges++;
       },
       error: (error) => { console.log(error); }
@@ -89,7 +89,7 @@ export class MyAdsUpdateComponent implements OnInit {
 
   private restoreFormGroup(): void {
     this.form.reset();
-    this.form.patchValue(this.item!);
+    this.form.patchValue(this.getMyAdUpdate!);
     this.formChanges++;
   }
 }
