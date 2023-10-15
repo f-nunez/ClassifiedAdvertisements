@@ -425,3 +425,35 @@ table tr td.actions {
     -webkit-filter: var(--theme-brand-img-color-filter);
     filter: var(--theme-brand-img-color-filter);
 }
+
+/* Spinner */
+.spinner-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 9998;
+    background-color: rgba(0, 0, 0, 0.01);
+}
+
+.spinner-border {
+    display: inline-block;
+    width: 4rem;
+    height: 4rem;
+    position: fixed;
+    z-index: 9998;
+    top: 50%;
+    right: 50%;
+    margin-top: -2rem;
+    margin-right: -2rem;
+}
+
+.spinner-message {
+    position: fixed;
+    z-index: 9998;
+    top: 50%;
+    width: 100%;
+    margin-top: 3rem;
+    text-align: center;
+}
