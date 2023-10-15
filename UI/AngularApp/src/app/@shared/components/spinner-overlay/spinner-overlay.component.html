@@ -1,0 +1,8 @@
+<div *ngIf="show" class="spinner-overlay">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">{{message}}</span>
+    </div>
+    <div *ngIf="message" class="spinner-message text-primary fw-semibold fs-5">
+        <span>{{message}}</span>
+    </div>
+</div>
