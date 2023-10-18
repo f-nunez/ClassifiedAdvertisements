@@ -1,3 +1,4 @@
+using Ads.Command.Api.Helpers;
 using Ads.Command.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -7,15 +8,18 @@ namespace Ads.Command.Api.Filters;
 public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
     private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
+    private readonly IHostEnvironment _hostEnvironment;
 
-    public ApiExceptionFilterAttribute()
+    public ApiExceptionFilterAttribute(IHostEnvironment hostEnvironment)
     {
-        // Register known exception types and handlers.
         _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
         {
+            { typeof(ExpectedVersionException), HandleExpectedVersionException },
             { typeof(NotFoundException), HandleNotFoundException },
             { typeof(ValidationException), HandleValidationException }
         };
+
+        _hostEnvironment = hostEnvironment;
     }
 
     public override void OnException(ExceptionContext context)
@@ -34,53 +38,37 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
             _exceptionHandlers[type].Invoke(context);
             return;
         }
+    }
 
-        if (!context.ModelState.IsValid)
-        {
-            HandleInvalidModelStateException(context);
-            return;
-        }
+    private void HandleExpectedVersionException(ExceptionContext context)
+    {
+        ProblemDetails details = ProblemDetailsHelper
+            .BuildProblemDetails(context.Exception, _hostEnvironment.IsProduction());
+
+        SetProblemDetailsToExceptionContext(context, details);
     }
 
     private void HandleNotFoundException(ExceptionContext context)
     {
-        var exception = (NotFoundException)context.Exception;
+        ProblemDetails details = ProblemDetailsHelper
+            .BuildProblemDetails(context.Exception, _hostEnvironment.IsProduction());
 
-        var details = new ProblemDetails()
-        {
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.4",
-            Title = "The specified resource was not found.",
-            Detail = exception.Message
-        };
-
-        context.Result = new NotFoundObjectResult(details);
-
-        context.ExceptionHandled = true;
+        SetProblemDetailsToExceptionContext(context, details);
     }
 
     private void HandleValidationException(ExceptionContext context)
     {
-        var exception = (ValidationException)context.Exception;
+        ProblemDetails details = ProblemDetailsHelper
+            .BuildProblemDetails(context.Exception, _hostEnvironment.IsProduction());
 
-        var details = new ValidationProblemDetails(exception.Errors)
-        {
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
-        };
-
-        context.Result = new BadRequestObjectResult(details);
-
-        context.ExceptionHandled = true;
+        SetProblemDetailsToExceptionContext(context, details);
     }
 
-    private void HandleInvalidModelStateException(ExceptionContext context)
+    private static void SetProblemDetailsToExceptionContext(
+        ExceptionContext context,
+        ProblemDetails details)
     {
-        var details = new ValidationProblemDetails(context.ModelState)
-        {
-            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
-        };
-
-        context.Result = new BadRequestObjectResult(details);
-
+        context.Result = new ObjectResult(details);
         context.ExceptionHandled = true;
     }
 }
