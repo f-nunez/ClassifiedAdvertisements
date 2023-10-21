@@ -1,6 +1,7 @@
-using Ads.Query.Api.Filters;
+using Ads.Query.Api.Middlewares;
 using Ads.Query.Api.Services;
 using Ads.Query.Application.Common.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -12,7 +13,7 @@ public static class ConfigureServices
 
         services.AddRouting(options => options.LowercaseUrls = true);
 
-        services.AddControllers(options => options.Filters.Add<ApiExceptionFilterAttribute>());
+        services.AddControllers();
 
         services.AddEndpointsApiExplorer();
 
@@ -35,6 +36,8 @@ public static class ConfigureServices
 
     public static WebApplication AddWebApplicationBuilder(this WebApplication app)
     {
+        app.UseMiddleware<ErrorHandlerMiddleware>();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
