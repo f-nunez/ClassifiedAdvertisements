@@ -1,7 +1,6 @@
 using Ads.Query.Api.Middlewares;
 using Ads.Query.Api.Services;
 using Ads.Query.Application.Common.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
