@@ -12,9 +12,39 @@ public static class ProblemDetailsHelper
     {
         ProblemDetails details = GetProblemDetails(exception);
 
-        SetInformativeExtensionMembers(httpContext, exception, details, isProductionHosting);
+        AddErrorCodeExtensionMember(exception, details);
+
+        if (!isProductionHosting)
+            AddDevelopmentExtensionMembers(httpContext, exception, details);
 
         return details;
+    }
+
+    private static void AddDevelopmentExtensionMembers(
+        HttpContext httpContext,
+        Exception exception,
+        ProblemDetails problemDetails)
+    {
+        problemDetails.Extensions.Add("exception", exception.ToString());
+
+        problemDetails.Extensions.Add("machineName", Environment.MachineName);
+
+        string? traceId = httpContext.TraceIdentifier;
+
+        if (!string.IsNullOrEmpty(traceId))
+            problemDetails.Extensions["traceId"] = traceId;
+
+        string? instance = httpContext.Request.Path.Value;
+
+        if (!string.IsNullOrEmpty(instance))
+            problemDetails.Extensions["instance"] = instance;
+    }
+
+    private static void AddErrorCodeExtensionMember(
+        Exception exception,
+        ProblemDetails problemDetails)
+    {
+        problemDetails.Extensions.Add("errorCode", exception.GetType().Name);
     }
 
     private static ProblemDetails GetProblemDetails(Exception exception)
@@ -58,34 +88,5 @@ public static class ProblemDetailsHelper
             Status = StatusCodes.Status400BadRequest,
             Detail = exception.Message
         };
-    }
-
-    private static void SetInformativeExtensionMembers(
-        HttpContext httpContext,
-        Exception exception,
-        ProblemDetails problemDetails,
-        bool isProductionHostEnvironment)
-    {
-        problemDetails.Extensions.Add("errorCode", exception.GetType().Name);
-
-        if (isProductionHostEnvironment)
-        {
-            problemDetails.Detail = null;
-            return;
-        }
-
-        problemDetails.Extensions.Add("exception", exception.ToString());
-
-        problemDetails.Extensions.Add("machineName", Environment.MachineName);
-
-        string? traceId = httpContext.TraceIdentifier;
-
-        if (!string.IsNullOrEmpty(traceId))
-            problemDetails.Extensions["traceId"] = traceId;
-
-        string? instance = httpContext.Request.Path.Value;
-
-        if (!string.IsNullOrEmpty(instance))
-            problemDetails.Extensions["instance"] = instance;
     }
 }
