@@ -1,7 +1,6 @@
 using Ads.Command.Api.Middlewares;
 using Ads.Command.Api.Services;
 using Ads.Command.Application.Common.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -15,9 +14,6 @@ public static class ConfigureServices
         services.AddRouting(options => options.LowercaseUrls = true);
 
         services.AddControllers();
-
-        services.Configure<ApiBehaviorOptions>(options =>
-            options.SuppressModelStateInvalidFilter = true);
 
         services.AddEndpointsApiExplorer();
 
