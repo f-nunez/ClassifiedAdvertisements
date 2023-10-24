@@ -57,12 +57,15 @@ public class EventStore<T> : IEventStore<T> where T : IAggregateRoot
         aggregateRoot.ClearChanges();
     }
 
-    public async Task<T> ReadStreamEventsAsync<TId>(TId id, CancellationToken cancellationToken)
+    public async Task<T?> ReadStreamEventsAsync<TId>(TId id, CancellationToken cancellationToken)
     {
         string streamName = GetStreamName(id);
 
-        List<ResolvedEvent> events = await _repository
+        List<ResolvedEvent>? events = await _repository
             .ReadStreamEventsAsync(streamName, cancellationToken);
+
+        if (events is null)
+            return default;
 
         IEnumerable<BaseDomainEvent> storedEvents = events.Select(Deserialize);
 

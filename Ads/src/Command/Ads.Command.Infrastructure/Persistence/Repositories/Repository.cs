@@ -33,7 +33,7 @@ public class Repository : IRepository
         }
     }
 
-    public async Task<List<ResolvedEvent>> ReadStreamEventsAsync(
+    public async Task<List<ResolvedEvent>?> ReadStreamEventsAsync(
         string streamName,
         CancellationToken cancellationToken)
     {
@@ -44,6 +44,13 @@ public class Repository : IRepository
             cancellationToken: cancellationToken
         );
 
-        return await result.ToListAsync();
+        try
+        {
+            return await result.ToListAsync();
+        }
+        catch (StreamNotFoundException)
+        {
+            return null;
+        }
     }
 }

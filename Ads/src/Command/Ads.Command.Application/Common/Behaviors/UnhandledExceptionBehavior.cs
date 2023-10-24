@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Ads.Command.Application.Common.Exceptions;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -24,22 +23,6 @@ public class UnhandledExceptionBehavior<TRequest, TResponse>
         try
         {
             return await next();
-        }
-        catch (ValidationException ex)
-        {
-            string requestName = typeof(TRequest).Name;
-
-            var validatedErrors = ex.Errors
-                .Select(x => $"{x.Key} - {string.Join(',', x.Value)}");
-
-            _logger.LogError(
-                ex,
-                "Ads.Command Validation Exception for Request: {Name} {@Errors}",
-                requestName,
-                validatedErrors
-            );
-
-            throw;
         }
         catch (Exception ex)
         {
