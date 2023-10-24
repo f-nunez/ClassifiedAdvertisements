@@ -39,10 +39,24 @@ public class ErrorHandlerMiddleware
         ProblemDetails problemDetails)
     {
         httpContext.Response.StatusCode = problemDetails.Status
-                ?? StatusCodes.Status500InternalServerError;
+            ?? StatusCodes.Status500InternalServerError;
 
+        SetResponseContentType(httpContext);
+
+        SetResponseHeaders(httpContext);
+
+        string responseBody = JsonSerializer.Serialize(problemDetails);
+
+        await httpContext.Response.WriteAsync(responseBody);
+    }
+
+    private static void SetResponseContentType(HttpContext httpContext)
+    {
         httpContext.Response.ContentType = "application/problem+json";
+    }
 
+    private static void SetResponseHeaders(HttpContext httpContext)
+    {
         httpContext.Response.Headers["cache-control"] = "no-cache, no-store";
 
         httpContext.Response.Headers["charset"] = Encoding.UTF8.WebName;
@@ -50,9 +64,5 @@ public class ErrorHandlerMiddleware
         httpContext.Response.Headers["expires"] = "-1";
 
         httpContext.Response.Headers["pragma"] = "no-cache";
-
-        string responseBody = JsonSerializer.Serialize(problemDetails);
-
-        await httpContext.Response.WriteAsync(responseBody);
     }
 }
