@@ -7,30 +7,30 @@ internal static class AddHttpClientServicesExtension
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var myAdsCommandHttpClientSetting = configuration
-            .GetSection(nameof(MyAdsCommandHttpClientSetting))
-            .Get<MyAdsCommandHttpClientSetting>()!;
+        var adsCommandHttpClientSettings = configuration
+            .GetSection(nameof(AdsCommandHttpClientSettings))
+            .Get<AdsCommandHttpClientSettings>()!;
 
-        var myAdsQueryHttpClientSetting = configuration
-            .GetSection(nameof(MyAdsQueryHttpClientSetting))
-            .Get<MyAdsQueryHttpClientSetting>()!;
+        var adsQueryHttpClientSettings = configuration
+            .GetSection(nameof(AdsQueryHttpClientSettings))
+            .Get<AdsQueryHttpClientSettings>()!;
 
         services.AddHttpClient<IAdsCommandHttpClient, AdsCommandHttpClient>()
             .ConfigureHttpClient((serviceProvider, httpClient) =>
             {
-                httpClient.BaseAddress = myAdsCommandHttpClientSetting.BaseAddress;
-                httpClient.Timeout = TimeSpan.FromSeconds(myAdsCommandHttpClientSetting.TimeoutInSeconds);
+                httpClient.BaseAddress = adsCommandHttpClientSettings.BaseAddress;
+                httpClient.Timeout = TimeSpan.FromSeconds(adsCommandHttpClientSettings.TimeoutInSeconds);
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             })
-            .SetHandlerLifetime(TimeSpan.FromSeconds(myAdsCommandHttpClientSetting.HandlerLifetimeInSeconds));
+            .SetHandlerLifetime(TimeSpan.FromSeconds(adsCommandHttpClientSettings.HandlerLifetimeInSeconds));
 
         services.AddHttpClient<IAdsQueryHttpClient, AdsQueryHttpClient>()
             .ConfigureHttpClient((serviceProvider, httpClient) =>
             {
-                httpClient.BaseAddress = myAdsQueryHttpClientSetting.BaseAddress;
-                httpClient.Timeout = TimeSpan.FromSeconds(myAdsQueryHttpClientSetting.TimeoutInSeconds);
+                httpClient.BaseAddress = adsQueryHttpClientSettings.BaseAddress;
+                httpClient.Timeout = TimeSpan.FromSeconds(adsQueryHttpClientSettings.TimeoutInSeconds);
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             })
-            .SetHandlerLifetime(TimeSpan.FromSeconds(myAdsQueryHttpClientSetting.HandlerLifetimeInSeconds));
+            .SetHandlerLifetime(TimeSpan.FromSeconds(adsQueryHttpClientSettings.HandlerLifetimeInSeconds));
     }
 }
