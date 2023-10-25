@@ -1,3 +1,5 @@
+using AngularWeb.Api.HttpClients;
+
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigureServices
@@ -23,6 +25,15 @@ public static class ConfigureServices
                 corsPolicyBuilder.AllowAnyOrigin();
             });
         });
+
+        services.AddHttpClient<IAdsCommandHttpClient, AdsCommandHttpClient>()
+            .ConfigureHttpClient((serviceProvider, httpClient) =>
+            {
+                httpClient.BaseAddress = new Uri("https://localhost:7200/api/");
+                httpClient.Timeout = TimeSpan.FromSeconds(20);
+                httpClient.DefaultRequestHeaders.Add("accept", "application/json");
+            })
+            .SetHandlerLifetime(TimeSpan.FromSeconds(60));// Default is 2 mins;
 
         return services;
     }
