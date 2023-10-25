@@ -35,6 +35,15 @@ public static class ConfigureServices
             })
             .SetHandlerLifetime(TimeSpan.FromSeconds(60));// Default is 2 mins;
 
+        services.AddHttpClient<IAdsQueryHttpClient, AdsQueryHttpClient>()
+            .ConfigureHttpClient((serviceProvider, httpClient) =>
+            {
+                httpClient.BaseAddress = new Uri("https://localhost:7201/api/");
+                httpClient.Timeout = TimeSpan.FromSeconds(20);
+                httpClient.DefaultRequestHeaders.Add("accept", "application/json");
+            })
+            .SetHandlerLifetime(TimeSpan.FromSeconds(60));// Default is 2 mins;
+
         return services;
     }
 
