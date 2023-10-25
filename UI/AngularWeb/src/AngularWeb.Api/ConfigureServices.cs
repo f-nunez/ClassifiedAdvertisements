@@ -28,6 +28,8 @@ public static class ConfigureServices
 
         services.AddHttpClientServices(configuration);
 
+        services.AddFeatureServices();
+
         return services;
     }
 
