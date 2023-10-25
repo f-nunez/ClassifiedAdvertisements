@@ -1,10 +1,10 @@
-using AngularWeb.Api.HttpClients;
-
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigureServices
 {
-    public static IServiceCollection AddWebServices(this IServiceCollection services)
+    public static IServiceCollection AddWebServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddRouting(options => options.LowercaseUrls = true);
 
@@ -26,23 +26,7 @@ public static class ConfigureServices
             });
         });
 
-        services.AddHttpClient<IAdsCommandHttpClient, AdsCommandHttpClient>()
-            .ConfigureHttpClient((serviceProvider, httpClient) =>
-            {
-                httpClient.BaseAddress = new Uri("https://localhost:7200/api/");
-                httpClient.Timeout = TimeSpan.FromSeconds(20);
-                httpClient.DefaultRequestHeaders.Add("accept", "application/json");
-            })
-            .SetHandlerLifetime(TimeSpan.FromSeconds(60));// Default is 2 mins;
-
-        services.AddHttpClient<IAdsQueryHttpClient, AdsQueryHttpClient>()
-            .ConfigureHttpClient((serviceProvider, httpClient) =>
-            {
-                httpClient.BaseAddress = new Uri("https://localhost:7201/api/");
-                httpClient.Timeout = TimeSpan.FromSeconds(20);
-                httpClient.DefaultRequestHeaders.Add("accept", "application/json");
-            })
-            .SetHandlerLifetime(TimeSpan.FromSeconds(60));// Default is 2 mins;
+        services.AddHttpClientServices(configuration);
 
         return services;
     }
