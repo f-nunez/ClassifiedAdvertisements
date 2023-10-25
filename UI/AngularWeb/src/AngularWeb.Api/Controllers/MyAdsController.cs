@@ -1,4 +1,4 @@
-using AngularWeb.Api.HttpClients;
+using AngularWeb.Api.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AngularWeb.Api.Controllers;
@@ -7,15 +7,11 @@ namespace AngularWeb.Api.Controllers;
 [Route("api/v1/[controller]")]
 public class MyAdsController : ControllerBase
 {
-    private readonly IAdsCommandHttpClient _adsCommandHttpClient;
-    private readonly IAdsQueryHttpClient _adsQueryHttpClient;
+    private readonly IMyAdsService _myAdsService;
 
-    public MyAdsController(
-        IAdsCommandHttpClient adsCommandHttpClient,
-        IAdsQueryHttpClient adsQueryHttpClient)
+    public MyAdsController(IMyAdsService myAdsService)
     {
-        _adsCommandHttpClient = adsCommandHttpClient;
-        _adsQueryHttpClient = adsQueryHttpClient;
+        _myAdsService = myAdsService;
     }
 
     [HttpPost]
@@ -23,7 +19,7 @@ public class MyAdsController : ControllerBase
         [FromBody] CreateMyAdRequestParameter parameter,
         CancellationToken cancellationToken)
     {
-        var response = await _adsCommandHttpClient.CreateMyAdAsync(
+        var response = await _myAdsService.CreateMyAdAsync(
             parameter.Description,
             parameter.Title,
             cancellationToken
@@ -38,7 +34,7 @@ public class MyAdsController : ControllerBase
         long version,
         CancellationToken cancellationToken)
     {
-        var response = await _adsCommandHttpClient.DeleteMyAdAsync(
+        var response = await _myAdsService.DeleteMyAdAsync(
             id,
             version,
             cancellationToken
@@ -52,7 +48,7 @@ public class MyAdsController : ControllerBase
         string id,
         CancellationToken cancellationToken)
     {
-        var response = await _adsQueryHttpClient
+        var response = await _myAdsService
             .GetMyAdDetailAsync(id, cancellationToken);
 
         return Ok(response);
@@ -66,7 +62,7 @@ public class MyAdsController : ControllerBase
         string sortProp,
         CancellationToken cancellationToken)
     {
-        var response = await _adsQueryHttpClient.GetMyAdListAsync(
+        var response = await _myAdsService.GetMyAdListAsync(
             skip,
             take,
             sortAsc,
@@ -82,7 +78,7 @@ public class MyAdsController : ControllerBase
         string id,
         CancellationToken cancellationToken)
     {
-        var response = await _adsQueryHttpClient
+        var response = await _myAdsService
             .GetMyAdUpdateAsync(id, cancellationToken);
 
         return Ok(response);
@@ -94,7 +90,7 @@ public class MyAdsController : ControllerBase
         [FromBody] UpdateMyAdRequestParameter parameter,
         CancellationToken cancellationToken)
     {
-        var response = await _adsCommandHttpClient.UpdateMyAdAsync(
+        var response = await _myAdsService.UpdateMyAdAsync(
             id,
             parameter.Description,
             parameter.Title,
