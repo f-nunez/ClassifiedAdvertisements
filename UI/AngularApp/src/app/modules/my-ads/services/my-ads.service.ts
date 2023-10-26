@@ -13,30 +13,33 @@ import { GetMyAdUpdateRequest } from '../interfaces/get-my-ad-update/get-my-ad-u
 import { GetMyAdUpdateResponse } from '../interfaces/get-my-ad-update/get-my-ad-update-response';
 import { UpdateMyAdRequest } from '../interfaces/update-my-ad/update-my-ad-request';
 import { UpdateMyAdResponse } from '../interfaces/update-my-ad/update-my-ad-response';
+import { environment } from 'src/environments/environment.development';
 
 @Injectable()
 export class MyAdsService {
+    private readonly apiUrl: string = environment.apiUrl;
+
     constructor(private httpClient: HttpClient) {
     }
 
     public createMyAd(request: CreateMyAdRequest): Observable<CreateMyAdResponse> {
-        let apiUrl = 'https://localhost:7200/api/v1/myads';
-        return this.httpClient.post<CreateMyAdResponse>(apiUrl, request);
+        let url = `${this.apiUrl}v1/myads`;
+        return this.httpClient.post<CreateMyAdResponse>(url, request);
     }
 
     public deleteMyAd(request: DeleteMyAdRequest): Observable<DeleteMyAdResponse> {
-        let apiUrl = `https://localhost:7200/api/v1/myads/${request.id}/version/${request.version}`;
-        return this.httpClient.delete<DeleteMyAdResponse>(apiUrl);
+        let url = `${this.apiUrl}v1/myads/${request.id}/version/${request.version}`;
+        return this.httpClient.delete<DeleteMyAdResponse>(url);
     }
 
     public getMyAdDetail(request: GetMyAdDetailRequest): Observable<GetMyAdDetailResponse> {
-        let apiUrl = `https://localhost:7201/api/v1/myads/${request.id}/detail`;
-        return this.httpClient.get<GetMyAdDetailResponse>(apiUrl);
+        let url = `${this.apiUrl}v1/myads/${request.id}/detail`;
+        return this.httpClient.get<GetMyAdDetailResponse>(url);
     }
 
     public getMyAdUpdate(request: GetMyAdUpdateRequest): Observable<GetMyAdUpdateResponse> {
-        let apiUrl = `https://localhost:7201/api/v1/myads/${request.id}/update`;
-        return this.httpClient.get<GetMyAdUpdateResponse>(apiUrl);
+        let url = `${this.apiUrl}v1/myads/${request.id}/update`;
+        return this.httpClient.get<GetMyAdUpdateResponse>(url);
     }
 
     public getMyAdsList(request: GetMyAdListRequest): Observable<GetMyAdListResponse> {
@@ -49,12 +52,12 @@ export class MyAdsService {
             params = params.append('sortprop', request.dataTableRequest.sorts[0].propertyName);
         }
 
-        let apiUrl = 'https://localhost:7201/api/v1/myads';
-        return this.httpClient.get<GetMyAdListResponse>(apiUrl, { params });
+        let url = `${this.apiUrl}v1/myads`;
+        return this.httpClient.get<GetMyAdListResponse>(url, { params });
     }
 
     public updateMyAd(request: UpdateMyAdRequest): Observable<UpdateMyAdResponse> {
-        let apiUrl = `https://localhost:7200/api/v1/myads/${request.id}`;
-        return this.httpClient.put<UpdateMyAdResponse>(apiUrl, request);
+        let url = `${this.apiUrl}v1/myads/${request.id}`;
+        return this.httpClient.put<UpdateMyAdResponse>(url, request);
     }
 }
