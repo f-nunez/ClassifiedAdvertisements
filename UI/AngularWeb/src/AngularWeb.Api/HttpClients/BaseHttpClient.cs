@@ -82,6 +82,20 @@ public abstract class BaseHttpClient
         return await DeserializeAsync<T>(contentStream, cancellationToken);
     }
 
+    protected async Task HttpPostAsync(
+        string requestUri,
+        object data,
+        CancellationToken cancellationToken)
+    {
+        var request = CreateRequest(HttpMethod.Post, requestUri, data);
+
+        using var result = await _httpClient.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken
+        );
+    }
+
     protected async Task<T?> HttpPostAsync<T>(
         string requestUri,
         object data,
@@ -99,20 +113,6 @@ public abstract class BaseHttpClient
             .ReadAsStreamAsync(cancellationToken);
 
         return await DeserializeAsync<T>(contentStream, cancellationToken);
-    }
-
-    protected async Task HttpPostAsync(
-        string requestUri,
-        object data,
-        CancellationToken cancellationToken)
-    {
-        var request = CreateRequest(HttpMethod.Post, requestUri, data);
-
-        using var result = await _httpClient.SendAsync(
-            request,
-            HttpCompletionOption.ResponseHeadersRead,
-            cancellationToken
-        );
     }
 
     protected async Task HttpPutAsync(
