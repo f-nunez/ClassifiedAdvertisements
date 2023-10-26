@@ -1,13 +1,20 @@
 using AngularWeb.Api.Application.Features.MyAds.Queries.GetMyAdDetail;
 using AngularWeb.Api.Application.Features.MyAds.Queries.GetMyAdList;
 using AngularWeb.Api.Application.Features.MyAds.Queries.GetMyAdUpdate;
+using AngularWeb.Api.Settings;
+using Polly.Registry;
 
 namespace AngularWeb.Api.HttpClients;
 
-public class AdsQueryHttpClient : BaseHttpClient, IAdsQueryHttpClient
+public class AdsQueryHttpClient : BaseResilienceHttpClient, IAdsQueryHttpClient
 {
-    public AdsQueryHttpClient(HttpClient httpClient)
-        : base(httpClient)
+    public AdsQueryHttpClient(
+        HttpClient httpClient,
+        ResiliencePipelineProvider<string> resiliencePipelineProvider)
+        : base(
+            httpClient,
+            nameof(HttpClientResilienceStrategySettings),
+            resiliencePipelineProvider)
     {
     }
 
