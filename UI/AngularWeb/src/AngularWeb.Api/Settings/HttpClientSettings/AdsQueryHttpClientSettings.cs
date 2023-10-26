@@ -1,8 +1,5 @@
 namespace AngularWeb.Api.Settings;
 
-public class AdsQueryHttpClientSettings
+public class AdsQueryHttpClientSettings : BaseHttpClientSettings
 {
-    public required Uri BaseAddress { get; set; }
-    public int HandlerLifetimeInSeconds { get; set; }
-    public int TimeoutInSeconds { get; set; }
 }
