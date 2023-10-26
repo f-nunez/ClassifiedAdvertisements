@@ -1,4 +1,5 @@
 export const environment = {
+    apiUrl: 'https://localhost:7220/api/',
     oidcSetting: {
         authority: 'https://localhost:7210/',
         automaticSilentRenew: true,
