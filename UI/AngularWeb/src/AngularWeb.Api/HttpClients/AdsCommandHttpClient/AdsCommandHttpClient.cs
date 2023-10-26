@@ -1,13 +1,20 @@
 using AngularWeb.Api.Application.Features.MyAds.Commands.CreateMyAd;
 using AngularWeb.Api.Application.Features.MyAds.Commands.DeleteMyAd;
 using AngularWeb.Api.Application.Features.MyAds.Commands.UpdateMyAd;
+using AngularWeb.Api.Settings;
+using Polly.Registry;
 
 namespace AngularWeb.Api.HttpClients;
 
-public class AdsCommandHttpClient : BaseHttpClient, IAdsCommandHttpClient
+public class AdsCommandHttpClient : BaseResilienceHttpClient, IAdsCommandHttpClient
 {
-    public AdsCommandHttpClient(HttpClient httpClient)
-        : base(httpClient)
+    public AdsCommandHttpClient(
+        HttpClient httpClient,
+        ResiliencePipelineProvider<string> resiliencePipelineProvider)
+        : base(
+            httpClient,
+            nameof(HttpClientResilienceStrategySettings),
+            resiliencePipelineProvider)
     {
     }
 
