@@ -82,8 +82,23 @@ public class ConfigurationStoreDbContextSeeder
             new ApiResource
             {
                 Name = "7e2593ba-e3cd-40e5-a50e-506877d0210e",
-                DisplayName = "Ads Api",
-                Scopes = new List<string> { "ads_api" },
+                DisplayName = "Ads Command Api",
+                Scopes = new List<string> { "ads_command_api" },
+                UserClaims = new List<string>
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
+            }.ToEntity(),
+            new ApiResource
+            {
+                Name = "717228aa-0fa6-43d1-8e3a-47325d0f57cc",
+                DisplayName = "Ads Query Api",
+                Scopes = new List<string> { "ads_query_api" },
                 UserClaims = new List<string>
                 {
                     JwtClaimTypes.ClientId,
@@ -107,8 +122,36 @@ public class ConfigurationStoreDbContextSeeder
         await _context.AddRangeAsync(
             new ApiScope
             {
-                Name = "ads_api",
-                DisplayName = "Ads Api",
+                Name = "angular_web_api",
+                DisplayName = "Angular Web Api",
+                UserClaims = new[]
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
+            }.ToEntity(),
+            new ApiScope
+            {
+                Name = "ads_command_api",
+                DisplayName = "Ads Command Api",
+                UserClaims = new[]
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
+            }.ToEntity(),
+            new ApiScope
+            {
+                Name = "ads_query_api",
+                DisplayName = "Ads Query Api",
                 UserClaims = new[]
                 {
                     JwtClaimTypes.ClientId,
