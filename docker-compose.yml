@@ -14,6 +14,16 @@ services:
       - 15672:15672
     restart: on-failure
 
+  identity-postgresql:
+    image: postgres:15.4-bullseye
+    container_name: identity-postgresql
+    environment:
+      POSTGRES_USER: "sa"
+      POSTGRES_PASSWORD: "ClassifiedAdvertisiments123!"
+    ports:
+      - 54320:5432
+    restart: on-failure
+
   ads-command-eventstore:
     container_name: ads-command-eventstore
     image: eventstore/eventstore:22.10.2-buster-slim

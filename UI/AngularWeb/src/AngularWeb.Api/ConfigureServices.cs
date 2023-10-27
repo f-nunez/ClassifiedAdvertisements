@@ -1,18 +1,16 @@
-using Ads.Query.Api.Middlewares;
-using Ads.Query.Api.Services;
-using Ads.Query.Application.Common.Interfaces;
+using AngularWeb.Api.Middlewares;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigureServices
 {
-    public static IServiceCollection AddWebServices(this IServiceCollection services)
+    public static IServiceCollection AddWebServices(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
-        services.AddSingleton<ICurrentUserService, CurrentUserService>();
-
         services.AddRouting(options => options.LowercaseUrls = true);
 
-        services.AddControllers();
+        services.AddControllersWithViews();
 
         services.AddEndpointsApiExplorer();
 
@@ -26,9 +24,15 @@ public static class ConfigureServices
 
                 corsPolicyBuilder.AllowAnyMethod();
 
-                corsPolicyBuilder.AllowAnyOrigin();
+                corsPolicyBuilder.WithOrigins("http://localhost:4200");
+
+                corsPolicyBuilder.WithOrigins("https://localhost:4200");
             });
         });
+
+        services.AddHttpClientServices(configuration);
+
+        services.AddFeatureServices();
 
         return services;
     }
@@ -36,6 +40,8 @@ public static class ConfigureServices
     public static WebApplication AddWebApplicationBuilder(this WebApplication app)
     {
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+
+        app.UseMiddleware<HttpResponseExceptionHandlerMiddleware>();
 
         if (app.Environment.IsDevelopment())
         {
@@ -45,11 +51,17 @@ public static class ConfigureServices
 
         app.UseHttpsRedirection();
 
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
         app.UseCors("CorsPolicy");
 
         app.UseAuthorization();
 
         app.MapControllers();
+
+        app.MapFallbackToFile("index.html");
 
         return app;
     }
