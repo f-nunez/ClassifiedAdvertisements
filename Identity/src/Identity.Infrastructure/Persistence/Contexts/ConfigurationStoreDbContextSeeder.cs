@@ -66,6 +66,21 @@ public class ConfigurationStoreDbContextSeeder
         await _context.AddRangeAsync(
             new ApiResource
             {
+                Name = "87c76d97-4a08-447b-a8e2-6f3b7a2412b1",
+                DisplayName = "Angular Web Api",
+                Scopes = new List<string> { "angular_web_api" },
+                UserClaims = new List<string>
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
+            }.ToEntity(),
+            new ApiResource
+            {
                 Name = "7e2593ba-e3cd-40e5-a50e-506877d0210e",
                 DisplayName = "Ads Api",
                 Scopes = new List<string> { "ads_api" },
