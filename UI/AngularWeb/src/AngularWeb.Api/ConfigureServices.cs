@@ -39,6 +39,8 @@ public static class ConfigureServices
     {
         app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
+        app.UseMiddleware<HttpResponseExceptionHandlerMiddleware>();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
