@@ -244,6 +244,51 @@ public class ConfigurationStoreDbContextSeeder
             // UpdateAccessTokenClaimsOnRefresh = true,
         };
 
+        var angularWebWithCookieBasedAuth = new Client
+        {
+            ClientId = "4c534f05-a5a7-4762-9f9d-5d5214f8caaf",
+            ClientName = "Classified Advertisements Angular App",
+            ClientSecrets = new List<Secret> { new("secret".Sha256()) },
+            Description = "Classified Advertisements Angular App",
+            AllowAccessTokensViaBrowser = false,
+            AllowedCorsOrigins = new List<string>
+            {
+                "https://localhost:7220"
+            },
+            AllowedGrantTypes = GrantTypes.Code,
+            AllowOfflineAccess = true,
+            AllowedScopes = new List<string>
+            {
+                IdentityServerConstants.StandardScopes.OpenId,
+                IdentityServerConstants.StandardScopes.OfflineAccess,
+                IdentityServerConstants.StandardScopes.Profile,
+                IdentityServerConstants.StandardScopes.Email,
+                "roles",
+                "ads_command_api",
+                "ads_query_api"
+            },
+            // AccessTokenLifetime = 60*60,
+            // IdentityTokenLifetime = 60*5,
+            // SlidingRefreshTokenLifetime = 60*60*24*15,
+            // AbsoluteRefreshTokenLifetime = 60*60*24*30,
+            // RefreshTokenExpiration = TokenExpiration.Absolute,
+            PostLogoutRedirectUris = new List<string>
+            {
+                "https://localhost:7220/signout-callback-oidc"
+            },
+            RedirectUris = new List<string>
+            {
+                "https://localhost:7220/signin-oidc",
+            },
+            BackChannelLogoutUri = "https://localhost:7220/bff/backchannellogout",
+            RefreshTokenUsage = TokenUsage.OneTimeOnly,
+            RequireClientSecret = true,
+            RequireConsent = false,
+            RequirePkce = true,
+            UpdateAccessTokenClaimsOnRefresh = true,
+            // CoordinateLifetimeWithUserSession = true,
+        };
+
         await _context.AddRangeAsync(
             demoAngularApp.ToEntity()
         );
