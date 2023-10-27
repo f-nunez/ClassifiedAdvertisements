@@ -290,7 +290,8 @@ public class ConfigurationStoreDbContextSeeder
         };
 
         await _context.AddRangeAsync(
-            demoAngularApp.ToEntity()
+            angularWebWithTokenBasedAuth.ToEntity(),
+            angularWebWithCookieBasedAuth.ToEntity()
         );
 
         await _context.SaveChangesAsync();
