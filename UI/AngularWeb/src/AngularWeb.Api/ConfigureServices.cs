@@ -10,7 +10,7 @@ public static class ConfigureServices
     {
         services.AddRouting(options => options.LowercaseUrls = true);
 
-        services.AddControllers();
+        services.AddControllersWithViews();
 
         services.AddEndpointsApiExplorer();
 
@@ -24,7 +24,9 @@ public static class ConfigureServices
 
                 corsPolicyBuilder.AllowAnyMethod();
 
-                corsPolicyBuilder.AllowAnyOrigin();
+                corsPolicyBuilder.WithOrigins("http://localhost:4200");
+
+                corsPolicyBuilder.WithOrigins("https://localhost:4200");
             });
         });
 
@@ -49,11 +51,17 @@ public static class ConfigureServices
 
         app.UseHttpsRedirection();
 
+        app.UseStaticFiles();
+
+        app.UseRouting();
+
         app.UseCors("CorsPolicy");
 
         app.UseAuthorization();
 
         app.MapControllers();
+
+        app.MapFallbackToFile("index.html");
 
         return app;
     }
