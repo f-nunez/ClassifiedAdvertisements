@@ -36,7 +36,7 @@ public static class ConfigureServices
 
     public static WebApplication AddWebApplicationBuilder(this WebApplication app)
     {
-        app.UseMiddleware<ErrorHandlerMiddleware>();
+        app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
         if (app.Environment.IsDevelopment())
         {
