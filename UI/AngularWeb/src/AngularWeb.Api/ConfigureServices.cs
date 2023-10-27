@@ -1,3 +1,5 @@
+using AngularWeb.Api.Middlewares;
+
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigureServices
@@ -35,6 +37,8 @@ public static class ConfigureServices
 
     public static WebApplication AddWebApplicationBuilder(this WebApplication app)
     {
+        app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
