@@ -2,7 +2,7 @@
     'use strict';
 
     const preloadStoredThemeColor = () => {
-        const storedTheme = localStorage.getItem('theme_color');
+        var storedTheme = localStorage.getItem('theme_color');
 
         if (!storedTheme)
             storedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
