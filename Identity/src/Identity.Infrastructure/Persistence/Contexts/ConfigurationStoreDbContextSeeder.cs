@@ -192,27 +192,51 @@ public class ConfigurationStoreDbContextSeeder
         if (await _context.Clients.AnyAsync())
             return;
 
-        var demoAngularApp = new Client
+        var angularWebWithTokenBasedAuth = new Client
         {
             ClientId = "6c4c5801-1089-4c3c-83c7-ddc0eb3707b3",
             ClientName = "Classified Advertisements Angular App",
+            // ClientSecrets = new List<Secret> { new("secret".Sha256()) },
             Description = "Classified Advertisements Angular App",
-            AllowAccessTokensViaBrowser = true,
-            AllowedCorsOrigins = new List<string> { "http://localhost:4200" },
+            AllowAccessTokensViaBrowser = false,
+            AllowedCorsOrigins = new List<string>
+            {
+                "http://localhost:4200",
+                "https://localhost:4200",
+                "https://localhost:7220"
+            },
             AllowedGrantTypes = GrantTypes.Code,
-            // AllowOfflineAccess = true,
+            AllowOfflineAccess = true,
             AllowedScopes = new List<string>
             {
                 IdentityServerConstants.StandardScopes.OpenId,
-                // IdentityServerConstants.StandardScopes.OfflineAccess,
+                IdentityServerConstants.StandardScopes.OfflineAccess,
                 IdentityServerConstants.StandardScopes.Profile,
                 IdentityServerConstants.StandardScopes.Email,
                 "roles",
-                "ads_api"
+                "ads_command_api",
+                "ads_query_api",
+                "angular_web_api",
             },
             // AccessTokenLifetime = 600,
-            PostLogoutRedirectUris = new List<string> { "http://localhost:4200/signout-callback-oidc" },
-            RedirectUris = new List<string> { "http://localhost:4200", "http://localhost:4200/signin-callback", "http://localhost:4200/silent-callback.html" },
+            PostLogoutRedirectUris = new List<string>
+            {
+                "http://localhost:4200/signout-callback-oidc",
+                "https://localhost:4200/signout-callback-oidc",
+                "https://localhost:7220/signout-callback-oidc"
+            },
+            RedirectUris = new List<string>
+            {
+                "http://localhost:4200",
+                "http://localhost:4200/signin-callback",
+                "http://localhost:4200/silent-callback.html",
+                "https://localhost:4200",
+                "https://localhost:4200/signin-callback",
+                "https://localhost:4200/silent-callback.html",
+                "https://localhost:7220",
+                "https://localhost:7220/signin-callback",
+                "https://localhost:7220/silent-callback.html"
+            },
             // RefreshTokenUsage = TokenUsage.ReUse
             RequireClientSecret = false,
             // RequireConsent = false,
