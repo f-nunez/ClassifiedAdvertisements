@@ -32,6 +32,8 @@ public static class ConfigureServices
 
         services.AddFeatureServices();
 
+        services.AddBffTokenBasedAuthenticationServices(configuration);
+
         return services;
     }
 
