@@ -24,9 +24,7 @@ public static class ConfigureServices
 
                 corsPolicyBuilder.AllowAnyMethod();
 
-                corsPolicyBuilder.WithOrigins("http://localhost:4200");
-
-                corsPolicyBuilder.WithOrigins("https://localhost:4200");
+                corsPolicyBuilder.AllowAnyOrigin();
             });
         });
 
