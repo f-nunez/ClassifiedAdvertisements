@@ -57,9 +57,11 @@ public static class ConfigureServices
 
         app.UseCors("CorsPolicy");
 
+        app.UseAuthentication();
+
         app.UseAuthorization();
 
-        app.MapControllers();
+        app.MapControllers().RequireAuthorization("WebApiPolicy");
 
         app.MapFallbackToFile("index.html");
 
