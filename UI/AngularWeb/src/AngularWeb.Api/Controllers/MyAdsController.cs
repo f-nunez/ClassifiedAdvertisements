@@ -1,10 +1,12 @@
 using AngularWeb.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AngularWeb.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/[controller]")]
+[Authorize("MyAdsPolicy")]
 public class MyAdsController : ControllerBase
 {
     private readonly IMyAdsService _myAdsService;
