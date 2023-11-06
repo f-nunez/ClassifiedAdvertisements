@@ -32,7 +32,9 @@ public static class ConfigureServices
 
         services.AddFeatureServices();
 
-        services.AddBffTokenBasedAuthenticationServices(configuration);
+        services.AddBffCookieBasedAuthenticationServices(configuration);
+
+        // services.AddBffTokenBasedAuthenticationServices(configuration);
 
         return services;
     }
