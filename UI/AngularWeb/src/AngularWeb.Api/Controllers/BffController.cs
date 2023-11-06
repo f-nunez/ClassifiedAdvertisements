@@ -52,7 +52,6 @@ public class BffController : ControllerBase
         return Challenge(authProperties, challengeScheme);
     }
 
-    [Authorize]
     [HttpGet("Logout")]
     public IActionResult Logout(string? redirectUri)
     {
