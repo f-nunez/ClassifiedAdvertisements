@@ -34,4 +34,25 @@ public class BffController : ControllerBase
 
         return Challenge(authProperties, challengeScheme);
     }
+
+    [Authorize]
+    [HttpGet("Logout")]
+    public IActionResult Logout(string? redirectUri)
+    {
+        if (string.IsNullOrEmpty(redirectUri))
+            redirectUri = "/";
+
+        //TODO: validate redirectUri with white list
+
+        var authSchemes = _authenticationOptions.Value.Schemes
+            .Select(authScheme => authScheme.Name)
+            .ToArray();
+
+        var authProperties = new AuthenticationProperties
+        {
+            RedirectUri = redirectUri
+        };
+
+        return SignOut(authProperties, authSchemes);
+    }
 }
