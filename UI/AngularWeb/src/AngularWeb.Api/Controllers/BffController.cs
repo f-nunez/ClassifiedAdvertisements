@@ -1,3 +1,5 @@
+using System.Security.Claims;
+using AngularWeb.Api.Bff.Common;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +15,21 @@ public class BffController : ControllerBase
     public BffController(IOptions<AuthenticationOptions> authenticationOptions)
     {
         _authenticationOptions = authenticationOptions;
+    }
+
+    [AllowAnonymous]
+    [HttpGet("User")]
+    [Produces("application/json")]
+    public ActionResult GetUserInfo()
+    {
+        List<ClaimRecord> claims = new();
+
+        if (User.Identity?.IsAuthenticated == true)
+            claims = ((ClaimsIdentity)User.Identity).Claims
+                .Select(c => new ClaimRecord(c.Type, c.Value))
+                .ToList();
+
+        return new JsonResult(claims);
     }
 
     [AllowAnonymous]
