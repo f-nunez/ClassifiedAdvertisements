@@ -71,4 +71,20 @@ public class BffController : ControllerBase
 
         return SignOut(authProperties, authSchemes);
     }
+
+    [AllowAnonymous]
+    [HttpGet("GetAuthProperties")]
+    [Produces("application/json")]
+    public ActionResult GetAuthProperties()
+    {
+        var props = new List<KeyValuePair<string, string?>>();
+        var authFeatures = HttpContext.Features.Get<IAuthenticateResultFeature>();
+        var authProps = authFeatures?.AuthenticateResult?.Properties;
+
+        if (authProps is not null)
+            foreach (var prop in authProps.Items)
+                props.Add(prop);
+
+        return new JsonResult(props);
+    }
 }
