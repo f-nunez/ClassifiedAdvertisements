@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using AngularWeb.Api.Bff.Common;
+using AngularWeb.Api.Bff.LogoutSessionManagement;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +12,27 @@ namespace AngularWeb.Api.Controllers;
 public class BffController : ControllerBase
 {
     private readonly IOptions<AuthenticationOptions> _authenticationOptions;
+    private readonly ILogoutSessionService _logoutSessionService;
 
-    public BffController(IOptions<AuthenticationOptions> authenticationOptions)
+    public BffController(
+        IOptions<AuthenticationOptions> authenticationOptions,
+        ILogoutSessionService logoutSessionService)
     {
         _authenticationOptions = authenticationOptions;
+        _logoutSessionService = logoutSessionService;
+    }
+
+    [AllowAnonymous]
+    [HttpPost("BackChannelLogout")]
+    public async Task<IActionResult> BackChannelLogout(string logout_token)
+    {
+        Response.Headers.Add("Cache-Control", "no-cache, no-store");
+
+        Response.Headers.Add("Pragma", "no-cache");
+
+        await _logoutSessionService.ProcessBackChannelLogout(logout_token);
+
+        return Ok();
     }
 
     [AllowAnonymous]
