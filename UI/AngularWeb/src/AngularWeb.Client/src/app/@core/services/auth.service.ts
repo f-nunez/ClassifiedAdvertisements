@@ -1,48 +1,31 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Role } from '@core/enums/role';
 import { AuthContextHelper } from '@core/helpers/auth-context.helper';
 import { RoleHelper } from '@core/helpers/role.helper';
 import { AuthContext } from '@core/interfaces/auth-context';
-import { UserInfo } from '@core/interfaces/user-info';
-import { UserManager, User } from 'oidc-client-ts';
+import { Claim } from '@core/interfaces/claim';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
+// TODO: load AuthService by interface based on authentication approach
+// eg. CookieBasedAuthService implements IAuthService
+// eg. TokenBasedAuthService implements IAuthService
+// and implement on related modules/features injecting IAuthService on constructors
+// or build a resolver constructor. any options sounds good to provide dynamic auth service
 export class AuthService {
     private authContext: AuthContext = {};
     private isAuthenticated$ = new BehaviorSubject<boolean>(false);
-    private user: User | null = null;
-    private userManager: UserManager;
 
     constructor(
+        private httpClient: HttpClient,
         private authContextHelper: AuthContextHelper,
         private roleHelper: RoleHelper
     ) {
-        const userManagerSettings = {
-            authority: environment.oidcSetting.authority,
-            automaticSilentRenew: environment.oidcSetting.automaticSilentRenew,
-            client_id: environment.oidcSetting.clientId,
-            post_logout_redirect_uri: environment.oidcSetting.postLogoutRedirectUri,
-            redirect_uri: environment.oidcSetting.redirectUri,
-            response_type: environment.oidcSetting.responseType,
-            scope: environment.oidcSetting.scope,
-            silent_redirect_uri: environment.oidcSetting.silentRedirectUri
-        };
-
-        this.userManager = new UserManager(userManagerSettings);
-
-        if (environment.useFakeAuth)
-            return;
-
-        if (environment.oidcSetting.automaticSilentRenew)
-            this.setUserToAuthContextWithSilentRenew();
-        else
-            this.setUserToAuthContext();
-
-        this.setEventsForUserManager();
+        this.setAuthContext();
     }
 
     public haveAccessToAnyRoles(roles: Role[]): boolean {
@@ -54,10 +37,7 @@ export class AuthService {
     }
 
     public isAuthenticated(): boolean {
-        if (environment.useFakeAuth)
-            return !!this.authContext.userInfo;
-        else
-            return this.validateUser(this.user);
+        return !!this.authContext.userInfo;
     }
 
     public getAuthenticatedObservable(): Observable<boolean> {
@@ -69,21 +49,15 @@ export class AuthService {
     }
 
     public async signinAsync(): Promise<void> {
-        if (environment.useFakeAuth)
-            this.mockLogin();
-        else
-            return await this.userManager.signinRedirect();
+        window.location.href = `${environment.apiUrl}bff/login`;
     }
 
-    public async signinCallbackAsync() {
-        return await this.userManager.signinCallback();
+    public async signinCallbackAsync(): Promise<void> {
+        this.setAuthContext();
     }
 
     public async signoutAsync(): Promise<void> {
-        if (environment.useFakeAuth)
-            this.mockLogout();
-        else
-            return await this.userManager.signoutRedirect();
+        window.location.href = `${environment.apiUrl}bff/logout`;
     }
 
     public getUserUsername(): string {
@@ -93,90 +67,14 @@ export class AuthService {
             return '';
     }
 
-    private setEventsForUserManager(): void {
-        this.userManager.events.addUserLoaded(user => {
-            this.setUserToAuthContext();
-        });
-
-        this.userManager.events.addUserUnloaded(() => {
-            this.setUserToAuthContext();
-        });
-
-        this.userManager.events.addUserSessionChanged(() => {
-            this.setUserToAuthContext();
-        });
-
-        this.userManager.events.addUserSignedIn(() => {
-            this.setUserToAuthContext();
-        })
-
-        this.userManager.events.addUserSignedOut(() => {
-            this.setUserToAuthContext();
-        });
+    public getAccessToken(): string | null {
+        return null;
     }
 
-    private setUserToAuthContext(): void {
-        this.userManager.getUser().then(user => {
-            this.validateUserResponse(user);
+    private setAuthContext(): void {
+        this.httpClient.get<Claim[]>(`${environment.apiUrl}bff/user`).subscribe((claims) => {
+            this.authContext = this.authContextHelper.getAuthContextFromClaims(claims);
             this.setAuthenticatedObservable(this.isAuthenticated());
         });
-    }
-
-    private setUserToAuthContextWithSilentRenew(): void {
-        this.userManager.getUser().then(user => {
-            this.validateUserResponse(user);
-
-            if (!this.isAuthenticated())
-                this.useSilentRefresh()
-            else
-                this.setAuthenticatedObservable(this.isAuthenticated());
-        });
-    }
-
-    private useSilentRefresh(): void {
-        this.userManager.signinSilent().then(user => {
-            this.validateUserResponse(user);
-            this.setAuthenticatedObservable(this.isAuthenticated());
-        });
-    }
-
-    private validateUser(user: User | null): boolean {
-        return !!user && !!user.access_token && !user.expired;
-    }
-
-    private validateUserResponse(user: User | null): void {
-        if (this.validateUser(user)) {
-            this.user = user;
-            this.authContext = this.authContextHelper
-                .getAuthContext(this.user!.access_token!);
-        } else {
-            this.user = null;
-            this.authContext = {};
-        }
-    };
-
-    private mockLogin(): void {
-        var roles: Role[] = [Role.Customer, Role.Manager, Role.Staff];
-
-        var userInfo: UserInfo = {
-            email: 'test@nunez.ninja',
-            id: '123456789',
-            name: 'my name',
-            roles: roles,
-            username: 'theUsername'
-        };
-
-        var authContext: AuthContext = {
-            claims: [],
-            userInfo: userInfo
-        };
-
-        this.authContext = authContext;
-        this.setAuthenticatedObservable(this.isAuthenticated());
-    }
-
-    private mockLogout(): void {
-        this.authContext = {};
-        this.setAuthenticatedObservable(this.isAuthenticated());
     }
 }
