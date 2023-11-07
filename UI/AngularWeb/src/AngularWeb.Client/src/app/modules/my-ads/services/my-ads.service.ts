@@ -13,7 +13,7 @@ import { GetMyAdUpdateRequest } from '../interfaces/get-my-ad-update/get-my-ad-u
 import { GetMyAdUpdateResponse } from '../interfaces/get-my-ad-update/get-my-ad-update-response';
 import { UpdateMyAdRequest } from '../interfaces/update-my-ad/update-my-ad-request';
 import { UpdateMyAdResponse } from '../interfaces/update-my-ad/update-my-ad-response';
-import { environment } from 'src/environments/environment.development';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class MyAdsService {
