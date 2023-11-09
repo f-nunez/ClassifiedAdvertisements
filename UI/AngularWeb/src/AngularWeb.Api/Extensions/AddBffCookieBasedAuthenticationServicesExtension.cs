@@ -14,7 +14,8 @@ internal static class AddBffCookieBasedAuthenticationServicesExtension
             .Get<BffCookieBasedAuthenticationSettings>();
 
         if (bffSettings is null)
-            throw new ArgumentNullException(nameof(bffSettings), $"Required {nameof(bffSettings)}.");
+            throw new ArgumentNullException(
+                nameof(bffSettings), $"{nameof(bffSettings)} is required.");
 
         services.AddSingleton(bffSettings);
 
