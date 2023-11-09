@@ -27,9 +27,13 @@ public class UpdateMyAdCommandHandler
 
         var response = new UpdateMyAdResponse(request.CorrelationId);
 
-        var classifiedAd = await _eventStore.ReadStreamEventsAsync(request.Id);
+        var classifiedAd = await _eventStore.ReadStreamEventsAsync(
+            request.Id, cancellationToken);
 
         if (classifiedAd is null)
+            throw new NotFoundException(nameof(classifiedAd), request.Id);
+
+        if (classifiedAd.CreatedBy != _currentUserService.UserId)
             throw new NotFoundException(nameof(classifiedAd), request.Id);
 
         classifiedAd.Update(
