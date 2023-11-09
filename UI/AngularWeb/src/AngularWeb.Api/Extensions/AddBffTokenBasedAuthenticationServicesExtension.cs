@@ -10,7 +10,7 @@ internal static class AddBffTokenBasedAuthenticationServicesExtension
             .Get<BffTokenBasedAuthenticationSettings>();
 
         if (bffSettings is null)
-            throw new ArgumentNullException(nameof(bffSettings), $"Required {nameof(bffSettings)}.");
+            throw new ArgumentNullException(nameof(bffSettings), $"{nameof(bffSettings)} is required.");
 
         services.AddAuthentication(bffSettings.AuthenticationDefaultScheme)
             .AddJwtBearer(options =>
