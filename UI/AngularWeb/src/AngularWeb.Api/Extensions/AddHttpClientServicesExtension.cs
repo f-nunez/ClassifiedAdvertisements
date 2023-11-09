@@ -1,4 +1,5 @@
 using System.Net.Sockets;
+using AngularWeb.Api.Handlers;
 using AngularWeb.Api.HttpClients;
 using AngularWeb.Api.Settings;
 using Polly;
@@ -11,6 +12,8 @@ internal static class AddHttpClientServicesExtension
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddTransient<AccessTokenDelegatingHandler>();
+
         var adsCommandHttpClientSettings = configuration
             .GetSection(nameof(AdsCommandHttpClientSettings))
             .Get<AdsCommandHttpClientSettings>()!;
@@ -30,7 +33,8 @@ internal static class AddHttpClientServicesExtension
                 httpClient.Timeout = adsCommandHttpClientSettings.Timeout;
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             })
-            .SetHandlerLifetime(adsCommandHttpClientSettings.HandlerLifetime);
+            .SetHandlerLifetime(adsCommandHttpClientSettings.HandlerLifetime)
+            .AddHttpMessageHandler<AccessTokenDelegatingHandler>();
 
         services.AddHttpClient<IAdsQueryHttpClient, AdsQueryHttpClient>()
             .ConfigureHttpClient((serviceProvider, httpClient) =>
@@ -39,7 +43,8 @@ internal static class AddHttpClientServicesExtension
                 httpClient.Timeout = adsQueryHttpClientSettings.Timeout;
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
             })
-            .SetHandlerLifetime(adsQueryHttpClientSettings.HandlerLifetime);
+            .SetHandlerLifetime(adsQueryHttpClientSettings.HandlerLifetime)
+            .AddHttpMessageHandler<AccessTokenDelegatingHandler>();
 
         services.AddResiliencePipeline(nameof(HttpClientResilienceStrategySettings), (builder, context) =>
         {
