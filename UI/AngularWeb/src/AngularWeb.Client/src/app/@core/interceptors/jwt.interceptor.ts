@@ -1,18 +1,16 @@
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthService } from '@core/services/auth.service';
+import { TokenProviderService } from '@core/services/token-provider.service';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-    constructor(private authService: AuthService) { }
+    constructor(private tokenProviderService: TokenProviderService) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         if (!environment.useCookieBasedAuthentication) {
-            const token = this.authService.getAccessToken();
+            const token = this.tokenProviderService.getAccessToken();
 
             if (token) {
                 req = req.clone({
