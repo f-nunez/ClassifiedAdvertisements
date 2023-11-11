@@ -38,7 +38,7 @@ public class LogoutSessionCookieAuthenticationEvent : CookieAuthenticationEvents
 
                 context.RejectPrincipal();
 
-                await context.HttpContext.SignOutAsync(_authenticationOptions.Value.DefaultAuthenticateScheme);
+                await context.HttpContext.SignOutAsync(_authenticationOptions.Value.DefaultScheme);
             }
         }
     }
