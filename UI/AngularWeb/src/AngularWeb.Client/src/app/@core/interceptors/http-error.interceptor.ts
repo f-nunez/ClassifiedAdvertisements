@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { SpinnerOverlayService } from '@core/services/spinner-overlay.service';
 import { Observable, retry, finalize, delay } from 'rxjs';
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
     private readonly retryCount = 3;
     private readonly retryDelayInMilliseconds = 1000;
