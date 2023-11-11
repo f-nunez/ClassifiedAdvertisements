@@ -67,10 +67,6 @@ export class AuthService {
             return '';
     }
 
-    public getAccessToken(): string | null {
-        return null;
-    }
-
     private setAuthContext(): void {
         this.httpClient.get<Claim[]>(`${environment.apiUrl}bff/user`).subscribe((claims) => {
             this.authContext = this.authContextHelper.getAuthContextFromClaims(claims);
