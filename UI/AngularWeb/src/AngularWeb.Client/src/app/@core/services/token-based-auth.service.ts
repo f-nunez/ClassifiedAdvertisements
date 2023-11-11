@@ -7,6 +7,7 @@ import { UserInfo } from '@core/interfaces/user-info';
 import { UserManager, User } from 'oidc-client-ts';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { TokenProviderService } from './token-provider.service';
 
 @Injectable({
     providedIn: 'root'
@@ -19,7 +20,8 @@ export class TokenBasedAuthService {
 
     constructor(
         private authContextHelper: AuthContextHelper,
-        private roleHelper: RoleHelper
+        private roleHelper: RoleHelper,
+        private tokenProviderService: TokenProviderService
     ) {
         const userManagerSettings = {
             authority: environment.oidcSetting.authority,
@@ -93,13 +95,6 @@ export class TokenBasedAuthService {
             return '';
     }
 
-    public getAccessToken(): string | null {
-        if (this.user?.access_token)
-            return this.user?.access_token;
-
-        return null;
-    }
-
     private setEventsForUserManager(): void {
         this.userManager.events.addUserLoaded(user => {
             this.setUserToAuthContext();
@@ -126,6 +121,7 @@ export class TokenBasedAuthService {
         this.userManager.getUser().then(user => {
             this.validateUserResponse(user);
             this.setAuthenticatedObservable(this.isAuthenticated());
+            this.setAccessToken();
         });
     }
 
@@ -135,8 +131,10 @@ export class TokenBasedAuthService {
 
             if (!this.isAuthenticated())
                 this.useSilentRefresh()
-            else
+            else {
                 this.setAuthenticatedObservable(this.isAuthenticated());
+                this.setAccessToken();
+            }
         });
     }
 
@@ -144,7 +142,12 @@ export class TokenBasedAuthService {
         this.userManager.signinSilent().then(user => {
             this.validateUserResponse(user);
             this.setAuthenticatedObservable(this.isAuthenticated());
+            this.setAccessToken();
         });
+    }
+
+    private setAccessToken(): void {
+        this.tokenProviderService.setAccessToken(this.user?.access_token);
     }
 
     private validateUser(user: User | null): boolean {
