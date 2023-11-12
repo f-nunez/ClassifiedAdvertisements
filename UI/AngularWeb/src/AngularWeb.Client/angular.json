@@ -58,8 +58,7 @@
                   "with": "src/environments/environment.production.ts"
                 }
               ],
-              "outputHashing": "all",
-              "outputPath": "../AngularWeb.Api/wwwroot"
+              "outputHashing": "all"
             },
             "development": {
               "buildOptimizer": false,
@@ -73,8 +72,7 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.development.ts"
                 }
-              ],
-              "outputPath": "../AngularWeb.Api/wwwroot"
+              ]
             },
             "staging": {
               "buildOptimizer": false,
@@ -88,11 +86,10 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.staging.ts"
                 }
-              ],
-              "outputPath": "../AngularWeb.Api/wwwroot"
+              ]
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -101,13 +98,14 @@
               "browserTarget": "AngularApp:build:production"
             },
             "development": {
-              "browserTarget": "AngularApp:build:development"
+              "browserTarget": "AngularApp:build:development",
+              "proxyConfig": "proxy.conf.js"
             },
             "staging": {
               "browserTarget": "AngularApp:build:staging"
             }
           },
-          "defaultConfiguration": "production"
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
