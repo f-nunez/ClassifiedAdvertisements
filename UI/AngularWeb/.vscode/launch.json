@@ -1,6 +1,23 @@
 {
     "version": "0.2.0",
+    "compounds": [
+        {
+            "name": "Full Stack",
+            "configurations": [
+                ".NET Core Launch (web)",
+                "Launch Chrome"
+            ]
+        }
+    ],
     "configurations": [
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "sourceMaps": true,
+            "type": "chrome",
+            "url": "https://localhost:7220",
+            "webRoot": "${workspaceFolder}/src/AngularWeb.Client"
+        },
         {
             // Use IntelliSense to find out which attributes exist for C# debugging
             // Use hover for the description of the existing attributes
@@ -15,12 +32,13 @@
             "cwd": "${workspaceFolder}/src/AngularWeb.Api",
             "stopAtEntry": false,
             // Enable launching a web browser when ASP.NET Core starts. For more information: https://aka.ms/VSCode-CS-LaunchJson-WebBrowser
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
+            // "serverReadyAction": {
+            //     "action": "openExternally",
+            //     "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            // },
             "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
