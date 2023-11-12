@@ -201,8 +201,7 @@ public class ConfigurationStoreDbContextSeeder
             AllowAccessTokensViaBrowser = false,
             AllowedCorsOrigins = new List<string>
             {
-                "http://localhost:4200",
-                "https://localhost:4200",
+                "https://localhost:44417",
                 "https://localhost:7220"
             },
             AllowedGrantTypes = GrantTypes.Code,
@@ -221,18 +220,14 @@ public class ConfigurationStoreDbContextSeeder
             // AccessTokenLifetime = 600,
             PostLogoutRedirectUris = new List<string>
             {
-                "http://localhost:4200/signout-callback-oidc",
-                "https://localhost:4200/signout-callback-oidc",
+                "https://localhost:44417/signout-callback-oidc",
                 "https://localhost:7220/signout-callback-oidc"
             },
             RedirectUris = new List<string>
             {
-                "http://localhost:4200",
-                "http://localhost:4200/signin-callback",
-                "http://localhost:4200/silent-callback.html",
-                "https://localhost:4200",
-                "https://localhost:4200/signin-callback",
-                "https://localhost:4200/silent-callback.html",
+                "https://localhost:44417",
+                "https://localhost:44417/signin-callback",
+                "https://localhost:44417/silent-callback.html",
                 "https://localhost:7220",
                 "https://localhost:7220/signin-callback",
                 "https://localhost:7220/silent-callback.html"
@@ -253,6 +248,7 @@ public class ConfigurationStoreDbContextSeeder
             AllowAccessTokensViaBrowser = false,
             AllowedCorsOrigins = new List<string>
             {
+                "https://localhost:44417",
                 "https://localhost:7220"
             },
             AllowedGrantTypes = GrantTypes.Code,
@@ -274,11 +270,13 @@ public class ConfigurationStoreDbContextSeeder
             // RefreshTokenExpiration = TokenExpiration.Absolute,
             PostLogoutRedirectUris = new List<string>
             {
+                "https://localhost:44417/signout-callback-oidc",
                 "https://localhost:7220/signout-callback-oidc"
             },
             RedirectUris = new List<string>
             {
-                "https://localhost:7220/signin-oidc",
+                "https://localhost:44417/signin-oidc",
+                "https://localhost:7220/signin-oidc"
             },
             BackChannelLogoutUri = "https://localhost:7220/bff/backchannellogout",
             RefreshTokenUsage = TokenUsage.OneTimeOnly,
