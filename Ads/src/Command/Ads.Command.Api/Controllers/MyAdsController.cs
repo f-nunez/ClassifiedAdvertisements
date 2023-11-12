@@ -1,10 +1,12 @@
 using Ads.Command.Application.Features.CreateMyAd;
 using Ads.Command.Application.Features.DeleteMyAd;
 using Ads.Command.Application.Features.UpdateMyAd;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ads.Command.Api.Controllers;
 
+[Authorize("GeneralPolicy")]
 public class MyAdsController : BaseApiController
 {
     [HttpPost]

@@ -66,9 +66,39 @@ public class ConfigurationStoreDbContextSeeder
         await _context.AddRangeAsync(
             new ApiResource
             {
+                Name = "87c76d97-4a08-447b-a8e2-6f3b7a2412b1",
+                DisplayName = "Angular Web Api",
+                Scopes = new List<string> { "angular_web_api" },
+                UserClaims = new List<string>
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
+            }.ToEntity(),
+            new ApiResource
+            {
                 Name = "7e2593ba-e3cd-40e5-a50e-506877d0210e",
-                DisplayName = "Ads Api",
-                Scopes = new List<string> { "ads_api" },
+                DisplayName = "Ads Command Api",
+                Scopes = new List<string> { "ads_command_api" },
+                UserClaims = new List<string>
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
+            }.ToEntity(),
+            new ApiResource
+            {
+                Name = "717228aa-0fa6-43d1-8e3a-47325d0f57cc",
+                DisplayName = "Ads Query Api",
+                Scopes = new List<string> { "ads_query_api" },
                 UserClaims = new List<string>
                 {
                     JwtClaimTypes.ClientId,
@@ -92,8 +122,36 @@ public class ConfigurationStoreDbContextSeeder
         await _context.AddRangeAsync(
             new ApiScope
             {
-                Name = "ads_api",
-                DisplayName = "Ads Api",
+                Name = "angular_web_api",
+                DisplayName = "Angular Web Api",
+                UserClaims = new[]
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
+            }.ToEntity(),
+            new ApiScope
+            {
+                Name = "ads_command_api",
+                DisplayName = "Ads Command Api",
+                UserClaims = new[]
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
+            }.ToEntity(),
+            new ApiScope
+            {
+                Name = "ads_query_api",
+                DisplayName = "Ads Query Api",
                 UserClaims = new[]
                 {
                     JwtClaimTypes.ClientId,
@@ -134,27 +192,51 @@ public class ConfigurationStoreDbContextSeeder
         if (await _context.Clients.AnyAsync())
             return;
 
-        var demoAngularApp = new Client
+        var angularWebWithTokenBasedAuth = new Client
         {
             ClientId = "6c4c5801-1089-4c3c-83c7-ddc0eb3707b3",
             ClientName = "Classified Advertisements Angular App",
+            // ClientSecrets = new List<Secret> { new("secret".Sha256()) },
             Description = "Classified Advertisements Angular App",
-            AllowAccessTokensViaBrowser = true,
-            AllowedCorsOrigins = new List<string> { "http://localhost:4200" },
+            AllowAccessTokensViaBrowser = false,
+            AllowedCorsOrigins = new List<string>
+            {
+                "http://localhost:4200",
+                "https://localhost:4200",
+                "https://localhost:7220"
+            },
             AllowedGrantTypes = GrantTypes.Code,
-            // AllowOfflineAccess = true,
+            AllowOfflineAccess = true,
             AllowedScopes = new List<string>
             {
                 IdentityServerConstants.StandardScopes.OpenId,
-                // IdentityServerConstants.StandardScopes.OfflineAccess,
+                IdentityServerConstants.StandardScopes.OfflineAccess,
                 IdentityServerConstants.StandardScopes.Profile,
                 IdentityServerConstants.StandardScopes.Email,
                 "roles",
-                "ads_api"
+                "ads_command_api",
+                "ads_query_api",
+                "angular_web_api",
             },
             // AccessTokenLifetime = 600,
-            PostLogoutRedirectUris = new List<string> { "http://localhost:4200/signout-callback-oidc" },
-            RedirectUris = new List<string> { "http://localhost:4200", "http://localhost:4200/signin-callback", "http://localhost:4200/silent-callback.html" },
+            PostLogoutRedirectUris = new List<string>
+            {
+                "http://localhost:4200/signout-callback-oidc",
+                "https://localhost:4200/signout-callback-oidc",
+                "https://localhost:7220/signout-callback-oidc"
+            },
+            RedirectUris = new List<string>
+            {
+                "http://localhost:4200",
+                "http://localhost:4200/signin-callback",
+                "http://localhost:4200/silent-callback.html",
+                "https://localhost:4200",
+                "https://localhost:4200/signin-callback",
+                "https://localhost:4200/silent-callback.html",
+                "https://localhost:7220",
+                "https://localhost:7220/signin-callback",
+                "https://localhost:7220/silent-callback.html"
+            },
             // RefreshTokenUsage = TokenUsage.ReUse
             RequireClientSecret = false,
             // RequireConsent = false,
@@ -162,8 +244,54 @@ public class ConfigurationStoreDbContextSeeder
             // UpdateAccessTokenClaimsOnRefresh = true,
         };
 
+        var angularWebWithCookieBasedAuth = new Client
+        {
+            ClientId = "4c534f05-a5a7-4762-9f9d-5d5214f8caaf",
+            ClientName = "Classified Advertisements Angular App",
+            ClientSecrets = new List<Secret> { new("secret".Sha256()) },
+            Description = "Classified Advertisements Angular App",
+            AllowAccessTokensViaBrowser = false,
+            AllowedCorsOrigins = new List<string>
+            {
+                "https://localhost:7220"
+            },
+            AllowedGrantTypes = GrantTypes.Code,
+            AllowOfflineAccess = true,
+            AllowedScopes = new List<string>
+            {
+                IdentityServerConstants.StandardScopes.OpenId,
+                IdentityServerConstants.StandardScopes.OfflineAccess,
+                IdentityServerConstants.StandardScopes.Profile,
+                IdentityServerConstants.StandardScopes.Email,
+                "roles",
+                "ads_command_api",
+                "ads_query_api"
+            },
+            // AccessTokenLifetime = 60*60,
+            // IdentityTokenLifetime = 60*5,
+            // SlidingRefreshTokenLifetime = 60*60*24*15,
+            // AbsoluteRefreshTokenLifetime = 60*60*24*30,
+            // RefreshTokenExpiration = TokenExpiration.Absolute,
+            PostLogoutRedirectUris = new List<string>
+            {
+                "https://localhost:7220/signout-callback-oidc"
+            },
+            RedirectUris = new List<string>
+            {
+                "https://localhost:7220/signin-oidc",
+            },
+            BackChannelLogoutUri = "https://localhost:7220/bff/backchannellogout",
+            RefreshTokenUsage = TokenUsage.OneTimeOnly,
+            RequireClientSecret = true,
+            RequireConsent = false,
+            RequirePkce = true,
+            UpdateAccessTokenClaimsOnRefresh = true,
+            // CoordinateLifetimeWithUserSession = true,
+        };
+
         await _context.AddRangeAsync(
-            demoAngularApp.ToEntity()
+            angularWebWithTokenBasedAuth.ToEntity(),
+            angularWebWithCookieBasedAuth.ToEntity()
         );
 
         await _context.SaveChangesAsync();

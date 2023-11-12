@@ -1,9 +1,11 @@
 using Identity.Domain.Entities;
 using Identity.Infrastructure.Persistence.Contexts;
 using Identity.Infrastructure.Settings;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using StackExchange.Redis;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -70,6 +72,13 @@ public static class ConfigureServices
         services.AddScoped<ConfigurationStoreDbContextSeeder>();
 
         services.AddScoped<OperationalStoreDbContextSeeder>();
+
+        var redisConnection = ConnectionMultiplexer.Connect(
+            identityServerSetting.DataProtectionRedisConnection);
+
+        services.AddDataProtection()
+            .PersistKeysToStackExchangeRedis(redisConnection, identityServerSetting.DataProtectionRedisKey)
+            .SetApplicationName(identityServerSetting.DataProtectionApplicationName);
 
         return services;
     }

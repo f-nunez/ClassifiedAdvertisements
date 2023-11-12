@@ -9,15 +9,18 @@ namespace Ads.Query.Application.Features.MyAds.GetMyAdList;
 public class GetMyAdListQueryHandler
     : IRequestHandler<GetMyAdListQuery, GetMyAdListResponse>
 {
+    private readonly ICurrentUserService _currentUserService;
     private readonly IMapper _mapper;
     private readonly IRepository<ClassifiedAd> _repository;
 
     public GetMyAdListQueryHandler(
+        ICurrentUserService currentUserService,
         IMapper mapper,
         IRepository<ClassifiedAd> repository)
     {
         _mapper = mapper;
         _repository = repository;
+        _currentUserService = currentUserService;
     }
 
     public async Task<GetMyAdListResponse> Handle(
@@ -30,13 +33,17 @@ public class GetMyAdListQueryHandler
 
         IEnumerable<ClassifiedAd> classifiedAds = await _repository
             .GetListAsync(
-                x => x.IsActive,
+                x => x.IsActive && x.CreatedBy == _currentUserService.UserId,
                 GetOrderedQueryable(request),
                 request.DataTableRequest.Skip,
-                request.DataTableRequest.Take
+                request.DataTableRequest.Take,
+                cancellationToken
             );
 
-        long count = await _repository.CountAsync(x => x.IsActive);
+        long count = await _repository.CountAsync(
+            x => x.IsActive && x.CreatedBy == _currentUserService.UserId,
+            cancellationToken
+        );
 
         if (classifiedAds is null)
             return response;

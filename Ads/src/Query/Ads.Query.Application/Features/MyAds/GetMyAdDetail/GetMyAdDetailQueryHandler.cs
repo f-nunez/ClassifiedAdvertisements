@@ -9,13 +9,16 @@ namespace Ads.Query.Application.Features.MyAds.GetMyAdDetail;
 public class GetMyAdDetailQueryHandler
     : IRequestHandler<GetMyAdDetailQuery, GetMyAdDetailResponse>
 {
+    private readonly ICurrentUserService _currentUserService;
     private readonly IMapper _mapper;
     private readonly IRepository<ClassifiedAd> _repository;
 
     public GetMyAdDetailQueryHandler(
+        ICurrentUserService currentUserService,
         IMapper mapper,
         IRepository<ClassifiedAd> repository)
     {
+        _currentUserService = currentUserService;
         _mapper = mapper;
         _repository = repository;
     }
@@ -29,7 +32,12 @@ public class GetMyAdDetailQueryHandler
         var response = new GetMyAdDetailResponse(request.CorrelationId);
 
         var classifiedAd = await _repository
-            .GetByIdAsync(request.Id, cancellationToken);
+            .GetFirstOrDefaultAsync(
+                x => x.IsActive
+                && x.Id == request.Id
+                && x.CreatedBy == _currentUserService.UserId,
+                cancellationToken: cancellationToken
+            );
 
         if (classifiedAd is null)
             throw new NotFoundException(nameof(classifiedAd), request.Id);

@@ -27,9 +27,13 @@ public class DeleteMyAdCommandHandler
 
         var response = new DeleteMyAdResponse(request.CorrelationId);
 
-        var classifiedAd = await _eventStore.ReadStreamEventsAsync(request.Id);
+        var classifiedAd = await _eventStore.ReadStreamEventsAsync(
+            request.Id, cancellationToken);
 
         if (classifiedAd is null)
+            throw new NotFoundException(nameof(classifiedAd), request.Id);
+
+        if (classifiedAd.CreatedBy != _currentUserService.UserId)
             throw new NotFoundException(nameof(classifiedAd), request.Id);
 
         classifiedAd.Delete(_currentUserService.UserId, DateTimeOffset.UtcNow);

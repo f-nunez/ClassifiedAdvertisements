@@ -1,4 +1,7 @@
 using AngularWeb.Api.Middlewares;
+using AngularWeb.Api.Settings;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.IdentityModel.Logging;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -8,6 +11,18 @@ public static class ConfigureServices
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        // ShowPII only for development stages
+        IdentityModelEventSource.ShowPII = true;
+
+        // Needed when run behind a reverse proxy
+        services.Configure<ForwardedHeadersOptions>(options =>
+        {
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor
+                | ForwardedHeaders.XForwardedProto;
+        });
+
+        services.AddHttpContextAccessor();
+
         services.AddRouting(options => options.LowercaseUrls = true);
 
         services.AddControllersWithViews();
@@ -16,23 +31,36 @@ public static class ConfigureServices
 
         services.AddSwaggerGen();
 
+        var corsPolicySettings = configuration
+            .GetSection(typeof(CorsPolicySettings).Name)
+            .Get<CorsPolicySettings>();
+
+        if (corsPolicySettings is null)
+            throw new ArgumentNullException(
+                nameof(corsPolicySettings), $"{nameof(corsPolicySettings)} is required.");
+
         services.AddCors(corsOptions =>
         {
-            corsOptions.AddPolicy("CorsPolicy", corsPolicyBuilder =>
+            corsOptions.AddPolicy(typeof(CorsPolicySettings).Name, corsPolicyBuilder =>
             {
                 corsPolicyBuilder.AllowAnyHeader();
 
                 corsPolicyBuilder.AllowAnyMethod();
 
-                corsPolicyBuilder.WithOrigins("http://localhost:4200");
-
-                corsPolicyBuilder.WithOrigins("https://localhost:4200");
+                if (corsPolicySettings.WithOrigins is not null)
+                    corsPolicyBuilder.WithOrigins(corsPolicySettings.WithOrigins);
+                else
+                    corsPolicyBuilder.AllowAnyOrigin();
             });
         });
 
         services.AddHttpClientServices(configuration);
 
         services.AddFeatureServices();
+
+        services.AddBffCookieBasedAuthenticationServices(configuration);
+
+        // services.AddBffTokenBasedAuthenticationServices(configuration);
 
         return services;
     }
@@ -55,11 +83,13 @@ public static class ConfigureServices
 
         app.UseRouting();
 
-        app.UseCors("CorsPolicy");
+        app.UseCors(typeof(CorsPolicySettings).Name);
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 
-        app.MapControllers();
+        app.MapControllers().RequireAuthorization("WebApiPolicy");
 
         app.MapFallbackToFile("index.html");
 

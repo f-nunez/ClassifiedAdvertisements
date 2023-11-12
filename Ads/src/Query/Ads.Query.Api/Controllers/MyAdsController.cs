@@ -2,10 +2,12 @@ using Ads.Query.Application.Common.Requests;
 using Ads.Query.Application.Features.MyAds.GetMyAdDetail;
 using Ads.Query.Application.Features.MyAds.GetMyAdList;
 using Ads.Query.Application.Features.MyAds.GetMyAdUpdate;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ads.Query.Api.Controllers;
 
+[Authorize("GeneralPolicy")]
 public class MyAdsController : BaseApiController
 {
     [HttpGet("{id}/detail")]
