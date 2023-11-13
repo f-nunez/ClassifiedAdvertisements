@@ -1,23 +1,28 @@
 using Duende.IdentityServer;
 using Duende.IdentityServer.EntityFramework.Mappers;
 using Duende.IdentityServer.Models;
+using Identity.Infrastructure.Settings;
 using IdentityModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace Identity.Infrastructure.Persistence.Contexts;
 
 public class ConfigurationStoreDbContextSeeder
 {
-    private readonly ILogger<ConfigurationStoreDbContext> _logger;
+    private readonly IConfiguration _configuration;
     private readonly ConfigurationStoreDbContext _context;
+    private readonly ILogger<ConfigurationStoreDbContext> _logger;
 
     public ConfigurationStoreDbContextSeeder(
-        ILogger<ConfigurationStoreDbContext> logger,
-        ConfigurationStoreDbContext context)
+        IConfiguration configuration,
+        ConfigurationStoreDbContext context,
+        ILogger<ConfigurationStoreDbContext> logger)
     {
-        _logger = logger;
+        _configuration = configuration;
         _context = context;
+        _logger = logger;
     }
 
     public async Task MigrateAsync()
@@ -192,6 +197,10 @@ public class ConfigurationStoreDbContextSeeder
         if (await _context.Clients.AnyAsync())
             return;
 
+        var angularWebClientSettings = _configuration
+            .GetSection(typeof(AngularWebTokenClientSettings).Name)
+            .Get<AngularWebTokenClientSettings>()!;
+
         var angularWebWithTokenBasedAuth = new Client
         {
             ClientId = "6c4c5801-1089-4c3c-83c7-ddc0eb3707b3",
@@ -199,11 +208,7 @@ public class ConfigurationStoreDbContextSeeder
             // ClientSecrets = new List<Secret> { new("secret".Sha256()) },
             Description = "Classified Advertisements Angular App",
             AllowAccessTokensViaBrowser = false,
-            AllowedCorsOrigins = new List<string>
-            {
-                "https://localhost:44417",
-                "https://localhost:7220"
-            },
+            AllowedCorsOrigins = angularWebClientSettings.AllowedCorsOrigins,
             AllowedGrantTypes = GrantTypes.Code,
             AllowOfflineAccess = true,
             AllowedScopes = new List<string>
@@ -218,26 +223,18 @@ public class ConfigurationStoreDbContextSeeder
                 "angular_web_api",
             },
             // AccessTokenLifetime = 600,
-            PostLogoutRedirectUris = new List<string>
-            {
-                "https://localhost:44417/signout-callback-oidc",
-                "https://localhost:7220/signout-callback-oidc"
-            },
-            RedirectUris = new List<string>
-            {
-                "https://localhost:44417",
-                "https://localhost:44417/signin-callback",
-                "https://localhost:44417/silent-callback.html",
-                "https://localhost:7220",
-                "https://localhost:7220/signin-callback",
-                "https://localhost:7220/silent-callback.html"
-            },
+            PostLogoutRedirectUris = angularWebClientSettings.PostLogoutRedirectUris,
+            RedirectUris = angularWebClientSettings.RedirectUris,
             // RefreshTokenUsage = TokenUsage.ReUse
             RequireClientSecret = false,
             // RequireConsent = false,
             RequirePkce = true,
             // UpdateAccessTokenClaimsOnRefresh = true,
         };
+
+        var angularWebCookieClientSettings = _configuration
+            .GetSection(typeof(AngularWebCookieClientSettings).Name)
+            .Get<AngularWebCookieClientSettings>()!;
 
         var angularWebWithCookieBasedAuth = new Client
         {
@@ -246,11 +243,7 @@ public class ConfigurationStoreDbContextSeeder
             ClientSecrets = new List<Secret> { new("secret".Sha256()) },
             Description = "Classified Advertisements Angular App",
             AllowAccessTokensViaBrowser = false,
-            AllowedCorsOrigins = new List<string>
-            {
-                "https://localhost:44417",
-                "https://localhost:7220"
-            },
+            AllowedCorsOrigins = angularWebCookieClientSettings.AllowedCorsOrigins,
             AllowedGrantTypes = GrantTypes.Code,
             AllowOfflineAccess = true,
             AllowedScopes = new List<string>
@@ -268,17 +261,9 @@ public class ConfigurationStoreDbContextSeeder
             // SlidingRefreshTokenLifetime = 60*60*24*15,
             // AbsoluteRefreshTokenLifetime = 60*60*24*30,
             // RefreshTokenExpiration = TokenExpiration.Absolute,
-            PostLogoutRedirectUris = new List<string>
-            {
-                "https://localhost:44417/signout-callback-oidc",
-                "https://localhost:7220/signout-callback-oidc"
-            },
-            RedirectUris = new List<string>
-            {
-                "https://localhost:44417/signin-oidc",
-                "https://localhost:7220/signin-oidc"
-            },
-            BackChannelLogoutUri = "https://localhost:7220/bff/backchannellogout",
+            PostLogoutRedirectUris = angularWebCookieClientSettings.PostLogoutRedirectUris,
+            RedirectUris = angularWebCookieClientSettings.RedirectUris,
+            BackChannelLogoutUri = angularWebCookieClientSettings.BackChannelLogoutUri,
             RefreshTokenUsage = TokenUsage.OneTimeOnly,
             RequireClientSecret = true,
             RequireConsent = false,
