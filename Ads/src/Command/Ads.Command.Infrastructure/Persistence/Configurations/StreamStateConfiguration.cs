@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Ads.Command.Infrastructure.Persistence.Configurations;
 
-public class AppointmentTypeConfiguration : IEntityTypeConfiguration<StreamState>
+public class StreamStateConfiguration : IEntityTypeConfiguration<StreamState>
 {
     public void Configure(EntityTypeBuilder<StreamState> builder)
     {
