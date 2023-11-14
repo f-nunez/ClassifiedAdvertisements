@@ -2,6 +2,7 @@ using Ads.Query.Api.Middlewares;
 using Ads.Query.Api.Services;
 using Ads.Query.Api.Settings;
 using Ads.Query.Application.Common.Interfaces;
+using Ads.Query.Infrastructure.Persistence.Contexts;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Logging;
 
@@ -115,6 +116,7 @@ public static class ConfigureServices
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+            Task.Run(() => SeedDataAsync(app));
         }
 
         app.UseHttpsRedirection();
@@ -128,5 +130,15 @@ public static class ConfigureServices
         app.MapControllers().RequireAuthorization("ApiPolicy");
 
         return app;
+    }
+
+    private static async void SeedDataAsync(WebApplication app)
+    {
+        using var scope = app.Services.CreateScope();
+
+        var adsQueryDbSeeder = scope.ServiceProvider
+            .GetRequiredService<AdsQueryDbContextSeeder>();
+
+        await adsQueryDbSeeder.MigrateAsync();
     }
 }
