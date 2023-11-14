@@ -7,25 +7,14 @@ using Ads.Query.Infrastructure.ServiceBus;
 using Ads.Query.Infrastructure.ServiceBus.Observers;
 using Ads.Query.Infrastructure.Settings;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using MongoDB.Bson.Serialization;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
 public static class ConfigureServices
 {
     public static IServiceCollection AddInfrastructureServices(
-        this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        services.AddMassTransit(configuration);
-
-        services.AddMongoDb(configuration);
-
-        return services;
-    }
-
-    private static IServiceCollection AddMassTransit(
         this IServiceCollection services,
         IConfiguration configuration)
     {
@@ -58,18 +47,16 @@ public static class ConfigureServices
             });
         });
 
-        return services;
-    }
+        services.AddDbContext<AdsQueryDbContext>(options =>
+            options.UseNpgsql(
+                configuration.GetConnectionString("AdsQueryDbConnection"),
+                builder => builder.MigrationsAssembly(
+                    typeof(AdsQueryDbContext).Assembly.FullName
+                )
+            )
+        );
 
-    private static IServiceCollection AddMongoDb(
-        this IServiceCollection services, IConfiguration configuration)
-    {
-        BsonClassMap.RegisterClassMap<ClassifiedAd>();
-
-        services.AddSingleton<IMongoDbContext, MongoDbContext>(sp =>
-        {
-            return new MongoDbContext(configuration.GetConnectionString("MongoDbConnection"));
-        });
+        services.AddScoped<AdsQueryDbContextSeeder>();
 
         services.AddScoped<IRepository<ClassifiedAd>, Repository<ClassifiedAd>>();
 
