@@ -1,12 +1,13 @@
 using Ads.Command.Application.Common.Interfaces;
 using Ads.Command.Domain.ClassifiedAdAggregate;
 using Ads.Command.Infrastructure.EventStores;
+using Ads.Command.Infrastructure.Persistence.Contexts;
 using Ads.Command.Infrastructure.Persistence.Repositories;
 using Ads.Command.Infrastructure.ServiceBus;
 using Ads.Command.Infrastructure.ServiceBus.Observers;
 using Ads.Command.Infrastructure.Settings;
-using EventStore.Client;
 using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.Extensions.DependencyInjection;
@@ -30,12 +31,16 @@ public static class ConfigureServices
     {
         services.AddScoped<IServiceBus, MassTransitServiceBus>();
 
-        services.AddSingleton(
-            new EventStoreClient(
-                EventStoreClientSettings.Create(
-                    configuration.GetConnectionString("EventStoreConnection")!)
+        services.AddDbContext<EventStoreDbContext>(options =>
+            options.UseNpgsql(
+                configuration.GetConnectionString("EventStoreConnection"),
+                builder => builder.MigrationsAssembly(
+                    typeof(EventStoreDbContext).Assembly.FullName
+                )
             )
         );
+
+        services.AddScoped<EventStoreDbContextSeeder>();
 
         services.AddScoped<IEventStore<ClassifiedAd>, EventStore<ClassifiedAd>>();
 
