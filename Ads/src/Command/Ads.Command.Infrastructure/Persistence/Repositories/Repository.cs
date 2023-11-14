@@ -1,56 +1,32 @@
-using Ads.Command.Application.Common.Exceptions;
-using EventStore.Client;
+using Ads.Command.Infrastructure.EventStores;
+using Ads.Command.Infrastructure.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ads.Command.Infrastructure.Persistence.Repositories;
 
 public class Repository : IRepository
 {
-    private readonly EventStoreClient _eventStoreClient;
+    private readonly EventStoreDbContext _dbContext;
 
-    public Repository(EventStoreClient eventStoreClient)
+    public Repository(EventStoreDbContext dbContext)
     {
-        _eventStoreClient = eventStoreClient;
+        _dbContext = dbContext;
     }
 
-    public async Task AppendEventAsync(
-        string streamName,
-        EventData eventData,
-        long expectedVersion,
-        CancellationToken cancellationToken)
+    public async Task AppendEventAsync(StreamState streamState, CancellationToken cancellationToken)
     {
-        try
-        {
-            await _eventStoreClient.AppendToStreamAsync(
-                streamName: streamName,
-                expectedRevision: (ulong)expectedVersion,
-                eventData: new EventData[] { eventData },
-                cancellationToken: cancellationToken
-            );
-        }
-        catch (WrongExpectedVersionException ex)
-        {
-            throw new ExpectedVersionException(streamName, ex.ExpectedVersion, ex.ActualVersion);
-        }
+        await _dbContext.AddAsync(streamState, cancellationToken);
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public async Task<List<ResolvedEvent>?> ReadStreamEventsAsync(
-        string streamName,
-        CancellationToken cancellationToken)
+    public async Task<List<StreamState>?> ReadStreamEventsAsync(string streamName, CancellationToken cancellationToken)
     {
-        var result = _eventStoreClient.ReadStreamAsync(
-            direction: Direction.Forwards,
-            streamName: streamName,
-            revision: StreamPosition.Start,
-            cancellationToken: cancellationToken
-        );
+        var query = from streamState in _dbContext.StreamStates
+                    where streamState.StreamName == streamName
+                    orderby streamState.Version
+                    select streamState;
 
-        try
-        {
-            return await result.ToListAsync();
-        }
-        catch (StreamNotFoundException)
-        {
-            return null;
-        }
+        return await query.AsNoTracking().ToListAsync(cancellationToken);
     }
 }

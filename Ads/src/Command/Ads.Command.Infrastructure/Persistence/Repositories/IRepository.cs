@@ -1,9 +1,9 @@
-using EventStore.Client;
+using Ads.Command.Infrastructure.EventStores;
 
 namespace Ads.Command.Infrastructure.Persistence.Repositories;
 
 public interface IRepository
 {
-    Task AppendEventAsync(string streamName, EventData eventData, long expectedVersion, CancellationToken cancellationToken = default);
-    Task<List<ResolvedEvent>?> ReadStreamEventsAsync(string streamName, CancellationToken cancellationToken = default);
+    Task AppendEventAsync(StreamState streamState, CancellationToken cancellationToken = default);
+    Task<List<StreamState>?> ReadStreamEventsAsync(string streamName, CancellationToken cancellationToken = default);
 }
