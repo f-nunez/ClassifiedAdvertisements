@@ -1,136 +1,128 @@
 using System.Linq.Expressions;
 using Ads.Query.Application.Common.Interfaces;
 using Ads.Query.Domain.Common;
-using MongoDB.Driver;
-using MongoDB.Driver.Linq;
+using Ads.Query.Infrastructure.Persistence.Contexts;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Ads.Query.Infrastructure.Persistence.Repositories;
 
 public class Repository<T> : IRepository<T> where T : BaseEntity
 {
-    private readonly IMongoCollection<T> _mongoCollection;
+    private readonly AdsQueryDbContext _dbContext;
 
-    public Repository(IMongoDbContext mongoDbContext)
+    public Repository(AdsQueryDbContext dbContext)
     {
-        _mongoCollection = mongoDbContext.GetCollection<T>();
+        _dbContext = dbContext;
     }
 
-    public long Count(
-        Expression<Func<T, bool>>? filter = null,
-        CancellationToken cancellationToken = default)
+    public long Count(Expression<Func<T, bool>>? filter = null)
     {
-        var filterDefinition = Builders<T>.Filter.Where(filter);
+        IQueryable<T> query = _dbContext.Set<T>();
 
-        return _mongoCollection.CountDocuments(
-            filter: filterDefinition, cancellationToken: cancellationToken);
+        if (filter != null)
+            query = query.Where(filter);
+
+        return query.Count();
     }
 
     public async Task<long> CountAsync(
         Expression<Func<T, bool>>? filter = null,
         CancellationToken cancellationToken = default)
     {
-        var filterDefinition = Builders<T>.Filter.Where(filter);
+        IQueryable<T> query = _dbContext.Set<T>();
 
-        return await _mongoCollection.CountDocumentsAsync(
-            filter: filterDefinition, cancellationToken: cancellationToken);
+        if (filter != null)
+            query = query.Where(filter);
+
+        return await query.CountAsync(cancellationToken);
     }
 
-    public void Delete(T entity, CancellationToken cancellationToken = default)
+    public void Delete(T entity)
     {
-        var filterDefinition = Builders<T>.Filter.Where(x => x.Id == entity.Id);
-
-        _mongoCollection.DeleteOne(filterDefinition, cancellationToken);
+        _dbContext.Set<T>().Remove(entity);
+        _dbContext.SaveChanges();
     }
 
-    public async Task DeleteAsync(T entity, CancellationToken cancellationToken = default)
-    {
-        var filterDefinition = Builders<T>.Filter.Where(x => x.Id == entity.Id);
-
-        await _mongoCollection.DeleteOneAsync(filterDefinition, cancellationToken);
-    }
-
-    public void DeleteById(string? id, CancellationToken cancellationToken = default)
-    {
-        var filterDefinition = Builders<T>.Filter.Where(x => x.Id == id);
-
-        _mongoCollection.DeleteOne(filterDefinition, cancellationToken);
-    }
-
-    public async Task DeleteByIdAsync(string? id, CancellationToken cancellationToken = default)
-    {
-        var filterDefinition = Builders<T>.Filter.Where(x => x.Id == id);
-
-        await _mongoCollection.DeleteOneAsync(filterDefinition, cancellationToken);
-    }
-
-    public void DeleteRange(
-        IEnumerable<T> entities,
+    public async Task DeleteAsync(
+        T entity,
         CancellationToken cancellationToken = default)
     {
-        var filterDefinition = Builders<T>.Filter.Where(x => entities.Any(y => y.Id == x.Id));
+        _dbContext.Set<T>().Remove(entity);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
 
-        _mongoCollection.DeleteMany(filterDefinition, cancellationToken);
+    public void DeleteById(string? id)
+    {
+        T? entity = GetById(id);
+
+        if (entity is null)
+            throw new NullReferenceException($"{nameof(entity)}");
+
+        Delete(entity);
+    }
+
+    public async Task DeleteByIdAsync(
+        string? id,
+        CancellationToken cancellationToken = default)
+    {
+        T? entity = await GetByIdAsync(id, cancellationToken);
+
+        if (entity is null)
+            throw new NullReferenceException($"{nameof(entity)}");
+
+        await DeleteAsync(entity, cancellationToken);
+    }
+
+    public void DeleteRange(IEnumerable<T> entities)
+    {
+        foreach (var entity in entities)
+            entity.IsActive = false;
+
+        UpdateRange(entities);
     }
 
     public async Task DeleteRangeAsync(
         IEnumerable<T> entities,
         CancellationToken cancellationToken = default)
     {
-        var filterDefinition = Builders<T>.Filter.Where(x => entities.Any(y => y.Id == x.Id));
+        foreach (var entity in entities)
+            entity.IsActive = false;
 
-        await _mongoCollection.DeleteManyAsync(filterDefinition, cancellationToken);
+        await UpdateRangeAsync(entities, cancellationToken);
     }
 
-    public bool Exists(
-        Expression<Func<T, bool>> filter,
-        CancellationToken cancellationToken = default)
+    public bool Exists(Expression<Func<T, bool>> filter)
     {
-        var filterDefinition = Builders<T>.Filter.Where(filter);
-
-        long count = _mongoCollection.CountDocuments(
-            filter: filterDefinition, cancellationToken: cancellationToken);
-
-        return count > 0;
+        return GetQuery(filter).Any();
     }
 
     public async Task<bool> ExistsAsync(
         Expression<Func<T, bool>> filter,
         CancellationToken cancellationToken = default)
     {
-        var filterDefinition = Builders<T>.Filter.Where(filter);
-
-        long count = await _mongoCollection.CountDocumentsAsync(
-            filter: filterDefinition, cancellationToken: cancellationToken);
-
-        return count > 0;
+        return await GetQuery(filter).AnyAsync(cancellationToken);
     }
 
-    public T GetById(string? id, CancellationToken cancellationToken = default)
+    public T? GetById(string? id)
     {
-        var filterDefinition = Builders<T>.Filter.Where(x => x.Id == id);
-
-        return _mongoCollection.Find(filterDefinition).FirstOrDefault(cancellationToken);
+        return _dbContext.Set<T>().Find(id);
     }
 
-    public async Task<T> GetByIdAsync(
+    public async Task<T?> GetByIdAsync(
         string? id,
         CancellationToken cancellationToken = default)
     {
-        var filterDefinition = Builders<T>.Filter.Where(x => x.Id == id);
-
-        return await _mongoCollection
-            .Find(filterDefinition)
-            .FirstOrDefaultAsync(cancellationToken);
+        return await _dbContext.Set<T>().FindAsync(new[] { id }, cancellationToken);
     }
 
     public T? GetFirstOrDefault(
         Expression<Func<T, bool>>? filter = null,
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-        CancellationToken cancellationToken = default)
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
     {
         var query = GetQuery(filter, orderBy);
 
-        return query.FirstOrDefault(cancellationToken);
+        return query.FirstOrDefault();
     }
 
     public async Task<T?> GetFirstOrDefaultAsync(
@@ -147,12 +139,11 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         Expression<Func<T, bool>>? filter = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         int? skip = null,
-        int? take = null,
-        CancellationToken cancellationToken = default)
+        int? take = null)
     {
         var query = GetQuery(filter, orderBy, skip, take);
 
-        return query.ToList(cancellationToken);
+        return query.ToList();
     }
 
     public async Task<IEnumerable<T>> GetListAsync(
@@ -167,55 +158,52 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         return await query.ToListAsync(cancellationToken);
     }
 
-    public void Insert(T entity, CancellationToken cancellationToken = default)
+    public void Insert(T entity)
     {
-        _mongoCollection.InsertOne(
-            document: entity, cancellationToken: cancellationToken);
+        _dbContext.Add(entity);
+        _dbContext.SaveChanges();
     }
 
-    public async Task InsertAsync(T entity, CancellationToken cancellationToken = default)
-    {
-        await _mongoCollection.InsertOneAsync(
-            document: entity, cancellationToken: cancellationToken);
-    }
-
-    public void InsertRange(
-        IEnumerable<T> entities,
+    public async Task InsertAsync(
+        T entity,
         CancellationToken cancellationToken = default)
     {
-        _mongoCollection.InsertMany(documents: entities, cancellationToken: cancellationToken);
+        _dbContext.Add(entity);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public void InsertRange(IEnumerable<T> entities)
+    {
+        _dbContext.AddRange(entities);
+        _dbContext.SaveChanges();
     }
 
     public async Task InsertRangeAsync(
         IEnumerable<T> entities,
         CancellationToken cancellationToken = default)
     {
-        await _mongoCollection.InsertManyAsync(
-            documents: entities, cancellationToken: cancellationToken);
+        _dbContext.AddRange(entities);
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    public void Update(T entity, CancellationToken cancellationToken = default)
+    public void Update(T entity)
     {
-        var filterDefinition = Builders<T>.Filter.Eq(x => x.Id, entity.Id);
-
-        _mongoCollection.ReplaceOne(
-            filter: filterDefinition, replacement: entity, cancellationToken: cancellationToken);
+        _dbContext.Update(entity);
+        _dbContext.SaveChanges();
     }
 
-    public async Task UpdateAsync(T entity, CancellationToken cancellationToken = default)
-    {
-        var filterDefinition = Builders<T>.Filter.Eq(x => x.Id, entity.Id);
-
-        await _mongoCollection.ReplaceOneAsync(
-            filter: filterDefinition, replacement: entity, cancellationToken: cancellationToken);
-    }
-
-    public void UpdateRange(
-        IEnumerable<T> entities,
+    public async Task UpdateAsync(
+        T entity,
         CancellationToken cancellationToken = default)
     {
+        _dbContext.Update(entity);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public void UpdateRange(IEnumerable<T> entities)
+    {
         foreach (var entity in entities)
-            Update(entity, cancellationToken);
+            Update(entity);
     }
 
     public async Task UpdateRangeAsync(
@@ -226,16 +214,21 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
             await UpdateAsync(entity, cancellationToken);
     }
 
-    private IMongoQueryable<T> GetQuery(
+    private IQueryable<T> GetQuery(
         Expression<Func<T, bool>>? filter = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         int? skip = null,
-        int? take = null)
+        int? take = null,
+        bool disableTracking = true,
+        params string[] includeProperties)
     {
-        IQueryable<T> query = _mongoCollection.AsQueryable();
+        IQueryable<T> query = _dbContext.Set<T>().AsQueryable();
 
         if (filter != null)
             query = query.Where(filter);
+
+        foreach (var includeProperty in includeProperties)
+            query = query.Include(includeProperty);
 
         if (orderBy != null)
             query = orderBy(query);
@@ -243,6 +236,9 @@ public class Repository<T> : IRepository<T> where T : BaseEntity
         if (skip.HasValue && take.HasValue)
             query = query.Skip(skip.Value).Take(take.Value);
 
-        return (IMongoQueryable<T>)query;
+        if (disableTracking)
+            query = query.AsNoTracking();
+
+        return query;
     }
 }
