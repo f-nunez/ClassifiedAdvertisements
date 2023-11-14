@@ -1,4 +1,3 @@
-using System.Text;
 using System.Text.Json;
 using Ads.Command.Application.Common.Interfaces;
 using Ads.Command.Domain.Common;
@@ -6,7 +5,6 @@ using Ads.Command.Infrastructure.Persistence.Repositories;
 using Ads.Common;
 using Ads.Common.DomainEvents;
 using Contracts.Ads;
-using EventStore.Client;
 
 namespace Ads.Command.Infrastructure.EventStores;
 
@@ -34,22 +32,22 @@ public class EventStore<T> : IEventStore<T> where T : IAggregateRoot
 
         string streamName = aggregateRoot.GetStreamName();
 
+        var events = await _repository.ReadStreamEventsAsync(streamName);
+
+        if (expectedVersion != -1 && events != null && events.Count > 0 && events[^1].Version != expectedVersion)
+            throw new Exception($"Append failed due to expected version. Stream: {streamName}, Expected version: {expectedVersion}, Actual version: {events[^1].Version}");
+
         foreach (var change in changes)
         {
             expectedVersion++;
 
             change.Version = expectedVersion;
 
-            var preparedEvent = MapEventData(change);
+            var streamState = MapStreamState(change, streamName, expectedVersion);
 
             var integrationEvent = GetIntegrationEvent(change, expectedVersion, correlationId);
 
-            await _repository.AppendEventAsync(
-                streamName,
-                preparedEvent,
-                expectedVersion - 1,
-                cancellationToken
-            );
+            await _repository.AppendEventAsync(streamState);
 
             await _serviceBus.PublishAsync(integrationEvent);
         }
@@ -61,7 +59,7 @@ public class EventStore<T> : IEventStore<T> where T : IAggregateRoot
     {
         string streamName = GetStreamName(id);
 
-        List<ResolvedEvent>? events = await _repository
+        List<StreamState>? events = await _repository
             .ReadStreamEventsAsync(streamName, cancellationToken);
 
         if (events is null)
@@ -76,30 +74,26 @@ public class EventStore<T> : IEventStore<T> where T : IAggregateRoot
         return aggregate;
     }
 
-    public static BaseDomainEvent Deserialize(ResolvedEvent resolvedEvent)
+    public static BaseDomainEvent Deserialize(StreamState @event)
     {
-        var @event = resolvedEvent.Event;
-
-        string jsonEventData = Encoding.UTF8.GetString(@event.Data.ToArray());
-
         BaseDomainEvent? data;
 
         switch (@event.EventType)
         {
             case nameof(ClassifiedAdCreatedV1):
-                data = JsonSerializer.Deserialize<ClassifiedAdCreatedV1>(jsonEventData);
+                data = JsonSerializer.Deserialize<ClassifiedAdCreatedV1>(@event.EventPayload);
                 break;
             case nameof(ClassifiedAdDeletedV1):
-                data = JsonSerializer.Deserialize<ClassifiedAdDeletedV1>(jsonEventData);
+                data = JsonSerializer.Deserialize<ClassifiedAdDeletedV1>(@event.EventPayload);
                 break;
             case nameof(ClassifiedAdPublishedV1):
-                data = JsonSerializer.Deserialize<ClassifiedAdPublishedV1>(jsonEventData);
+                data = JsonSerializer.Deserialize<ClassifiedAdPublishedV1>(@event.EventPayload);
                 break;
             case nameof(ClassifiedAdUnpublishedV1):
-                data = JsonSerializer.Deserialize<ClassifiedAdUnpublishedV1>(jsonEventData);
+                data = JsonSerializer.Deserialize<ClassifiedAdUnpublishedV1>(@event.EventPayload);
                 break;
             case nameof(ClassifiedAdUpdatedV1):
-                data = JsonSerializer.Deserialize<ClassifiedAdUpdatedV1>(jsonEventData);
+                data = JsonSerializer.Deserialize<ClassifiedAdUpdatedV1>(@event.EventPayload);
                 break;
             default:
                 throw new ArgumentNullException(
@@ -133,13 +127,16 @@ public class EventStore<T> : IEventStore<T> where T : IAggregateRoot
     private static string GetStreamName<TId>(TId aggregateId)
         => $"{typeof(T).Name}-{aggregateId}";
 
-    private static EventData MapEventData(BaseDomainEvent @event)
+    static StreamState MapStreamState(BaseDomainEvent @event, string streamName, long version)
     {
-        var eventData = new EventData(
-            Uuid.NewUuid(),
-            @event.GetType().Name,
-            JsonSerializer.SerializeToUtf8Bytes((object)@event)
-        );
+        var eventData = new StreamState
+        {
+            CreatedOn = DateTime.UtcNow,
+            EventPayload = JsonSerializer.Serialize((object)@event),
+            EventType = @event.GetType().Name,
+            StreamName = streamName,
+            Version = version
+        };
 
         return eventData;
     }
