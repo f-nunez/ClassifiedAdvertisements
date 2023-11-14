@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Ads.Common.DomainEvents;
+using Ads.Query.Application.Common.Exceptions;
 using Ads.Query.Application.Common.Interfaces;
 using Ads.Query.Domain.Entities;
 using Contracts.Ads;
@@ -51,6 +52,9 @@ public class DomainEventAdsConsumer : IConsumer<DomainEventAdsContract>
                 var deleteClassifiedAd = await _repository
                     .GetByIdAsync(classifiedAdDeletedV1.Id!);
 
+                if (deleteClassifiedAd is null)
+                    throw new NotFoundException(nameof(deleteClassifiedAd), classifiedAdDeletedV1.Id);
+
                 deleteClassifiedAd.IsActive = false;
                 deleteClassifiedAd.UpdatedBy = classifiedAdDeletedV1.DeletedBy;
                 deleteClassifiedAd.UpdatedOn = classifiedAdDeletedV1.DeletedOn;
@@ -65,6 +69,9 @@ public class DomainEventAdsConsumer : IConsumer<DomainEventAdsContract>
 
                 var publishClassifiedAd = await _repository
                     .GetByIdAsync(classifiedAdPublishedV1.Id!);
+
+                if (publishClassifiedAd is null)
+                    throw new NotFoundException(nameof(deleteClassifiedAd), classifiedAdPublishedV1.Id);
 
                 publishClassifiedAd.PublishedBy = classifiedAdPublishedV1.PublishedBy;
                 publishClassifiedAd.PublishedOn = classifiedAdPublishedV1.PublishedOn;
@@ -82,6 +89,9 @@ public class DomainEventAdsConsumer : IConsumer<DomainEventAdsContract>
                 var UnpublishClassifiedAd = await _repository
                     .GetByIdAsync(classifiedAdUnpublishedV1.Id!);
 
+                if (UnpublishClassifiedAd is null)
+                    throw new NotFoundException(nameof(deleteClassifiedAd), classifiedAdUnpublishedV1.Id);
+
                 UnpublishClassifiedAd.PublishedBy = null;
                 UnpublishClassifiedAd.PublishedOn = null;
                 UnpublishClassifiedAd.UpdatedBy = classifiedAdUnpublishedV1.UnpublishedBy;
@@ -97,6 +107,9 @@ public class DomainEventAdsConsumer : IConsumer<DomainEventAdsContract>
 
                 var UpdateClassifiedAd = await _repository
                     .GetByIdAsync(classifiedAdUpdatedV1.Id!);
+
+                if (UpdateClassifiedAd is null)
+                    throw new NotFoundException(nameof(deleteClassifiedAd), classifiedAdUpdatedV1.Id);
 
                 UpdateClassifiedAd.Description = classifiedAdUpdatedV1.Description;
                 UpdateClassifiedAd.Title = classifiedAdUpdatedV1.Title;

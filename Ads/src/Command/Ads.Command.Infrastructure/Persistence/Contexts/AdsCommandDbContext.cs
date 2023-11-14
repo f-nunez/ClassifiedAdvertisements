@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Ads.Command.Infrastructure.Persistence.Contexts;
 
-public class EventStoreDbContext : DbContext
+public class AdsCommandDbContext : DbContext
 {
-    public EventStoreDbContext(DbContextOptions<EventStoreDbContext> options)
+    public AdsCommandDbContext(DbContextOptions<AdsCommandDbContext> options)
         : base(options)
     {
     }

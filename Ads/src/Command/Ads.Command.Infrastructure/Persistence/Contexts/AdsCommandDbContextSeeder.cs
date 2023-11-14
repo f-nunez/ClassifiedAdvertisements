@@ -3,14 +3,14 @@ using Microsoft.Extensions.Logging;
 
 namespace Ads.Command.Infrastructure.Persistence.Contexts;
 
-public class EventStoreDbContextSeeder
+public class AdsCommandDbContextSeeder
 {
-    private readonly ILogger<EventStoreDbContextSeeder> _logger;
-    private readonly EventStoreDbContext _context;
+    private readonly ILogger<AdsCommandDbContextSeeder> _logger;
+    private readonly AdsCommandDbContext _context;
 
-    public EventStoreDbContextSeeder(
-        ILogger<EventStoreDbContextSeeder> logger,
-        EventStoreDbContext context)
+    public AdsCommandDbContextSeeder(
+        ILogger<AdsCommandDbContextSeeder> logger,
+        AdsCommandDbContext context)
     {
         _logger = logger;
         _context = context;

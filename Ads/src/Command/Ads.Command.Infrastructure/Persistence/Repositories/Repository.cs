@@ -6,9 +6,9 @@ namespace Ads.Command.Infrastructure.Persistence.Repositories;
 
 public class Repository : IRepository
 {
-    private readonly EventStoreDbContext _dbContext;
+    private readonly AdsCommandDbContext _dbContext;
 
-    public Repository(EventStoreDbContext dbContext)
+    public Repository(AdsCommandDbContext dbContext)
     {
         _dbContext = dbContext;
     }

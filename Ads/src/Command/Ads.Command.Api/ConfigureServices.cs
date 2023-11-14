@@ -136,9 +136,9 @@ public static class ConfigureServices
     {
         using var scope = app.Services.CreateScope();
 
-        var eventStoreDbSeeder = scope.ServiceProvider
-            .GetRequiredService<EventStoreDbContextSeeder>();
+        var adsCommandDbSeeder = scope.ServiceProvider
+            .GetRequiredService<AdsCommandDbContextSeeder>();
 
-        await eventStoreDbSeeder.MigrateAsync();
+        await adsCommandDbSeeder.MigrateAsync();
     }
 }
