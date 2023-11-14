@@ -31,16 +31,16 @@ public static class ConfigureServices
     {
         services.AddScoped<IServiceBus, MassTransitServiceBus>();
 
-        services.AddDbContext<EventStoreDbContext>(options =>
+        services.AddDbContext<AdsCommandDbContext>(options =>
             options.UseNpgsql(
                 configuration.GetConnectionString("EventStoreConnection"),
                 builder => builder.MigrationsAssembly(
-                    typeof(EventStoreDbContext).Assembly.FullName
+                    typeof(AdsCommandDbContext).Assembly.FullName
                 )
             )
         );
 
-        services.AddScoped<EventStoreDbContextSeeder>();
+        services.AddScoped<AdsCommandDbContextSeeder>();
 
         services.AddScoped<IEventStore<ClassifiedAd>, EventStore<ClassifiedAd>>();
 
