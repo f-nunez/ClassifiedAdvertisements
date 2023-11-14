@@ -33,7 +33,7 @@ public static class ConfigureServices
 
         services.AddDbContext<AdsCommandDbContext>(options =>
             options.UseNpgsql(
-                configuration.GetConnectionString("EventStoreConnection"),
+                configuration.GetConnectionString("AdsCommandDbConnection"),
                 builder => builder.MigrationsAssembly(
                     typeof(AdsCommandDbContext).Assembly.FullName
                 )
