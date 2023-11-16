@@ -18,35 +18,18 @@ public static class ConfigureServices
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddSingleton<IRabbitMqSetting>(configuration
-            .GetSection(typeof(RabbitMqSetting).Name)
-            .Get<RabbitMqSetting>()!);
 
-        services.AddScoped<IServiceBus, MassTransitServiceBus>();
+        services.AddDatabase(configuration);
 
-        services.AddConsumeObserver<LoggingConsumeObserver>();
+        services.AddMassTransitServiceBus(configuration);
 
-        services.AddPublishObserver<LoggingPublishObserver>();
+        return services;
+    }
 
-        services.AddReceiveObserver<LoggingReceiveObserver>();
-
-        services.AddSendObserver<LoggingSendObserver>();
-
-        services.AddMassTransit(mt =>
-        {
-            mt.AddConsumers(Assembly.GetExecutingAssembly());
-
-            mt.UsingRabbitMq((context, cfg) =>
-            {
-                var rabbitMqSetting = context
-                    .GetRequiredService<IRabbitMqSetting>();
-
-                cfg.Host(rabbitMqSetting.HostAddress);
-
-                cfg.ConfigureEndpoints(context);
-            });
-        });
-
+    private static IServiceCollection AddDatabase(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
         services.AddDbContext<AdsQueryDbContext>(options =>
             options.UseNpgsql(
                 configuration.GetConnectionString("AdsQueryDbConnection"),
@@ -59,6 +42,64 @@ public static class ConfigureServices
         services.AddScoped<AdsQueryDbContextSeeder>();
 
         services.AddScoped<IRepository<ClassifiedAd>, Repository<ClassifiedAd>>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddMassTransitServiceBus(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        services.AddScoped<IServiceBus, MassTransitServiceBus>();
+
+        services.AddConsumeObserver<LoggingConsumeObserver>();
+
+        services.AddPublishObserver<LoggingPublishObserver>();
+
+        services.AddReceiveObserver<LoggingReceiveObserver>();
+
+        services.AddSendObserver<LoggingSendObserver>();
+
+        var serviceBusSettings = configuration
+            .GetSection(typeof(ServiceBusSettings).Name)
+            .Get<ServiceBusSettings>();
+
+        if (serviceBusSettings is null)
+            throw new ArgumentNullException(
+                nameof(serviceBusSettings), $"{nameof(serviceBusSettings)} is required.");
+
+        switch (serviceBusSettings.ServiceBusType)
+        {
+            case ServiceBusType.AzureServiceBus:
+                services.AddMassTransit(mt =>
+                {
+                    mt.AddConsumers(Assembly.GetExecutingAssembly());
+
+                    mt.UsingAzureServiceBus((context, cfg) =>
+                    {
+                        cfg.Host(serviceBusSettings.HostAddress);
+
+                        cfg.ConfigureEndpoints(context);
+                    });
+                });
+                break;
+            case ServiceBusType.RabbitMQ:
+                services.AddMassTransit(mt =>
+                {
+                    mt.AddConsumers(Assembly.GetExecutingAssembly());
+
+                    mt.UsingRabbitMq((context, cfg) =>
+                    {
+                        cfg.Host(serviceBusSettings.HostAddress);
+
+                        cfg.ConfigureEndpoints(context);
+                    });
+                });
+                break;
+            default:
+                throw new ArgumentException(
+                    $"Not found {nameof(serviceBusSettings.ServiceBusType)}: {serviceBusSettings.ServiceBusType}");
+        }
 
         return services;
     }
