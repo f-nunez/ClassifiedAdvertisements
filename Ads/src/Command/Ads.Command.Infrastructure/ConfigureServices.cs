@@ -18,14 +18,14 @@ public static class ConfigureServices
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddEventStoreDb(configuration);
+        services.AddDatabase(configuration);
 
-        services.AddMassTransit(configuration);
+        services.AddMassTransitServiceBus(configuration);
 
         return services;
     }
 
-    private static IServiceCollection AddEventStoreDb(
+    private static IServiceCollection AddDatabase(
         this IServiceCollection services,
         IConfiguration configuration)
     {
@@ -49,14 +49,10 @@ public static class ConfigureServices
         return services;
     }
 
-    private static IServiceCollection AddMassTransit(
+    private static IServiceCollection AddMassTransitServiceBus(
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddSingleton<IRabbitMqSetting>(configuration
-            .GetSection(typeof(RabbitMqSetting).Name)
-            .Get<RabbitMqSetting>()!);
-
         services.AddScoped<IServiceBus, MassTransitServiceBus>();
 
         services.AddConsumeObserver<LoggingConsumeObserver>();
@@ -67,18 +63,42 @@ public static class ConfigureServices
 
         services.AddSendObserver<LoggingSendObserver>();
 
-        services.AddMassTransit(mt =>
+        var serviceBusSettings = configuration
+            .GetSection(typeof(ServiceBusSettings).Name)
+            .Get<ServiceBusSettings>();
+
+        if (serviceBusSettings is null)
+            throw new ArgumentNullException(
+                nameof(serviceBusSettings), $"{nameof(serviceBusSettings)} is required.");
+
+        switch (serviceBusSettings.ServiceBusType)
         {
-            mt.UsingRabbitMq((context, cfg) =>
-            {
-                var rabbitMqSetting = context
-                    .GetRequiredService<IRabbitMqSetting>();
+            case ServiceBusType.AzureServiceBus:
+                services.AddMassTransit(mt =>
+                {
+                    mt.UsingAzureServiceBus((context, cfg) =>
+                    {
+                        cfg.Host(serviceBusSettings.HostAddress);
 
-                cfg.Host(rabbitMqSetting.HostAddress);
+                        cfg.ConfigureEndpoints(context);
+                    });
+                });
+                break;
+            case ServiceBusType.RabbitMQ:
+                services.AddMassTransit(mt =>
+                {
+                    mt.UsingRabbitMq((context, cfg) =>
+                    {
+                        cfg.Host(serviceBusSettings.HostAddress);
 
-                cfg.ConfigureEndpoints(context);
-            });
-        });
+                        cfg.ConfigureEndpoints(context);
+                    });
+                });
+                break;
+            default:
+                throw new ArgumentException(
+                    $"Not found {nameof(serviceBusSettings.ServiceBusType)}: {serviceBusSettings.ServiceBusType}");
+        }
 
         return services;
     }
