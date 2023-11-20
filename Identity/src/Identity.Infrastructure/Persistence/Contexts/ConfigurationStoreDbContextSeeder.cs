@@ -113,6 +113,21 @@ public class ConfigurationStoreDbContextSeeder
                     JwtClaimTypes.Role,
                     JwtClaimTypes.SessionId
                 }
+            }.ToEntity(),
+            new ApiResource
+            {
+                Name = "13b45036-c874-4b21-a651-c48148b78215",
+                DisplayName = "Users Api",
+                Scopes = new List<string> { "users_api" },
+                UserClaims = new List<string>
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
             }.ToEntity()
         );
 
