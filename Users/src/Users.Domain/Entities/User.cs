@@ -16,4 +16,6 @@ public class User : BaseEntity
     public string? NormalizedUserName { get; set; }
     public string? PhoneNumber { get; set; }
     public string? ProfileImageUrl { get; set; }
+
+    public virtual ICollection<UserRole> UserRoles { get; set; } = default!;
 }
