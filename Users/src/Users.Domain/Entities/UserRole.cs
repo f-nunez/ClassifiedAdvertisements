@@ -6,4 +6,6 @@ public class UserRole : BaseEntity
 {
     public string UserId { get; set; } = default!;
     public string RoleId { get; set; } = default!;
+
+    public virtual User User { get; set; } = default!;
 }
