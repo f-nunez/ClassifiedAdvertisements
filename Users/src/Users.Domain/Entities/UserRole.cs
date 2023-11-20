@@ -8,4 +8,5 @@ public class UserRole : BaseEntity
     public string RoleId { get; set; } = default!;
 
     public virtual User User { get; set; } = default!;
+    public virtual Role Role { get; set; } = default!;
 }
