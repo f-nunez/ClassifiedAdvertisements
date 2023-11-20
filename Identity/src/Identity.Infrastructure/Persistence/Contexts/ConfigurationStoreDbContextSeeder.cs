@@ -250,6 +250,7 @@ public class ConfigurationStoreDbContextSeeder
                 "ads_command_api",
                 "ads_query_api",
                 "angular_web_api",
+                "users_api"
             },
             // AccessTokenLifetime = 600,
             PostLogoutRedirectUris = angularWebClientSettings.PostLogoutRedirectUris,
