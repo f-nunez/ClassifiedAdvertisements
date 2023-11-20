@@ -284,7 +284,8 @@ public class ConfigurationStoreDbContextSeeder
                 IdentityServerConstants.StandardScopes.Email,
                 "roles",
                 "ads_command_api",
-                "ads_query_api"
+                "ads_query_api",
+                "users_api"
             },
             // AccessTokenLifetime = 60*60,
             // IdentityTokenLifetime = 60*5,
