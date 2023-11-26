@@ -2,7 +2,7 @@ using Users.Domain.Common;
 
 namespace Users.Domain.Entities;
 
-public class UserRole : BaseEntity
+public class UserRole : BaseAuditableEntity
 {
     public string UserId { get; set; } = default!;
     public string RoleId { get; set; } = default!;
