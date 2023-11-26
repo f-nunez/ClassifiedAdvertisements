@@ -15,7 +15,7 @@ public class User : BaseAuditableEntity
     public string? UserName { get; set; }
     public string? NormalizedUserName { get; set; }
     public string? PhoneNumber { get; set; }
-    public string? ProfileImageUrl { get; set; }
+    public string? ProfileImage { get; set; }
 
     public virtual ICollection<UserRole> UserRoles { get; set; } = default!;
 }
