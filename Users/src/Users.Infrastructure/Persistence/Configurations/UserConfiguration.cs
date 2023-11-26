@@ -43,7 +43,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.PhoneNumber)
             .HasMaxLength(256);
 
-        builder.Property(u => u.ProfileImageUrl)
+        builder.Property(u => u.ProfileImage)
             .HasMaxLength(256);
 
         builder.HasIndex(u => u.NormalizedFullName)
