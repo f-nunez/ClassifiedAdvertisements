@@ -2,7 +2,7 @@ using Users.Domain.Common;
 
 namespace Users.Domain.Entities;
 
-public class User : BaseEntity
+public class User : BaseAuditableEntity
 {
     public string? FullName { get; set; }
     public string? NormalizedFullName { get; set; }
