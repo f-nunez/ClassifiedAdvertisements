@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Users.Domain.Constants;
 using Users.Domain.Entities;
 
 namespace Users.Infrastructure.Persistence.Contexts;
@@ -67,22 +68,30 @@ public class ApplicationDbContextSeeder
 
     private List<Role> GetRoles()
     {
+        var createdOn = DateTime.UtcNow;
+
         return new List<Role>
         {
             new()
             {
+                CreatedBy = ApplicationIds.Users,
+                CreatedOn = createdOn,
                 Id = "98253fe9-5912-4c92-93c3-54035d204be8",
                 IsActive = true,
                 Name = "Customer",
                 NormalizedName = "Customer".Normalize().ToUpper()
             },
             new() {
+                CreatedBy = ApplicationIds.Users,
+                CreatedOn = createdOn,
                 Id = "089cb161-fce4-4d55-acc5-a40603a385ba",
                 IsActive = true,
                 Name = "Manager",
                 NormalizedName = "Manager".Normalize().ToUpper()
             },
             new() {
+                CreatedBy = ApplicationIds.Users,
+                CreatedOn = createdOn,
                 Id = "1f4d522f-429e-4e14-9a25-0a38cf6a587e",
                 IsActive = true,
                 Name = "Staff",
@@ -93,13 +102,38 @@ public class ApplicationDbContextSeeder
 
     private List<User> GetUsers()
     {
+        var createdOn = DateTime.UtcNow;
+
         return new List<User>
         {
             new()
             {
+                CreatedBy = ApplicationIds.Users,
+                CreatedOn = createdOn,
+                Email = null,
+                FirstName = nameof(ApplicationIds.Users),
+                FullName = nameof(ApplicationIds.Users),
+                Id = ApplicationIds.Users,
+                IsActive = true,
+                LastName = nameof(ApplicationIds.Users),
+                NormalizedEmail = null,
+                NormalizedFirstName = nameof(ApplicationIds.Users).Normalize().ToUpper(),
+                NormalizedFullName = nameof(ApplicationIds.Users).Normalize().ToUpper(),
+                NormalizedLastName = nameof(ApplicationIds.Users).Normalize().ToUpper(),
+                NormalizedUserName = null,
+                PhoneNumber = null,
+                ProfileImage = null,
+                UpdatedBy = null,
+                UpdatedOn = null,
+                UserName = null
+            },
+            new()
+            {
+                CreatedBy = ApplicationIds.Users,
+                CreatedOn = createdOn,
                 Email = "francisco@nunez.ninja",
                 FirstName = "Francisco",
-                FullName ="Francisco Nuñez",
+                FullName = "Francisco Nuñez",
                 Id = "3541fa79-0c35-4626-8dc5-7ac4414eed04",
                 IsActive = true,
                 LastName = "Nuñez",
@@ -109,14 +143,18 @@ public class ApplicationDbContextSeeder
                 NormalizedLastName = "Nuñez".Normalize().ToUpper(),
                 NormalizedUserName = "francisco".Normalize().ToUpper(),
                 PhoneNumber = "+521111111111",
-                ProfileImageUrl = null,
+                ProfileImage = null,
+                UpdatedBy = null,
+                UpdatedOn = null,
                 UserName = "francisco"
             },
             new()
             {
+                CreatedBy = ApplicationIds.Users,
+                CreatedOn = createdOn,
                 Email = "ramon@nunez.ninja",
                 FirstName = "Ramon",
-                FullName ="Ramon Nuñez",
+                FullName = "Ramon Nuñez",
                 Id = "2abe8c75-51f7-489a-a87b-c4867ef1e220",
                 IsActive = true,
                 LastName = "Nuñez",
@@ -126,14 +164,18 @@ public class ApplicationDbContextSeeder
                 NormalizedLastName = "Nuñez".Normalize().ToUpper(),
                 NormalizedUserName = "ramon".Normalize().ToUpper(),
                 PhoneNumber = "+521111111112",
-                ProfileImageUrl = null,
+                ProfileImage = null,
+                UpdatedBy = null,
+                UpdatedOn = null,
                 UserName = "ramon"
             },
             new()
             {
+                CreatedBy = ApplicationIds.Users,
+                CreatedOn = createdOn,
                 Email = "chris@nunez.ninja",
                 FirstName = "Chris",
-                FullName ="Chris Nuñez",
+                FullName = "Chris Nuñez",
                 Id = "162bb879-33a8-4a25-b11d-8fa14d8e87ed",
                 IsActive = true,
                 LastName = "Nuñez",
@@ -143,7 +185,9 @@ public class ApplicationDbContextSeeder
                 NormalizedLastName = "Nuñez".Normalize().ToUpper(),
                 NormalizedUserName = "chris".Normalize().ToUpper(),
                 PhoneNumber = "+521111111113",
-                ProfileImageUrl = null,
+                ProfileImage = null,
+                UpdatedBy = null,
+                UpdatedOn = null,
                 UserName = "chris"
             }
         };
@@ -151,10 +195,14 @@ public class ApplicationDbContextSeeder
 
     private List<UserRole> GetUserRoles()
     {
+        var createdOn = DateTime.UtcNow;
+
         return new List<UserRole>
         {
             new()
             {
+                CreatedBy = ApplicationIds.Users,
+                CreatedOn = createdOn,
                 Id = "b72902d3-25d4-4e70-afa1-1baed255dc3c",
                 IsActive = true,
                 RoleId = "089cb161-fce4-4d55-acc5-a40603a385ba",
@@ -162,6 +210,8 @@ public class ApplicationDbContextSeeder
             },
             new()
             {
+                CreatedBy = ApplicationIds.Users,
+                CreatedOn = createdOn,
                 Id = "d31dc2c2-6cdd-437c-b6fc-63398ed5f1ef",
                 IsActive = true,
                 RoleId = "1f4d522f-429e-4e14-9a25-0a38cf6a587e",
@@ -169,6 +219,8 @@ public class ApplicationDbContextSeeder
             },
             new()
             {
+                CreatedBy = ApplicationIds.Users,
+                CreatedOn = createdOn,
                 Id = "a1165810-8192-487a-8bbf-743f7d1071b2",
                 IsActive = true,
                 RoleId = "98253fe9-5912-4c92-93c3-54035d204be8",
