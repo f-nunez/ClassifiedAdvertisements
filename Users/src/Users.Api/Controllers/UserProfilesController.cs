@@ -4,6 +4,7 @@ using Users.Application.Common.Requests;
 using Users.Application.Features.UserProfiles.Commands.CreateUserProfile;
 using Users.Application.Features.UserProfiles.Commands.DeleteUserProfile;
 using Users.Application.Features.UserProfiles.Commands.UpdateUserProfile;
+using Users.Application.Features.UserProfiles.Queries.GetUserProfileList;
 
 namespace Users.Api.Controllers;
 
@@ -48,6 +49,35 @@ public class UserProfilesController : BaseApiController
 
         DeleteUserProfileResponse response = await Mediator
             .Send(command, cancellationToken);
+
+        return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetUserProfileList(
+        int skip,
+        int take,
+        bool sortasc,
+        string sortprop,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetUserProfileListQuery(
+            new GetUserProfileListRequest
+            {
+                DataTableRequest = new DataTableRequest
+                {
+                    Skip = skip,
+                    Take = take,
+                    Sorts = new List<DataTableRequestSort>()
+                    {
+                        new(sortprop, sortasc)
+                    }
+                }
+            }
+        );
+
+        GetUserProfileListResponse response = await Mediator
+            .Send(query, cancellationToken);
 
         return Ok(response);
     }
