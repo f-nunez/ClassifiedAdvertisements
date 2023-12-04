@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Users.Application.Common.Requests;
 using Users.Application.Features.UserProfiles.Commands.CreateUserProfile;
+using Users.Application.Features.UserProfiles.Commands.DeleteUserProfile;
 using Users.Application.Features.UserProfiles.Commands.UpdateUserProfile;
 
 namespace Users.Api.Controllers;
@@ -28,6 +29,24 @@ public class UserProfilesController : BaseApiController
         );
 
         CreateUserProfileResponse response = await Mediator
+            .Send(command, cancellationToken);
+
+        return Ok(response);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUserProfile(
+        string id,
+        CancellationToken cancellationToken)
+    {
+        var command = new DeleteUserProfileCommand(
+            new DeleteUserProfileRequest
+            {
+                Id = id
+            }
+        );
+
+        DeleteUserProfileResponse response = await Mediator
             .Send(command, cancellationToken);
 
         return Ok(response);
