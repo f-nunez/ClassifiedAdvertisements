@@ -113,6 +113,21 @@ public class ConfigurationStoreDbContextSeeder
                     JwtClaimTypes.Role,
                     JwtClaimTypes.SessionId
                 }
+            }.ToEntity(),
+            new ApiResource
+            {
+                Name = "13b45036-c874-4b21-a651-c48148b78215",
+                DisplayName = "Users Api",
+                Scopes = new List<string> { "users_api" },
+                UserClaims = new List<string>
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
             }.ToEntity()
         );
 
@@ -157,6 +172,20 @@ public class ConfigurationStoreDbContextSeeder
             {
                 Name = "ads_query_api",
                 DisplayName = "Ads Query Api",
+                UserClaims = new[]
+                {
+                    JwtClaimTypes.ClientId,
+                    JwtClaimTypes.Email,
+                    JwtClaimTypes.Name,
+                    JwtClaimTypes.PreferredUserName,
+                    JwtClaimTypes.Role,
+                    JwtClaimTypes.SessionId
+                }
+            }.ToEntity(),
+            new ApiScope
+            {
+                Name = "users_api",
+                DisplayName = "Users Api",
                 UserClaims = new[]
                 {
                     JwtClaimTypes.ClientId,
@@ -221,6 +250,7 @@ public class ConfigurationStoreDbContextSeeder
                 "ads_command_api",
                 "ads_query_api",
                 "angular_web_api",
+                "users_api"
             },
             // AccessTokenLifetime = 600,
             PostLogoutRedirectUris = angularWebClientSettings.PostLogoutRedirectUris,
@@ -254,7 +284,8 @@ public class ConfigurationStoreDbContextSeeder
                 IdentityServerConstants.StandardScopes.Email,
                 "roles",
                 "ads_command_api",
-                "ads_query_api"
+                "ads_query_api",
+                "users_api"
             },
             // AccessTokenLifetime = 60*60,
             // IdentityTokenLifetime = 60*5,

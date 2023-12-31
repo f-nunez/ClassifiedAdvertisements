@@ -81,6 +81,20 @@ services:
         source: ads-query-postgresql-data-volume
         target: /var/lib/postgresql/data
 
+  users-postgresql:
+    image: postgres:15.4-bullseye
+    container_name: users-postgresql
+    environment:
+      POSTGRES_USER: "sa"
+      POSTGRES_PASSWORD: "ClassifiedAdvertisiments123!"
+    ports:
+      - 54323:5432
+    restart: on-failure
+    volumes:
+      - type: volume
+        source: users-postgresql-data-volume
+        target: /var/lib/postgresql/data
+
   adminer:
     image: adminer
     container_name: adminer
@@ -96,4 +110,6 @@ volumes:
   ads-command-postgresql-data-volume:
     driver: local
   ads-query-postgresql-data-volume:
+    driver: local
+  users-postgresql-data-volume:
     driver: local
